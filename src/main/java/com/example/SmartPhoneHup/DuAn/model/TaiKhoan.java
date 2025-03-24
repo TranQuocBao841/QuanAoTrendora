@@ -1,35 +1,43 @@
 package com.example.SmartPhoneHup.DuAn.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "tai_khoan")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaiKhoan {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "ten_dang_nhap")
+    @Column(name = "ten_dang_nhap", nullable = false, unique = true)
     private String tenDangNhap;
 
-    @Column(name = "mat_khau")
+    @Column(name = "mat_khau", nullable = false)
     private String matKhau;
 
-    @Column(name = "loai_tai_khoan")
+    @Column(name = "loai_tai_khoan", nullable = false)
     private Integer loaiTaiKhoan; // 1: Nhân viên, 2: Khách hàng
 
-    @Column(name = "id_nguoi_dung")
-    private Integer idNguoiDung;
-}
 
+    @ManyToOne
+    @JoinColumn(name = "id_khach_hang")
+    private KhachHang khachHang;
+
+    @ManyToOne
+    @JoinColumn(name = "id_nhan_vien")
+    private NhanVien nhanVien;
+
+
+
+
+
+}
 
 
 

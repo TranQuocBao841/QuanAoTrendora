@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Đăng Ký</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #8a2be2, #4b0082);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            width: 500px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+<div class="card">
+    <h2 class="text-center mb-4">Đăng Ký Tài Khoản</h2>
+
+    <form th:action="@{/dien-thoai/dangky}" method="post" onsubmit="return validateForm()">
+
+        <!-- Tên đăng nhập -->
+        <div class="mb-3">
+            <label class="form-label">Tên Đăng Nhập:</label>
+            <input type="text" id="tenDangNhap" name="tenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" required />
+        </div>
+
+        <!-- Mật khẩu -->
+        <div class="mb-3">
+            <label class="form-label">Mật Khẩu:</label>
+            <input type="password" id="matKhau" name="matKhau" class="form-control" placeholder="Nhập mật khẩu" required />
+        </div>
+
+        <!-- Xác nhận mật khẩu -->
+        <div class="mb-3">
+            <label class="form-label">Xác Nhận Mật Khẩu:</label>
+            <input type="password" id="xacNhanMatKhau" class="form-control" placeholder="Nhập lại mật khẩu" required />
+        </div>
+
+        <!-- Loại tài khoản -->
+        <div class="mb-3">
+            <label class="form-label">Loại Tài Khoản:</label>
+            <select name="loaiTaiKhoan" class="form-select" required>
+                <option value="" disabled selected>Chọn loại tài khoản</option>
+                <option value="1">Nhân Viên</option>
+                <option value="2">Khách Hàng</option>
+            </select>
+        </div>
+
+        <!-- Nút đăng ký -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Đăng Ký</button>
+        </div>
+    </form>
+
+    <!-- Hiển thị lỗi nếu có -->
+    <p th:if="${error}" th:text="${error}" class="text-danger mt-3 text-center"></p>
+</div>
+
+<script>
+    // Kiểm tra xác nhận mật khẩu và độ dài tối thiểu
+    function validateForm() {
+        const tenDangNhap = document.getElementById('tenDangNhap').value.trim();
+        const matKhau = document.getElementById('matKhau').value;
+        const xacNhanMatKhau = document.getElementById('xacNhanMatKhau').value;
+
+        if (tenDangNhap.length < 5) {
+            alert('Tên đăng nhập phải có ít nhất 5 ký tự!');
+            return false;
+        }
+
+        if (matKhau.length < 6) {
+            alert('Mật khẩu phải có ít nhất 6 ký tự!');
+            return false;
+        }
+
+        if (matKhau !== xacNhanMatKhau) {
+            alert('Mật khẩu và Xác nhận mật khẩu không khớp!');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
