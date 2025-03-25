@@ -15,12 +15,12 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/dien-thoai")
-public class AuthController {
+public class TaiKhoanController {
     @Autowired
     private TaiKhoanRepo taiKhoanRepository;
 
 
-    public AuthController(TaiKhoanRepo taiKhoanRepository) {
+    public TaiKhoanController(TaiKhoanRepo taiKhoanRepository) {
         this.taiKhoanRepository = taiKhoanRepository;
     }
 

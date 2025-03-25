@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Khách Hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Quản Lý Khách Hàng SmartPhone Hub</h2>
+
+
+    <!-- Form Thêm Thông Tin Khách Hàng -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">Thêm Khách Hàng</div>
+        <div class="card-body">
+            <form action="/khach-hang/add" method="post">
+                <div class="mb-3">
+                    <label for="ten" class="form-label">Tên Khách Hàng</label>
+                    <input type="text" id="ten" name="ten" class="form-control" placeholder="Nhập tên" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="sdt" class="form-label">Số Điện Thoại</label>
+                    <input type="text" id="sdt" name="sdt" class="form-control" placeholder="Nhập số điện thoại" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="maKh" class="form-label">Mã Khách Hàng</label>
+                    <input type="text" id="maKh" name="maKh" class="form-control" placeholder="Nhập mã khách hàng" required>
+                </div>
+
+                <label class="form-label">Trạng Thái</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="trangThai" value="1" id="active" required>
+                    <label class="form-check-label" for="active">Hoạt Động</label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="trangThai" value="0" id="inactive" required>
+                    <label class="form-check-label" for="inactive">Không Hoạt Động</label>
+                </div>
+
+                <button type="submit" class="btn btn-success">Lưu Khách Hàng</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bảng Hiển Thị Thông Tin Khách Hàng -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">Danh Sách Khách Hàng</div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>Mã Khách Hàng</th>
+                    <th>Tên Khách Hàng</th>
+                    <th>Số Điện Thoại</th>
+                    <th>Trạng Thái</th>
+                    <th>Hành Động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="khachhang : ${list}">
+                    <tr>
+                        <td th:text="${khachhang.maKh}"></td>
+                        <td th:text="${khachhang.ten}"></td>
+                        <td th:text="${khachhang.sdt}"></td>
+                        <td th:text="${khachhang.trangThai == 1 ? 'Hoạt Động' : 'Không Hoạt Động'}"></td>
+                        <td>
+                            <a th:href="@{'/khach-hang/deltal?id=' + ${khachhang.id}}" class="btn btn-info btn-sm">Chi Tiết</a>
+                            <a th:href="@{'/khach-hang/update?id=' + ${khachhang.id}}" class="btn btn-warning btn-sm">Cập Nhật</a>
+                            <a th:href="@{'/khach-hang/delete?id=' + ${khachhang.id}}" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">Xóa</a>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
