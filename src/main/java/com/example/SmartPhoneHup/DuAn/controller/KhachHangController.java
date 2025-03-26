@@ -52,9 +52,4 @@ public class KhachHangController {
         return "redirect:/khach-hang/hien-thi";
     }
 
-    @GetMapping("/timkiem")
-    public String TimKiem(@RequestParam("ten") String ten ,Model model){
-       model.addAttribute("khachhang",khachHangRepo.findKhachHangsByTenContains(ten));
-        return "/ViewKhachHang/hien-thi";
-    }
 }

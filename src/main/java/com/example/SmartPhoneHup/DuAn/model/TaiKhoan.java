@@ -21,6 +21,8 @@ public class TaiKhoan {
     @Column(name = "mat_khau", nullable = false)
     private String matKhau;
 
+    @Column(name = "sdt")
+    private String sdt;
     @Column(name = "loai_tai_khoan", nullable = false)
     private Integer loaiTaiKhoan; // 1: Nhân viên, 2: Khách hàng
 

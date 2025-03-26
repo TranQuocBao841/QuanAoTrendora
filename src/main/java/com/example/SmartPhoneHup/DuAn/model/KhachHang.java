@@ -20,6 +20,9 @@ public class KhachHang {
     @Column(name = "ten")
     private String ten;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "sdt")
     private String sdt;
 
