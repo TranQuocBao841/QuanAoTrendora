@@ -37,7 +37,7 @@ public class TaiKhoanController {
             @RequestParam String tenDangNhap,
             @RequestParam String matKhau,
             @RequestParam Integer loaiTaiKhoan,
-            @RequestParam String sDt,
+            @RequestParam String email,
             RedirectAttributes redirectAttributes) {
 
         // Kiểm tra tài khoản đã tồn tại chưa
@@ -50,26 +50,25 @@ public class TaiKhoanController {
         taiKhoan.setTenDangNhap(tenDangNhap);
         taiKhoan.setMatKhau(matKhau);
         taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
-        taiKhoan.setSdt(sDt);
+        taiKhoan.setEmail(email);
         // Xử lý linh hoạt dựa vào loại tài khoản
         if (loaiTaiKhoan == 2) { // Khách hàng
             KhachHang khachHang = khachHangRepository.findByEmail(tenDangNhap);
             if (khachHang == null) {
                 // Tạo mới khách hàng nếu chưa có
                 khachHang = new KhachHang();
-                khachHang.setEmail(tenDangNhap);
                 khachHang.setTen(tenDangNhap);
 
                 // Tự động tạo ma_kh (ví dụ: KH001, KH002,...)
                 String maKhachHangMoi = "KH00" + (khachHangRepository.count() + 1);
                 khachHang.setMaKh(maKhachHangMoi);
 
-                // Kiểm tra và xử lý số điện thoại (nếu có)
-                String sdt = taiKhoan.getSdt();
-                if (sdt == null || sdt.isBlank()) {
-                    khachHang.setSdt(""); // Gán null nếu sdt trống
+                // Kiểm tra và xử lý email (nếu có)
+                String emails = taiKhoan.getEmail();
+                if (emails == null || emails.isBlank()) {
+                    khachHang.setEmail(""); // Gán null nếu email trống
                 } else {
-                    khachHang.setSdt(sdt);
+                    khachHang.setEmail(emails);
                 }
 
                 // Đặt trạng thái mặc định (1: Active)
@@ -82,10 +81,26 @@ public class TaiKhoanController {
 
 
     } else if (loaiTaiKhoan == 1) { // Nhân viên
-            NhanVien nhanVien = nhanVienRepository.findByMaNv(tenDangNhap);
-            if (nhanVien != null) {
-                taiKhoan.setNhanVien(nhanVien);
+            NhanVien nhanVien = nhanVienRepository.findByEmail(tenDangNhap);
+            if (nhanVien == null) {
+                nhanVien = new NhanVien();
+                nhanVien.setTen(tenDangNhap);
+                // tự động tăng mã nv
+                String maNhanVienMoi = "NV00" + (nhanVienRepository.count() + 1);
+                nhanVien.setMaNv(maNhanVienMoi);
+                // kiểm tra email
+                String emails = taiKhoan.getEmail();
+                if (emails == null || emails.isBlank()) {
+                    nhanVien.setEmail(""); // Gán null nếu email trống
+                } else {
+                    nhanVien.setEmail(emails);
+                }
+
+                // Đặt trạng thái mặc định (1: Active)
+                nhanVien.setTrangThai(1);
+                nhanVienRepository.save(nhanVien);
             }
+            taiKhoan.setNhanVien(nhanVien);
         }
 
         // Lưu tài khoản vào cơ sở dữ liệu

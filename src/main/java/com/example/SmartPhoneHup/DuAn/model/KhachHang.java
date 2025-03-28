@@ -23,9 +23,6 @@ public class KhachHang {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "sdt")
-    private String sdt;
-
     @Column(name = "ma_kh")
     private String maKh;
 

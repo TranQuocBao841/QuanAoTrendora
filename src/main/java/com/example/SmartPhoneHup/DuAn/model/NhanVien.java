@@ -20,6 +20,9 @@ public class NhanVien {
     @Column(name = "ten")
     private String ten;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "ma_nv")
     private String maNv;
 
