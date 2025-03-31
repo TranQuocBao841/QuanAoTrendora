@@ -24,6 +24,9 @@ public class SanPham {
     @Column(name = "ten")
     private String ten;
 
+    @Column(name = "anh")
+    private String anh;
+
     @Column(name = "trang_thai")
     private Integer trangThai;
 }

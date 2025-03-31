@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Sản Phẩm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<!-- Form Update Thông Tin Sản Phẩm-->
+<div class="container mt-5">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">Update Khách Hàng</div>
+        <div class="card-body">
+
+            <!-- Hiển thị Ảnh Đại Diện -->
+            <div class="text-center mb-4">
+                <img th:src="${sp.anh}">
+            </div>
+
+            <form action="/san-pham/update" method="post" enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <label for="id" class="form-label">ID Sản Phẩm</label>
+                    <input type="text" id="id" name="id" class="form-control" placeholder="Nhập id" th:value="${sp.id}" required readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ten" class="form-label">Tên Sản Phẩm</label>
+                    <input type="text" id="ten" name="ten" class="form-control" placeholder="Nhập tên" th:value="${sp.ten}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="anh" class="form-label">URL ảnh</label>
+                    <input type="text" id="and" name="anh" class="form-control" placeholder="Nhập địa chỉ ảnh cần đổi" th:value="${sp.anh}" required>
+                </div>
+
+
+
+                <div class="mb-3">
+                    <label for="ma" class="form-label">Mã Sản Phẩm</label>
+                    <input type="text" id="ma" name="ma" class="form-control" placeholder="Nhập mã sản phẩm" th:value="${sp.ma}" required>
+                </div>
+
+
+                <label class="form-label">Trạng Thái</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="trangThai" value="1" id="active" th:checked="${sp.trangThai == 1}" required>
+                    <label class="form-check-label" for="active">Còn Hàng</label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="trangThai" value="0" id="inactive" th:checked="${sp.trangThai == 0}" required>
+                    <label class="form-check-label" for="inactive">Hết Hàng</label>
+                </div>
+
+                <button type="submit" class="btn btn-success">Update Khách Hàng</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

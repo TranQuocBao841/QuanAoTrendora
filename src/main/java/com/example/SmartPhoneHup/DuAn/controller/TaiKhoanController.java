@@ -141,6 +141,6 @@ public class TaiKhoanController {
             return "ViewSmartPhone/login";
         }
         model.addAttribute("user", user);
-        return "home";
+        return "redirect:/san-pham/hien-thi";
     }
 }
