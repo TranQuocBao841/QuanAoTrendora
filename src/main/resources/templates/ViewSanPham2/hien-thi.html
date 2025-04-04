@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Danh Sách Sản Phẩm - SmartPhone Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(to right, #f4f4f9, #e0f7fa);
+            font-family: 'Quicksand', sans-serif;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .navbar {
+            background-color: #007bff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 12px 0;
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffcc00 !important;
+        }
+
+        .dropdown-menu {
+            background-color: #007bff;
+        }
+
+        .dropdown-item {
+            color: white;
+        }
+
+        .dropdown-item:hover {
+            background-color: #0056b3;
+        }
+
+        h2 {
+            font-weight: 600;
+        }
+
+        .input-group input {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .input-group .btn {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .carousel-item img {
+            border-radius: 15px;
+            object-fit: cover;
+            height: 400px;
+            filter: brightness(95%);
+        }
+
+        .product-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+            background-color: #ffffff;
+            border-radius: 10px;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 123, 255, 0.3);
+            background-color: #f0f9ff;
+        }
+
+        .product-info p {
+            margin: 4px 0;
+            font-size: 15px;
+        }
+
+        .product-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .product-value {
+            color: #007bff;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+        .btn:hover {
+            filter: brightness(90%);
+        }
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .product-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 123, 255, 0.85);
+            color: white;
+            padding: 12px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .image-container:hover .overlay {
+            transform: translateY(0);
+        }
+
+        .image-container:hover .product-image {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand text-white fw-bold" href="/san-pham2/hien-thi">SmartPhone Hub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+<!--                <li class="nav-item">Chào mừng, <span th:text="${userName}"></span></li>-->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="sanphamDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dịch vụ Khách Hàng</a>
+                    <ul class="dropdown-menu" aria-labelledby="sanphamDropdown">
+                        <li><a class="dropdown-item" href="#">Đăng Ký tài Khoản</a></li>
+                        <li><a class="dropdown-item" href="#">Đăng Nhập tài khoản</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="#">Liên Hệ</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Content -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary">SmartPhone Hub - Danh Sách Sản Phẩm</h2>
+
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <form action="/san-pham2/timkiem" method="get" class="input-group">
+            <input type="text" id="name" name="ten" class="form-control" placeholder="Tìm kiếm sản phẩm..." th:value="${ten}">
+            <button class="btn btn-primary" type="submit">Tìm</button>
+        </form>
+    </div>
+
+    <!-- Carousel -->
+    <div class="mb-5">
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <th:block th:each="sanpham, iterStat : ${list}">
+                    <div class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
+                        <img th:src="${sanpham.anh}" class="d-block w-100" alt="Ảnh sản phẩm">
+                    </div>
+                </th:block>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5" id="productList">
+        <th:block th:each="sanpham : ${list}">
+            <div class="col product-item" data-name="[[${sanpham.sanPham.ten}]]">
+                <div class="card h-100 shadow-sm product-card">
+
+                    <!-- Ảnh sản phẩm có overlay -->
+                    <div class="image-container">
+                        <img th:src="${sanpham.anh}" class="product-image" alt="Ảnh sản phẩm">
+                        <div class="overlay" th:text="${sanpham.moTa}"></div>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="text-center text-primary mb-3" th:text="${sanpham.ten}">Tên sản phẩm</h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <p><span class="product-label">Mã sản phẩm:</span><br>
+                                    <span class="product-value" th:text="${sanpham.ma}"></span></p>
+                            </div>
+                            <div class="col-6">
+                                <p><span class="product-label">Trạng thái:</span><br>
+                                    <span class="product-value" th:text="${sanpham.trangThai == 1 ? 'Còn Hàng' : 'Hết Hàng'}"></span></p>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3">
+                            <a th:href="@{'/san-pham2/deltal?id=' + ${sanpham.id}}" class="btn btn-info btn-sm">Xem Chi Tiết</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltips.forEach(el => new bootstrap.Tooltip(el));
+</script>
+</body>
+</html>

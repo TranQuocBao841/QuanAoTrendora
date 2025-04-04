@@ -1,18 +1,14 @@
 package com.example.SmartPhoneHup.DuAn.controller;
 
 import com.example.SmartPhoneHup.DuAn.model.KhachHang;
-import com.example.SmartPhoneHup.DuAn.model.NhanVien;
 import com.example.SmartPhoneHup.DuAn.model.TaiKhoan;
 import com.example.SmartPhoneHup.DuAn.repository.KhachHangRepo;
-import com.example.SmartPhoneHup.DuAn.repository.NhanVienRepo;
 import com.example.SmartPhoneHup.DuAn.repository.TaiKhoanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/dien-thoai")
@@ -24,9 +20,6 @@ public class TaiKhoanController {
     @Autowired
     private KhachHangRepo khachHangRepository;
 
-    @Autowired
-    private NhanVienRepo nhanVienRepository;
-
     @GetMapping("/dangky")
     public String showRegisterForm() {
         return "/ViewSmartPhone/dangky";
@@ -36,7 +29,6 @@ public class TaiKhoanController {
     public String register(
             @RequestParam String tenDangNhap,
             @RequestParam String matKhau,
-            @RequestParam Integer loaiTaiKhoan,
             @RequestParam String email,
             RedirectAttributes redirectAttributes) {
 
@@ -49,59 +41,25 @@ public class TaiKhoanController {
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setTenDangNhap(tenDangNhap);
         taiKhoan.setMatKhau(matKhau);
-        taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
         taiKhoan.setEmail(email);
-        // Xử lý linh hoạt dựa vào loại tài khoản
-        if (loaiTaiKhoan == 2) { // Khách hàng
-            KhachHang khachHang = khachHangRepository.findByEmail(tenDangNhap);
-            if (khachHang == null) {
-                // Tạo mới khách hàng nếu chưa có
-                khachHang = new KhachHang();
-                khachHang.setTen(tenDangNhap);
+        taiKhoan.setLoaiTaiKhoan(2); // Mặc định là khách hàng
 
-                // Tự động tạo ma_kh (ví dụ: KH001, KH002,...)
-                String maKhachHangMoi = "KH00" + (khachHangRepository.count() + 1);
-                khachHang.setMaKh(maKhachHangMoi);
+        // Kiểm tra xem khách hàng đã tồn tại chưa
+        KhachHang khachHang = khachHangRepository.findByEmail(email);
+        if (khachHang == null) {
+            khachHang = new KhachHang();
+            khachHang.setTen(tenDangNhap);
 
-                // Kiểm tra và xử lý email (nếu có)
-                String emails = taiKhoan.getEmail();
-                if (emails == null || emails.isBlank()) {
-                    khachHang.setEmail(""); // Gán null nếu email trống
-                } else {
-                    khachHang.setEmail(emails);
-                }
+            // Tự động tạo mã khách hàng
+            String maKhachHangMoi = "KH00" + (khachHangRepository.count() + 1);
+            khachHang.setMaKh(maKhachHangMoi);
 
-                // Đặt trạng thái mặc định (1: Active)
-                khachHang.setTrangThai(1);
+            khachHang.setEmail(email != null && !email.isBlank() ? email : "");
+            khachHang.setTrangThai(1);
 
-                khachHangRepository.save(khachHang);
-            }
-            taiKhoan.setKhachHang(khachHang);
-
-
-
-    } else if (loaiTaiKhoan == 1) { // Nhân viên
-            NhanVien nhanVien = nhanVienRepository.findByEmail(tenDangNhap);
-            if (nhanVien == null) {
-                nhanVien = new NhanVien();
-                nhanVien.setTen(tenDangNhap);
-                // tự động tăng mã nv
-                String maNhanVienMoi = "NV00" + (nhanVienRepository.count() + 1);
-                nhanVien.setMaNv(maNhanVienMoi);
-                // kiểm tra email
-                String emails = taiKhoan.getEmail();
-                if (emails == null || emails.isBlank()) {
-                    nhanVien.setEmail(""); // Gán null nếu email trống
-                } else {
-                    nhanVien.setEmail(emails);
-                }
-
-                // Đặt trạng thái mặc định (1: Active)
-                nhanVien.setTrangThai(1);
-                nhanVienRepository.save(nhanVien);
-            }
-            taiKhoan.setNhanVien(nhanVien);
+            khachHangRepository.save(khachHang);
         }
+        taiKhoan.setKhachHang(khachHang);
 
         // Lưu tài khoản vào cơ sở dữ liệu
         taiKhoanRepository.save(taiKhoan);
@@ -111,29 +69,15 @@ public class TaiKhoanController {
         return "redirect:/dien-thoai/login";
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Hiển thị form đăng nhập
     @GetMapping("/login")
     public String HienThiDangNhap() {
         return "ViewSmartPhone/login";
     }
 
-    // Xử lý đăng nhập
     @PostMapping("/login")
     public String login(@RequestParam String tenDangNhap,
                         @RequestParam String matKhau,
+
                         Model model) {
         TaiKhoan user = taiKhoanRepository.findByTenDangNhapAndMatKhau(tenDangNhap, matKhau);
         if (user == null) {
@@ -141,6 +85,10 @@ public class TaiKhoanController {
             return "ViewSmartPhone/login";
         }
         model.addAttribute("user", user);
-        return "redirect:/san-pham/hien-thi";
+        if ("1".equalsIgnoreCase(String.valueOf(user.getLoaiTaiKhoan()))){
+            return "redirect:/san-pham/hien-thi"; // Trang quản lý dành cho nhân viên
+        } else {
+            return "redirect:/san-pham2/hien-thi"; // Trang bình thường dành cho khách hàng
+        }
     }
 }

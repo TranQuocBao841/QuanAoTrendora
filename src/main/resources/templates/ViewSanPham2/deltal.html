@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Chi Tiết Sản Phẩm</title>
+    <!-- Link đến Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .product-detail {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .product-image {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .product-title {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .product-info {
+            font-size: 1.1rem;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="product-detail">
+        <div class="row">
+            <div class="col-md-4">
+                <img th:src="@{${listct.sanPham.anh}}" class="product-image" alt="Hình ảnh sản phẩm">
+            </div>
+            <div class="col-md-8">
+                <h1 class="product-title">[[${listct.sanPham.ten}]]</h1>
+                <p class="product-info"><strong>Màu sắc:</strong> [[${listct.mauSac.ten}]]</p>
+                <p class="product-info"><strong>Đơn giá:</strong> [[${listct.donGia}]]</p>
+                <p class="product-info"><strong>Số lượng:</strong> [[${listct.soLuong}]]</p>
+                <p class="product-info"><strong>Trạng thái:</strong> [[${listct.trangThai==1 ?'Còn hàng':'Hết hàng'}]]</p>
+                <button class="btn-custom">Thêm vào giỏ hàng</button>
+                <!-- Nút quay lại -->
+                <a href="/san-pham2/hien-thi" class="btn-back mt-3">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Link đến Bootstrap JS và jQuery (nếu cần cho tính năng khác) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
