@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,7 +38,7 @@ public class SanPhamChiTiet {
     private Integer soLuong;
 
     @Column(name = "don_gia")
-    private Integer donGia;
+    private BigDecimal donGia;
 
     @Column(name = "trang_thai")
     private Integer trangThai;
