@@ -9,4 +9,6 @@ import java.util.List;
 
 @Repository
 public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet,Integer> {
+    List<SanPhamChiTiet> findAllBySanPham_Id(Integer sanPhamId);
+
 }

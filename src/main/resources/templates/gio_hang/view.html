@@ -13,7 +13,16 @@
 
 <!-- Tiêu đề giỏ hàng -->
 <div class="container my-4">
-    <h2 class="text-center">Giỏ Hàng</h2>
+    <h2 class="text-center">Giỏ Hàng SmartPhoneHup</h2>
+
+    <!-- Hiển thị thông báo lỗi hoặc thành công -->
+    <div th:if="${error}" class="alert alert-danger text-center" role="alert">
+        <span th:text="${error}"></span>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success text-center" role="alert">
+        <span th:text="${success}"></span>
+    </div>
 
     <!-- Bảng giỏ hàng -->
     <table class="table table-bordered table-striped table-hover">
@@ -72,7 +81,7 @@
 
     <!-- Nút quay lại trang sản phẩm -->
     <div class="text-left my-4">
-        <a href="/san-pham2/hien-thi" class="btn btn-primary btn-lg">Quay lại trang sản phẩm</a>
+        <a href="/san-pham/hien-thi" class="btn btn-primary btn-lg">Quay lại trang sản phẩm</a>
     </div>
 
 </div>

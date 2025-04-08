@@ -62,7 +62,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand text-white" href="#">SmartPhone Hub</a>
+        <a class="navbar-brand text-white" href="/admin/san-pham/hien-thi">SmartPhone Hub</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -73,7 +73,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="sanphamDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin Quản Lý </a>
                     <ul class="dropdown-menu" aria-labelledby="sanphamDropdown">
                         <li><a class="dropdown-item" href="/khach-hang/hien-thi">Quản Lý Khách Hàng</a></li>
-                        <li><a class="dropdown-item" href="#">Quản Lý Khách hàng</a></li>
+                        <li><a class="dropdown-item" href="/san-pham-chi-tiet/hien-thi">Quản Lý Sản Phẩm Chi Tiết</a></li>
                         <li><a class="dropdown-item" href="#">Quản Lý Tài Khoản</a></li>
                     </ul>
                 </li>
@@ -88,7 +88,7 @@
 
     <!-- Thanh Tìm Kiếm -->
     <div class="mb-4">
-        <form action="/san-pham/timkiem" method="get">
+        <form action="/admin/san-pham/timkiem" method="get">
             <input type="text" id="name" name="ten" class="form-control" placeholder="Tìm kiếm sản phẩm..." th:value="${ten}">
 
         </form>
@@ -104,9 +104,8 @@
                         <h5 class="card-title" th:text="${sanpham.ten}"></h5>
                         <p class="card-text" th:text="${sanpham.trangThai == 1 ? 'Còn Hàng' : 'Hết Hàng'}"></p>
                         <div class="d-flex justify-content-around">
-                            <a th:href="@{'/san-pham/deltal?id=' + ${sanpham.id}}" class="btn btn-info btn-sm">Chi Tiết</a>
-                            <a th:href="@{'/san-pham/update?id=' + ${sanpham.id}}" class="btn btn-warning btn-sm">Cập Nhật</a>
-                            <a th:href="@{'/san-pham/delete?id=' + ${sanpham.id}}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">Xóa</a>
+                            <a th:href="@{'/admin/san-pham/update?id=' + ${sanpham.id}}" class="btn btn-warning btn-sm">Cập Nhật</a>
+                            <a th:href="@{'/admin/san-pham/delete?id=' + ${sanpham.id}}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">Xóa</a>
                         </div>
                     </div>
                 </div>
@@ -118,7 +117,7 @@
     <div class="card shadow-sm mb-4">
         <div class="card-header">Thêm Sản Phẩm</div>
         <div class="card-body">
-            <form action="/san-pham/add" method="post">
+            <form action="/admin/san-pham/add" method="post">
                 <div class="mb-3">
                     <label class="form-label">Mã Sản Phẩm</label>
                     <input type="text" name="ma" class="form-control" required>

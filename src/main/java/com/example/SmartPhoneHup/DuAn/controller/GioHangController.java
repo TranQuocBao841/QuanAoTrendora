@@ -28,6 +28,10 @@ public class GioHangController {
     @Autowired
     private SanPhamRepo sanPhamRepo;
 
+    @Autowired
+    private SanPhamChiTietRepo sanPhamChiTietRepo;
+
+
     @GetMapping("/add")
     public String themVaoGio(@RequestParam("id") Integer idSpChiTiet,
                              @RequestParam(defaultValue = "1") int soLuong,
@@ -94,24 +98,34 @@ public class GioHangController {
             return "redirect:/gio-hang/hien-thi";
         }
 
-        // Lấy sản phẩm trong giỏ hàng theo ID
+        // Lấy sản phẩm trong giỏ hàng
         CartItem item = cart.getItemById(idSpChiTiet);
         if (item == null) {
             redirectAttributes.addFlashAttribute("error", "Sản phẩm không có trong giỏ hàng.");
             return "redirect:/gio-hang/hien-thi";
         }
 
-        // Kiểm tra số lượng mới và cập nhật
         if (quantity <= 0) {
             redirectAttributes.addFlashAttribute("error", "Số lượng phải lớn hơn 0.");
             return "redirect:/gio-hang/hien-thi";
         }
 
-        // Cập nhật số lượng cho sản phẩm
+        // 👉 Gọi trực tiếp repository để lấy số lượng tồn
+        SanPhamChiTiet sp = sanPhamChiTietRepo.findById(idSpChiTiet).orElse(null);
+        if (sp == null) {
+            redirectAttributes.addFlashAttribute("error", "Không tìm thấy sản phẩm.");
+            return "redirect:/gio-hang/hien-thi";
+        }
+
+        if (quantity > sp.getSoLuong()) {
+            redirectAttributes.addFlashAttribute("error", "Số lượng yêu cầu vượt quá số lượng tồn kho (" + sp.getSoLuong() + ").");
+            return "redirect:/gio-hang/hien-thi";
+        }
+
+        // Cập nhật số lượng
         item.setSoLuong(quantity);
         cart.updateItem(item);
 
-        // Lưu giỏ hàng vào session
         session.setAttribute("gioHang", cart);
         redirectAttributes.addFlashAttribute("success", "Cập nhật số lượng thành công!");
 
