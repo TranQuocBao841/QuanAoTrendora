@@ -8,10 +8,7 @@ import com.example.SmartPhoneHup.DuAn.repository.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/san-pham-chi-tiet")
@@ -54,6 +51,31 @@ public class SanPhamChiTietController {
     public String list(Model model) {
         model.addAttribute("dsChiTiet", chiTietRepo.findAll());
         return "ViewSanPhamCT/hien-thi";
+    }
+
+    @GetMapping("/update")
+    public String showUpdate(@RequestParam("id") Integer id, Model model) {
+        model.addAttribute("sanPhamChiTiet", chiTietRepo.findById(id).get());
+
+        // Gợi ý: load lại dữ liệu cho dropdown nếu bạn dùng chung form với thêm mới
+        model.addAttribute("dsSanPham", sanPhamRepo.findAll());
+        model.addAttribute("dsMauSac", mauSacRepo.findAll());
+        model.addAttribute("dsKichThuoc", kichThuocRepo.findAll());
+
+        return "/ViewSanPhamCT/update"; // hoặc cùng form với thêm mới nếu bạn tái sử dụng
+    }
+
+
+    @PostMapping("/update")
+    public String update(SanPhamChiTiet sanPhamChiTiet){
+        chiTietRepo.save(sanPhamChiTiet);
+        return "redirect:/san-pham-chi-tiet/hien-thi";
+    }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam("id") Integer id){
+        chiTietRepo.deleteById(id);
+        return "redirect:/san-pham-chi-tiet/hien-thi";
     }
 }
 

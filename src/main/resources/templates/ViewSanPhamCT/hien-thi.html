@@ -23,7 +23,13 @@
                             <strong>Kích thước:</strong> <span th:text="${sp.kichThuoc.ten}"></span><br>
                             <strong>Trạng thái:</strong> <span th:text="${sp.trangThai ==1?'Còn hàng':'Hết hàng'}"></span>
                         </p>
-                        <a href="/san-pham-chi-tiet/them" class="btn btn-success">Thêm</a>
+                        <a href="/san-pham-chi-tiet/them" class="btn btn-success">Thêm thông tin</a>
+                        <a th:href="@{|/san-pham-chi-tiet/update?id=${sp.id}|}" class="btn btn-warning">
+                            <i class="bi bi-pencil-square"></i> Cập nhật thông tin
+                        </a>
+                        <a th:href="@{|/san-pham-chi-tiet/delete?id=${sp.id}|}" class="btn btn-warning">
+                            <i class="bi bi-pencil-square"></i> Xóa thông tin
+                        </a>
                         <a href="/admin/san-pham/hien-thi" class="btn btn-success">Quay Lại Trang Chủ</a>
                     </div>
                 </div>
