@@ -86,9 +86,9 @@ public class TaiKhoanController {
         }
         model.addAttribute("user", user);
         if ("1".equalsIgnoreCase(String.valueOf(user.getLoaiTaiKhoan()))){
-            return "redirect:/san-pham/hien-thi"; // Trang quản lý dành cho nhân viên
+            return "redirect:/admin/san-pham/hien-thi"; // Trang quản lý dành cho nhân viên
         } else {
-            return "redirect:/san-pham2/hien-thi"; // Trang bình thường dành cho khách hàng
+            return "redirect:/san-pham/hien-thi"; // Trang bình thường dành cho khách hàng
         }
     }
 }

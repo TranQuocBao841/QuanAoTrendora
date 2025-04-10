@@ -1,80 +1,95 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <title>Quản Lý Sản Phẩm - SmartPhone Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f4f4f9;
-            animation: fadeIn 1s ease-in-out;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', sans-serif;
+            animation: fadeIn 0.8s ease-in-out;
         }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .product-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
-            background-color: #ffffff;
-            border-radius: 10px;
-        }
-        .product-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-            background-color: #e3f2fd;
-        }
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-        }
-        .btn:hover {
-            filter: brightness(90%);
-            transition: filter 0.2s ease-in-out;
-        }
-        .card-header {
-            background-color: #007bff !important;
-            color: white !important;
-        }
+
         .navbar {
-            background-color: #007bff;
+            background-color: #0d6efd;
         }
-        .navbar-nav .nav-link {
+
+        .navbar-brand, .nav-link, .dropdown-item {
             color: white !important;
-            transition: color 0.3s ease-in-out;
         }
-        .navbar-nav .nav-link:hover {
-            color: #ffcc00 !important;
+
+        .nav-link:hover, .dropdown-item:hover {
+            color: #ffc107 !important;
         }
+
         .dropdown-menu {
-            background-color: #007bff;
+            background-color: #0d6efd;
         }
-        .dropdown-item {
-            color: white;
+
+        .search-bar input {
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
         }
-        .dropdown-item:hover {
-            background-color: #0056b3;
+
+        .product-card {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.3s ease-in-out;
+            background: #ffffff;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .product-card img {
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.85rem;
+        }
+
+        .card-body h5 {
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+            color: #6c757d;
         }
     </style>
 </head>
-
 <body>
+
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand text-white" href="/admin/san-pham/hien-thi">SmartPhone Hub</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="/admin/san-pham/hien-thi">SmartPhone Hub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="#">Trang Chủ</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="sanphamDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin Quản Lý </a>
-                    <ul class="dropdown-menu" aria-labelledby="sanphamDropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Admin Quản Lý
+                    </a>
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/khach-hang/hien-thi">Quản Lý Khách Hàng</a></li>
                         <li><a class="dropdown-item" href="/san-pham-chi-tiet/hien-thi">Quản Lý Sản Phẩm Chi Tiết</a></li>
-                        <li><a class="dropdown-item" href="#">Quản Lý Tài Khoản</a></li>
+                        <li><a class="dropdown-item" href="/tai-khoan/hien-thi">Quản Lý Tài Khoản</a></li>
                     </ul>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="#">Liên Hệ</a></li>
@@ -83,67 +98,38 @@
     </div>
 </nav>
 
+<!-- Main Content -->
 <div class="container mt-5">
     <h2 class="text-center mb-4 text-primary">SmartPhone Hub - Danh Sách Sản Phẩm</h2>
 
-    <!-- Thanh Tìm Kiếm -->
-    <div class="mb-4">
+    <!-- Search Bar -->
+    <div class="search-bar mb-4">
         <form action="/admin/san-pham/timkiem" method="get">
-            <input type="text" id="name" name="ten" class="form-control" placeholder="Tìm kiếm sản phẩm..." th:value="${ten}">
-
+            <input type="text" name="ten" class="form-control" placeholder="🔍 Tìm kiếm sản phẩm..." th:value="${ten}">
         </form>
     </div>
 
-    <!-- Danh Sách Sản Phẩm Dạng Grid -->
-    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5" id="productList">
+    <!-- Product Grid -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         <th:block th:each="sanpham : ${list}">
-            <div class="col product-item" data-name="[[${sanpham.ten}]]">
-                <div class="card h-100 shadow-sm product-card">
-                    <img th:src="${sanpham.anh}" class="card-img-top" alt="Ảnh sản phẩm">
+            <div class="col">
+                <div class="card product-card h-100">
+                    <img th:src="${sanpham.anh}" alt="Ảnh sản phẩm">
                     <div class="card-body text-center">
-                        <h5 class="card-title" th:text="${sanpham.ten}"></h5>
-                        <p class="card-text" th:text="${sanpham.trangThai == 1 ? 'Còn Hàng' : 'Hết Hàng'}"></p>
-                        <div class="d-flex justify-content-around">
+                        <h5 th:text="${sanpham.ten}"></h5>
+                        <p class="card-text" th:text="${sanpham.trangThai == 1 ? '✅ Còn Hàng' : '❌ Hết Hàng'}"></p>
+                        <div class="d-flex justify-content-around mt-3">
+                            <a href="/admin/san-pham/view-add" class="btn btn-success btn-sm">Thêm</a>
                             <a th:href="@{'/admin/san-pham/update?id=' + ${sanpham.id}}" class="btn btn-warning btn-sm">Cập Nhật</a>
-                            <a th:href="@{'/admin/san-pham/delete?id=' + ${sanpham.id}}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">Xóa</a>
+                            <a th:href="@{'/admin/san-pham/delete?id=' + ${sanpham.id}}" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">Xóa</a>
                         </div>
                     </div>
                 </div>
             </div>
         </th:block>
     </div>
-
-    <!-- Form Thêm Sản Phẩm -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header">Thêm Sản Phẩm</div>
-        <div class="card-body">
-            <form action="/admin/san-pham/add" method="post">
-                <div class="mb-3">
-                    <label class="form-label">Mã Sản Phẩm</label>
-                    <input type="text" name="ma" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Tên Sản Phẩm</label>
-                    <input type="text" name="ten" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">URL Ảnh</label>
-                    <input type="text" name="anh" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Trạng Thái</label>
-                    <select name="trangThai" class="form-control">
-                        <option value="1">Còn Hàng</option>
-                        <option value="0">Hết Hàng</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-success">Thêm Sản Phẩm</button>
-            </form>
-        </div>
-    </div>
 </div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

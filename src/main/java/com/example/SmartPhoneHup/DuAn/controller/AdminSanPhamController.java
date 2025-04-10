@@ -24,6 +24,14 @@ public class AdminSanPhamController {
         model.addAttribute("list",sanPhamRepo.findAll());
         return "/ViewSanpham/hien-thi";
     }
+
+
+    @GetMapping("/view-add")
+    public String viewAddForm(Model model) {
+        model.addAttribute("sp", new SanPham());
+        return "/ViewSanPham/add";
+    }
+
     @PostMapping("/add")
     public String add(SanPham sanPham){
         sanPhamRepo.save(sanPham);
