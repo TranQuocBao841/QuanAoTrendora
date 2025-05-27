@@ -116,7 +116,7 @@
 
         <!-- Sign In Form -->
         <form th:action="@{/dien-thoai/login}" method="post">
-            <input type="text" name="tenDangNhap" placeholder="Username" class="form-control" required>
+            <input type="email" name="email" placeholder="email" class="form-control" required>
             <input type="password" name="matKhau" placeholder="Password" class="form-control" required>
             <a href="#" class="text-muted mb-3 d-block">Forgot Your Password?</a>
             <button type="submit" class="btn btn-primary w-100">Sign In</button>
