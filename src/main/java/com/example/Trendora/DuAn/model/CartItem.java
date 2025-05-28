@@ -1,4 +1,4 @@
-package com.example.SmartPhoneHup.DuAn.model;
+package com.example.Trendora.DuAn.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

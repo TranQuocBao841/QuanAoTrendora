@@ -1,9 +1,10 @@
-package com.example.SmartPhoneHup.DuAn.controller;
+package com.example.Trendora.DuAn.controller;
 
-import com.example.SmartPhoneHup.DuAn.model.KhachHang;
-import com.example.SmartPhoneHup.DuAn.model.TaiKhoan;
-import com.example.SmartPhoneHup.DuAn.repository.KhachHangRepo;
-import com.example.SmartPhoneHup.DuAn.repository.TaiKhoanRepo;
+
+import com.example.Trendora.DuAn.model.KhachHang;
+import com.example.Trendora.DuAn.model.TaiKhoan;
+import com.example.Trendora.DuAn.repository.KhachHangRepo;
+import com.example.Trendora.DuAn.repository.TaiKhoanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/dien-thoai")
+@RequestMapping("/quan-ao")
 public class TaiKhoanController {
 
     @Autowired
@@ -22,7 +23,7 @@ public class TaiKhoanController {
 
     @GetMapping("/dangky")
     public String showRegisterForm() {
-        return "/ViewSmartPhone/dangky";
+        return "/ViewTrendora/dangky";
     }
 
     @PostMapping("/dangky")
@@ -35,13 +36,13 @@ public class TaiKhoanController {
         // Kiểm tra tài khoản đã tồn tại chưa
         if (taiKhoanRepository.existsByTenDangNhap(tenDangNhap)) {
             redirectAttributes.addFlashAttribute("error", "Tên đăng nhập đã tồn tại!");
-            return "redirect:/dien-thoai/dangky";
+            return "redirect:/quan-ao/dangky";
         }
 
         //kiem tra email tồn tai
         if (taiKhoanRepository.existsByEmail(email)) {
             redirectAttributes.addFlashAttribute("error", "Email đã được sử dụng để đăng ký tài khoản khác!");
-            return "redirect:/dien-thoai/dangky";
+            return "redirect:/quan-ao/dangky";
         }
 
         TaiKhoan taiKhoan = new TaiKhoan();
@@ -72,12 +73,12 @@ public class TaiKhoanController {
 
         // Chuyển hướng về trang đăng nhập với thông báo thành công
         redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
-        return "redirect:/dien-thoai/login";
+        return "redirect:/quan-ao/login";
     }
 
     @GetMapping("/login")
     public String HienThiDangNhap() {
-        return "ViewSmartPhone/login";
+        return "ViewTrendora/login";
     }
 
     @PostMapping("/login")
@@ -88,7 +89,7 @@ public class TaiKhoanController {
         TaiKhoan user = taiKhoanRepository.findByEmailAndMatKhau(email, matKhau);
         if (user == null) {
             model.addAttribute("error", "Sai email hoặc mật khẩu!");
-            return "ViewSmartPhone/login";
+            return "ViewTrendora/login";
         }
         model.addAttribute("user", user);
         if ("1".equalsIgnoreCase(String.valueOf(user.getLoaiTaiKhoan()))){

@@ -1,9 +1,8 @@
-package com.example.SmartPhoneHup.DuAn.controller;
+package com.example.Trendora.DuAn.controller;
 
-import com.example.SmartPhoneHup.DuAn.model.SanPham;
-import com.example.SmartPhoneHup.DuAn.repository.KichThuocRepo;
-import com.example.SmartPhoneHup.DuAn.repository.MauSacRepo;
-import com.example.SmartPhoneHup.DuAn.repository.SanPhamRepo;
+import com.example.Trendora.DuAn.repository.KichThuocRepo;
+import com.example.Trendora.DuAn.repository.MauSacRepo;
+import com.example.Trendora.DuAn.repository.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

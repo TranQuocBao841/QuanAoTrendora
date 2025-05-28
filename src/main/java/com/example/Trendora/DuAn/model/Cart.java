@@ -1,4 +1,4 @@
-package com.example.SmartPhoneHup.DuAn.model;
+package com.example.Trendora.DuAn.model;
 
 import java.math.BigDecimal;
 import java.util.*;

@@ -1,4 +1,4 @@
-package com.example.SmartPhoneHup.DuAn.model;
+package com.example.Trendora.DuAn.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

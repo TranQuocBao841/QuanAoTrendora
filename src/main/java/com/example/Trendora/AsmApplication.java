@@ -1,4 +1,4 @@
-package com.example.SmartPhoneHup;
+package com.example.Trendora;
 
 
 import org.springframework.boot.SpringApplication;

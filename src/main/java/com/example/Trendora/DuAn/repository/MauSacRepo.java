@@ -1,7 +1,7 @@
-package com.example.SmartPhoneHup.DuAn.repository;
+package com.example.Trendora.DuAn.repository;
 
-import com.example.SmartPhoneHup.DuAn.model.HoaDonChiTiet;
-import com.example.SmartPhoneHup.DuAn.model.MauSac;
+
+import com.example.Trendora.DuAn.model.MauSac;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
