@@ -22,6 +22,6 @@ public class KieuDang {
     private String ma;
 
     @Column(name = "kieu_dang")
-    private String kieuDang;
+    private String tenkieuDang;
 }
 

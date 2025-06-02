@@ -22,6 +22,6 @@ public class PhongCach {
     private String ma;
 
     @Column(name = "phong_cach")
-    private String phongCach;
+    private String tenphongCach;
 }
 

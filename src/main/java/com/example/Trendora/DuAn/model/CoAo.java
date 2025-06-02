@@ -22,6 +22,6 @@ public class CoAo {
     private String ma;
 
     @Column(name = "co_ao")
-    private String coAo;
+    private String tencoAo;
 }
 

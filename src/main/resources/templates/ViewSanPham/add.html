@@ -101,7 +101,7 @@
                                         <label>Màu sắc</label>
                                         <select class="form-control" name="mauSac">
                                             <option value="" disabled selected>-- Chọn màu --</option>
-                                            <option th:each="m : ${dsMauSac}" th:value="${m.id}" th:text="${m.mauSac}"></option>
+                                            <option th:each="m : ${dsMauSac}" th:value="${m.id}" th:text="${m.tenmauSac}"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -111,14 +111,14 @@
                                         <label>Kích thước</label>
                                         <select class="form-control" name="kichThuoc">
                                             <option value="" disabled selected>-- Chọn kích thước --</option>
-                                            <option th:each="k : ${dsKichThuoc}" th:value="${k.id}" th:text="${k.kichThuoc}"></option>
+                                            <option th:each="k : ${dsKichThuoc}" th:value="${k.id}" th:text="${k.tenkichThuoc}"></option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Chất liệu</label>
                                         <select class="form-control" th:field="*{chatLieu}">
                                             <option value="" disabled selected>-- Chọn Chất liệu --</option>
-                                            <option th:each="k : ${dsChatLieu}" th:value="${k.id}" th:text="${k.chatLieu}"></option>
+                                            <option th:each="k : ${dsChatLieu}" th:value="${k.id}" th:text="${k.tencl}"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -128,14 +128,14 @@
                                         <label>Cổ áo</label>
                                         <select class="form-control" th:field="*{coAo}">
                                             <option value="" disabled selected>-- Chọn Cổ áo --</option>
-                                            <option th:each="k : ${dsCoAo}" th:value="${k.id}" th:text="${k.coAo}"></option>
+                                            <option th:each="k : ${dsCoAo}" th:value="${k.id}" th:text="${k.tencoAo}"></option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Đường may</label>
                                         <select class="form-control" th:field="*{duongMay}">
                                             <option value="" disabled selected>-- Chọn Đường may --</option>
-                                            <option th:each="k : ${dsDuongMay}" th:value="${k.id}" th:text="${k.duongMay}"></option>
+                                            <option th:each="k : ${dsDuongMay}" th:value="${k.id}" th:text="${k.tenduongMay}"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -145,14 +145,14 @@
                                         <label>Họa tiết</label>
                                         <select class="form-control" th:field="*{hoaTiet}">
                                             <option value="" disabled selected>-- Chọn Họa tiết --</option>
-                                            <option th:each="k : ${dsHoaTiet}" th:value="${k.id}" th:text="${k.hoaTiet}"></option>
+                                            <option th:each="k : ${dsHoaTiet}" th:value="${k.id}" th:text="${k.tenhoaTiet}"></option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Khuy áo</label>
                                         <select class="form-control" th:field="*{khuyAo}">
                                             <option value="" disabled selected>-- Chọn Khuy áo --</option>
-                                            <option th:each="k : ${dsKhuyAo}" th:value="${k.id}" th:text="${k.khuyAo}"></option>
+                                            <option th:each="k : ${dsKhuyAo}" th:value="${k.id}" th:text="${k.tenkhuyAo}"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -162,14 +162,14 @@
                                         <label>Kiểu dáng</label>
                                         <select class="form-control" th:field="*{kieuDang}">
                                             <option value="" disabled selected>-- Chọn Kiểu dáng --</option>
-                                            <option th:each="k : ${dsKieuDang}" th:value="${k.id}" th:text="${k.kieuDang}"></option>
+                                            <option th:each="k : ${dsKieuDang}" th:value="${k.id}" th:text="${k.tenkieuDang}"></option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Phong cách</label>
                                         <select class="form-control" th:field="*{phongCach}">
                                             <option value="" disabled selected>-- Chọn Phong cách --</option>
-                                            <option th:each="k : ${dsPhongCach}" th:value="${k.id}" th:text="${k.phongCach}"></option>
+                                            <option th:each="k : ${dsPhongCach}" th:value="${k.id}" th:text="${k.tenphongCach}"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -179,7 +179,7 @@
                                         <label>Tay áo</label>
                                         <select class="form-control" th:field="*{tayAo}">
                                             <option value="" disabled selected>-- Chọn Tay áo --</option>
-                                            <option th:each="k : ${dsTayAo}" th:value="${k.id}" th:text="${k.tayAo}"></option>
+                                            <option th:each="k : ${dsTayAo}" th:value="${k.id}" th:text="${k.tentayAo}"></option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">

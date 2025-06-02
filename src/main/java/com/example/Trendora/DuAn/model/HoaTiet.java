@@ -22,5 +22,5 @@ public class HoaTiet {
     private String ma;
 
     @Column(name = "hoa_tiet")
-    private String hoaTiet;
+    private String tenhoaTiet;
 }

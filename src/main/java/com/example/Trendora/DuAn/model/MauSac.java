@@ -22,7 +22,7 @@ public class MauSac {
     private String ma;
 
     @Column(name = "mau_sac")
-    private String mauSac;
+    private String tenmauSac;
 }
 
 

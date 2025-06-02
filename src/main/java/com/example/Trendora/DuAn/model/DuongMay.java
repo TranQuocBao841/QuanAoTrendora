@@ -22,5 +22,5 @@ public class DuongMay {
     private String ma;
 
     @Column(name = "duong_may")
-    private String duongMay;
+    private String tenduongMay;
 }

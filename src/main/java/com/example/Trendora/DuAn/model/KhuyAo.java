@@ -22,7 +22,7 @@ public class KhuyAo {
     private String ma;
 
     @Column(name = "khuy_ao")
-    private String khuyAo;
+    private String tenkhuyAo;
 }
 
 

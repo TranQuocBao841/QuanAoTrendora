@@ -22,5 +22,5 @@ public class ChatLieu {
     private String ma;
 
     @Column(name = "chat_lieu")
-    private String chatLieu;
+    private String tencl;
 }
