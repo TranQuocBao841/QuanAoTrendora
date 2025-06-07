@@ -3,7 +3,8 @@ package com.example.Trendora.DuAn.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-
+@Getter
+@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,10 +37,5 @@ public class TaiKhoan {
     private Integer loaiTaiKhoan;
 
     @Column(name = "trang_thai")
-    private Integer trangThai;
+    private Boolean trangThai;
 }
-
-
-
-
-

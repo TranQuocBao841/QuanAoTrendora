@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+    <head th:replace="~{ViewSanPham/layout/head :: head}"></head>
+    <header th:replace="~{ViewSanPham/layout/header :: header}"></header>
+    <aside th:replace="~{ViewSanPham/layout/aside :: aside}"></aside>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                Trang Quản Trị Admin Bán Áo Phông
+                <small>Thông Tin Sản Phẩm</small>
+            </h1>
+        </section>
+
+        <section class="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Chi Tiết Sản Phẩm</h3>
+                </div>
+
+                <div class="box-body">
+                    <div style="display: flex; flex-wrap: wrap; gap: 40px;">
+                        <!-- Ảnh sản phẩm -->
+                        <div style="flex: 1; min-width: 300px;">
+                            <img th:src="@{${sp.anhSanPham}}" alt="Ảnh sản phẩm" style="width: 100%;">
+                        </div>
+
+                        <!-- Thông tin sản phẩm -->
+                        <div style="flex: 2; min-width: 400px;">
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr><th>Mã sản phẩm</th><td th:text="${sp.maSanPham}"></td></tr>
+                                <tr><th>Tên sản phẩm</th><td th:text="${sp.tenSanPham}"></td></tr>
+                                <tr><th>Cổ áo</th><td th:text="${sp.coAo.tencoAo}"></td></tr>
+                                <tr><th>Khuy áo</th><td th:text="${sp.khuyAo.tenkhuyAo}"></td></tr>
+                                <tr><th>Kiểu dáng</th><td th:text="${sp.kieuDang.tenkieuDang}"></td></tr>
+                                <tr><th>Đường may</th><td th:text="${sp.duongMay.tenduongMay}"></td></tr>
+                                <tr><th>Họa tiết</th><td th:text="${sp.hoaTiet.tenhoaTiet}"></td></tr>
+                                <tr><th>Phong cách</th><td th:text="${sp.phongCach.tenphongCach}"></td></tr>
+                                <tr><th>Chất liệu</th><td th:text="${sp.chatLieu.tencl}"></td></tr>
+                                <tr><th>Màu sắc</th><td th:text="${sp.mauSac.tenmauSac}"></td></tr>
+                                <tr><th>Kích thước</th><td th:text="${sp.kichThuoc.tenkichThuoc}"></td></tr>
+                                <tr><th>Tay áo</th><td th:text="${sp.tayAo.tentayAo}"></td></tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Nút thao tác -->
+                            <div style="margin-top: 20px;">
+                                <a th:href="@{'/admin/san-pham/update?id=' + ${sp.id}}" class="btn btn-primary">
+                                    <i class="fa fa-pencil"></i> Sửa
+                                </a>
+                                <a th:href="@{/admin/san-pham/hien-thi}" class="btn btn-default">
+                                    <i class="fa fa-arrow-left"></i> Quay lại
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs"><b>Version</b> 2.4.13</div>
+        <strong>&copy; 2014-2019 <a href="https://adminlte.io/">AdminLTE</a>.</strong> All rights reserved.
+    </footer>
+</div>
+
+<!-- Scripts -->
+<script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/bower_components/jquery-ui/jquery-ui.min.js}"></script>
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script th:src="@{/assets/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/dist/js/adminlte.min.js}"></script>
+
+</body>
+</html>
+

@@ -49,6 +49,8 @@ public class AdminSanPhamController {
     @Autowired
     HoaTietRepo hoaTietRepo;
 
+    @Autowired
+    DanhMucRepo danhMucRepo;
     @GetMapping("hien-thi")
     public String Hienthi(Model model){
         model.addAttribute("list",sanPhamRepo.findAll());
@@ -69,6 +71,7 @@ public class AdminSanPhamController {
         model.addAttribute("dsPhongCach",phongCachRepo.findAll());
         model.addAttribute("dsTayAo",tayAoRepo.findAll());
         model.addAttribute("dsHoaTiet",hoaTietRepo.findAll());
+        model.addAttribute("dsDanhMuc",danhMucRepo.findAll());
         return "/ViewSanPham/add";
     }
 

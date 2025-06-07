@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{ViewSanPham/layout/head :: head}"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<div class="wrapper">
+
+    <header th:replace="~{ViewSanPham/layout/header :: header}"></header>
+    <aside th:replace="~{ViewSanPham/layout/aside :: aside}"></aside>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                Trang Quản Trị Admin Bán Áo Phông
+                <small>Danh Mục - Cập nhật</small>
+            </h1>
+        </section>
+
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Cập nhật danh mục</h3>
+                </div>
+
+                <div class="box box-primary">
+                    <form role="form" th:action="@{/danh-muc/update}" method="post" th:object="${danhMuc}">
+                        <div class="box-body">
+                            <div class="row">
+
+                                <!-- ID (ẩn hoặc readonly) -->
+                                <div class="form-group col-md-6">
+                                    <label>ID Danh Mục</label>
+                                    <input type="text" class="form-control" th:field="*{id}" readonly />
+                                </div>
+
+                                <!-- Mã danh mục -->
+                                <div class="form-group col-md-6">
+                                    <label>Mã Danh Mục</label>
+                                    <input type="text" class="form-control" th:field="*{ma}" placeholder="Mã danh mục" />
+                                    <p class="text-danger" th:if="${#fields.hasErrors('ma')}" th:errors="*{ma}"></p>
+                                </div>
+
+                                <!-- Tên danh mục -->
+                                <div class="form-group col-md-6">
+                                    <label>Tên Danh Mục</label>
+                                    <input type="text" class="form-control" th:field="*{tendanhMuc}" placeholder="Tên danh mục" />
+                                    <p class="text-danger" th:if="${#fields.hasErrors('tendanhMuc')}" th:errors="*{tendanhMuc}"></p>
+                                </div>
+
+                                <!-- Trạng thái -->
+                                <div class="form-group col-md-6">
+                                    <label>Trạng thái</label><br>
+                                    <label class="radio-inline">
+                                        <input type="radio" th:field="*{trangThai}" value="1" /> Còn hàng
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" th:field="*{trangThai}" value="0" /> Hết hàng
+                                    </label>
+                                    <p class="text-danger" th:if="${#fields.hasErrors('trangThai')}" th:errors="*{trangThai}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            <a th:href="@{/danh-muc/hien-thi}" class="btn btn-default">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs"><b>Version</b> 2.4.13</div>
+        <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io/">AdminLTE</a>.</strong> All rights reserved.
+    </footer>
+</div>
+
+<!-- Scripts -->
+<script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/assets/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/dist/js/adminlte.min.js}"></script>
+
+</body>
+</html>

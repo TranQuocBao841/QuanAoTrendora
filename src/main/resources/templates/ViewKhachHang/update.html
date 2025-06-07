@@ -1,66 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Update Khách Hàng</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{ViewSanPham/layout/head :: head}"></head>
 
-<!-- Form Update Thông Tin Khách Hàng -->
-<div class="container mt-5">
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">Update Khách Hàng</div>
-        <div class="card-body">
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
 
-            <!-- Hiển thị Ảnh Đại Diện -->
-            <div class="text-center mb-4">
-                <img src="https://tse4.mm.bing.net/th?id=OIP.8WO2GDRro_B4Bd74IKbogQHaHa&pid=Api&P=0&h=180">
+    <header th:replace="~{ViewSanPham/layout/header :: header}"></header>
+
+    <aside th:replace="~{ViewSanPham/layout/aside :: aside}"></aside>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                Cập Nhật Khách Hàng
+                <small>Chỉnh sửa thông tin khách hàng</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="/khach-hang/hien-thi">Khách hàng</a></li>
+                <li class="active">Cập nhật</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Thông tin khách hàng</h3>
+                </div>
+
+                <form th:action="@{/khach-hang/update}" th:object="${kh}" method="post">
+                    <div class="box-body">
+                        <input type="hidden" th:field="*{idKh}"/>
+
+                        <div class="form-group">
+                            <label for="maKh">Mã KH</label>
+                            <input type="text" th:field="*{maKh}" class="form-control" id="maKh" placeholder="Nhập mã khách hàng" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tenKh">Tên KH</label>
+                            <input type="text" th:field="*{tenKh}" class="form-control" id="tenKh" placeholder="Nhập tên khách hàng" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Giới tính</label><br>
+                            <label>
+                                <input type="radio" th:field="*{gioiTinh}" value="true" checked> Nam
+                            </label>
+                            <label style="margin-left: 10px;">
+                                <input type="radio" th:field="*{gioiTinh}" value="false"> Nữ
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ngaySinh">Ngày sinh</label>
+                            <input type="text" th:field="*{ngaySinh}"  class="form-control" id="ngaySinh" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="diaChi">Địa chỉ</label>
+                            <input type="text" th:field="*{diaChi}" class="form-control" id="diaChi" placeholder="Nhập địa chỉ">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sdt">SĐT</label>
+                            <input type="text" th:field="*{sdt}" class="form-control" id="sdt" placeholder="Nhập số điện thoại">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Nhập email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quocTich">Quốc tịch</label>
+                            <input type="text" th:field="*{quocTich}" class="form-control" id="quocTich" placeholder="Nhập quốc tịch">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Trạng thái</label>
+                            <select class="form-control" th:field="*{trangThai}">
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Không hoạt động</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        <a th:href="@{/khach-hang/hien-thi}" class="btn btn-default">Hủy</a>
+                    </div>
+                </form>
             </div>
-
-            <form action="/khach-hang/update" method="post" enctype="multipart/form-data">
-
-                <div class="mb-3">
-                    <label for="id" class="form-label">ID Khách Hàng</label>
-                    <input type="text" id="id" name="id" class="form-control" placeholder="Nhập id" th:value="${kh.id}" required readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label for="ten" class="form-label">Tên Khách Hàng</label>
-                    <input type="text" id="ten" name="ten" class="form-control" placeholder="Nhập tên" th:value="${kh.ten}" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="email" class="form-label">Emai Khách Hàng</label>
-                    <input type="text" id="email" name="email" class="form-control" placeholder="Nhập Email" th:value="${kh.email}" required>
-                </div>
-
-
-
-                <div class="mb-3">
-                    <label for="maKh" class="form-label">Mã Khách Hàng</label>
-                    <input type="text" id="maKh" name="maKh" class="form-control" placeholder="Nhập mã khách hàng" th:value="${kh.maKh}" required>
-                </div>
-
-
-                <label class="form-label">Trạng Thái</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="trangThai" value="1" id="active" th:checked="${kh.trangThai == 1}" required>
-                    <label class="form-check-label" for="active">Hoạt Động</label>
-                </div>
-
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="radio" name="trangThai" value="0" id="inactive" th:checked="${kh.trangThai == 0}" required>
-                    <label class="form-check-label" for="inactive">Không Hoạt Động</label>
-                </div>
-
-                <button type="submit" class="btn btn-success">Update Khách Hàng</button>
-            </form>
-        </div>
-        <a href="/khach-hang/hien-thi" class="btn btn-secondary">Quay Lại Danh Sách</a>
+        </section>
     </div>
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.4.13
+        </div>
+        <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io/">AdminLTE</a>.</strong>
+        All rights reserved.
+    </footer>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Các script -->
+<script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/assets/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/dist/js/adminlte.min.js}"></script>
+
 </body>
 </html>

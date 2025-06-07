@@ -50,6 +50,7 @@ public class TaiKhoanController {
         taiKhoan.setMatKhau(matKhau);
         taiKhoan.setEmail(email);
         taiKhoan.setLoaiTaiKhoan(2); // Mặc định là khách hàng
+        taiKhoan.setTrangThai(true); //mặc định hoạt động
 
         // Kiểm tra xem khách hàng đã tồn tại chưa
         KhachHang khachHang = khachHangRepository.findByEmail(email);
@@ -84,18 +85,28 @@ public class TaiKhoanController {
     @PostMapping("/login")
     public String login(@RequestParam String email,
                         @RequestParam String matKhau,
-
                         Model model) {
+
         TaiKhoan user = taiKhoanRepository.findByEmailAndMatKhau(email, matKhau);
+
         if (user == null) {
             model.addAttribute("error", "Sai email hoặc mật khẩu!");
             return "ViewTrendora/login";
         }
+
+        // Kiểm tra trạng thái tài khoản
+        if (!user.getTrangThai()) {
+            model.addAttribute("error", "Tài khoản của bạn đã bị khóa hoặc ngừng hoạt động!");
+            return "ViewTrendora/login";
+        }
+
         model.addAttribute("user", user);
-        if ("1".equalsIgnoreCase(String.valueOf(user.getLoaiTaiKhoan()))){
+
+        if ("1".equalsIgnoreCase(String.valueOf(user.getLoaiTaiKhoan()))) {
             return "redirect:/admin/san-pham/hien-thi"; // Trang quản lý dành cho nhân viên
         } else {
             return "redirect:/san-pham/hien-thi"; // Trang bình thường dành cho khách hàng
         }
     }
+
 }

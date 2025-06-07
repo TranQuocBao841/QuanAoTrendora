@@ -11,4 +11,5 @@ import java.util.List;
 public interface KhachHangRepo extends JpaRepository<KhachHang,Integer> {
    KhachHang findByEmail(String email);
 
+   List<KhachHang> findByMaKhContainingIgnoreCase(String maKh);
 }

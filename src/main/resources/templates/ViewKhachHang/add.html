@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{ViewSanPham/layout/head :: head}"></head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+
+    <header th:replace="~{ViewSanPham/layout/header :: header}"></header>
+
+    <aside th:replace="~{ViewSanPham/layout/aside :: aside}"></aside>
+
+    <div class="content-wrapper">
+
+        <section class="content-header">
+            <h1>
+                Thêm Khách Hàng Mới
+                <small>Form thêm khách hàng</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="/khach-hang/hien-thi">Danh Sách Khách Hàng</a></li>
+                <li class="active">Thêm Khách Hàng</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Thông tin khách hàng</h3>
+                    </div>
+
+                    <form th:action="@{/khach-hang/add}" method="post" th:object="${khachHang}" class="form-horizontal" style="padding: 15px;">
+
+                        <div class="form-group">
+                            <label for="maKh" class="col-sm-2 control-label">Mã KH</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="maKh" th:field="*{maKh}" placeholder="Mã khách hàng">
+                                <p th:if="${#fields.hasErrors('maKh')}" th:errors="*{maKh}" style="color:red"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tenKh" class="col-sm-2 control-label">Tên KH</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="tenKh" th:field="*{tenKh}" placeholder="Tên khách hàng">
+                                <p th:if="${#fields.hasErrors('tenKh')}" th:errors="*{tenKh}" style="color:red"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gioiTinh" class="col-sm-2 control-label">Giới tính</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="gioiTinh" th:field="*{gioiTinh}">
+                                    <option value="">-- Chọn giới tính --</option>
+                                    <option value="true">Nam</option>
+                                    <option value="false">Nữ</option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('gioiTinh')}" th:errors="*{gioiTinh}" style="color:red"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ngaySinh" class="col-sm-2 control-label">Ngày sinh</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="ngaySinh" th:field="*{ngaySinh}">
+                                <p th:if="${#fields.hasErrors('ngaySinh')}" th:errors="*{ngaySinh}" style="color:red"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="diaChi" class="col-sm-2 control-label">Địa chỉ</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="diaChi" th:field="*{diaChi}" placeholder="Địa chỉ">
+                                <p th:if="${#fields.hasErrors('diaChi')}" th:errors="*{diaChi}" style="color:red"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sdt" class="col-sm-2 control-label">SĐT</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="sdt" th:field="*{sdt}" placeholder="Số điện thoại">
+                                <p th:if="${#fields.hasErrors('sdt')}" th:errors="*{sdt}" style="color:red"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email">
+                                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quocTich" class="col-sm-2 control-label">Quốc tịch</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="quocTich" th:field="*{quocTich}" placeholder="Quốc tịch">
+                                <p th:if="${#fields.hasErrors('quocTich')}" th:errors="*{quocTich}" style="color:red"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="trangThai" class="col-sm-2 control-label">Trạng thái</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="trangThai" th:field="*{trangThai}">
+                                    <option value="">-- Chọn trạng thái --</option>
+                                    <option value="1">Hoạt động</option>
+                                    <option value="0">Không hoạt động</option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('trangThai')}" th:errors="*{trangThai}" style="color:red"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                                <a href="/khach-hang/hien-thi" class="btn btn-default">Hủy</a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.4.13
+        </div>
+        <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io/">AdminLTE</a>.</strong> All rights
+        reserved.
+    </footer>
+
+</div>
+
+<script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/assets/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/dist/js/adminlte.min.js}"></script>
+
+</body>
+</html>
