@@ -1,0 +1,87 @@
+<div th:fragment="header" class="printmax-header-area upper" id="sticky-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-lg-3 pt-10">
+                <div class="header-logo">
+                    <a class="active_logo" href="/san-pham/trang-chu"
+                    ><img th:src="@{/fe/images/thuonghieuht.png}" alt="logo" style="max-height: 60px ; width: auto"
+                    /></a>
+                    <a class="logo_two" href="index.html"
+                    ><img th:src="@{/fe/images/thuonghieuht.png}" alt="logo" style="max-height: 60px ; width: auto"
+                    /></a>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="header-menu">
+                    <ul class="nav_scroll">
+                        <li>
+                            <a href="/san-pham/trang-chu"
+                            >Home</a>
+
+                        </li>
+                        <li><a href="about.html">About</a></li>
+                        <li>
+                            <a href="#"
+                            >Page <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="service.html">Our Service</a></li>
+                                <li><a href="service-details.html">Service Details</a></li>
+                                <li><a href="team.html">Our Team</a></li>
+                                <li><a href="portfolio.html">Portfolio</a></li>
+                                <li>
+                                    <a href="portfolio-details.html">Portfolio Details</a>
+                                </li>
+                                <li><a href="checkout.html">Checkout</a></li>
+                                <li><a href="cart.html">Cart</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"
+                            >Shop <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="/san-pham/hien-thi">Shop</a></li>
+                                <li><a href="shop-two.html">Shop Two</a></li>
+                                <li><a href="shop-details.html">Shop Details</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"
+                            >Blog <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="blog-details.html">Blog Details</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                    <div class="header_right">
+                        <button class="cart_btn headers-button"
+                                type="button"
+                                th:onclick="'window.location.href=\'/gio-hang/hien-thi\''">
+                            <i class="bi bi-cart3"></i>
+                            <small class="cart_counter">0</small>
+                        </button>
+
+
+                        <div class="header-button printmax_btn">
+                            <a href="contact.html"
+                            >Get Started <i class="bi bi-chevron-double-right"></i>
+                                <span></span
+                                ></a>
+                        </div>
+                        <div class="sidebar-btn">
+                            <div class="nav-btn navSidebar-button">
+                                <span><i class="bi bi-text-left"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

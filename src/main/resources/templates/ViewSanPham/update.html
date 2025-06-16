@@ -207,6 +207,17 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
+                                        <label>Danh mục</label>
+                                        <select name="danhMuc" class="form-control" required>
+                                            <option th:each="dm : ${dsDanhMuc}"
+                                                    th:value="${dm.id}"
+                                                    th:text="${dm.tendanhMuc}"
+                                                    th:selected="${dm.id == sp.danhMuc.id}">
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
                                         <label>Mô tả</label>
                                         <textarea class="form-control" name="moTa" th:text="${sp.moTa}" rows="3"  placeholder="Nhập mô tả ..."></textarea>
                                     </div>

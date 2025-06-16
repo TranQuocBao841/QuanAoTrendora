@@ -48,165 +48,190 @@
                 <!-- /.box-header -->
 
                 <div class="box box-primary">
-                    <form role="form" th:action="@{/admin/san-pham/add}" th:object="${sp}" method="post" enctype="multipart/form-data">
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Thêm Sản Phẩm</h3>
+                    <div class="container py-4">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h3 class="mb-0">Thêm Sản Phẩm</h3>
                             </div>
-                            <div class="box-body">
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label>Mã Sản Phẩm</label>
-                                        <input type="text" class="form-control" name="maSanPham" placeholder="Mã Sản Phẩm">
+                            <form th:action="@{/admin/san-pham/add}" th:object="${sp}" method="post" enctype="multipart/form-data">
+                                <!-- THÔNG TIN CƠ BẢN -->
+                                <div class="card-body">
+                                    <h5 class="text-secondary">Thông tin cơ bản</h5>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Mã Sản Phẩm</label>
+                                            <input type="text" class="form-control" th:field="*{maSanPham}" placeholder="Mã Sản Phẩm">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('maSanPham')}" th:errors="*{maSanPham}"></div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Tên Sản Phẩm</label>
+                                            <input type="text" class="form-control" th:field="*{tenSanPham}" placeholder="Tên Sản Phẩm">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('tenSanPham')}" th:errors="*{tenSanPham}"></div>
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Tên Sản Phẩm</label>
-                                        <input type="text" class="form-control" name="tenSanPham" placeholder="Tên Sản Phẩm">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label>URL Ảnh Sản Phẩm</label>
-                                        <input type="url" class="form-control" name="anhSanPham" placeholder="Nhập URL ảnh sản phẩm" id="imageURLInput">
-                                        <img id="imagePreview" src="" alt="Preview ảnh" style="margin-top:10px; max-width:100%; display:none;">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Ngày Sản Phẩm</label>
-                                        <input type="date" class="form-control" name="ngay">
-                                    </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label>Số Lượng Sản Phẩm</label>
-                                        <input type="number" class="form-control" name="soLuong" placeholder="Số Lượng">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>URL Ảnh Sản Phẩm</label>
+                                            <input type="url" class="form-control" name="anhSanPham" th:value="${sp.anhSanPham}" placeholder="Nhập URL ảnh sản phẩm" id="imageURLInput">
+                                            <img id="imagePreview" src="" alt="Preview ảnh" style="margin-top:10px; max-width:100%; display:none;">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Ngày Sản Phẩm</label>
+                                            <input type="date" class="form-control" th:field="*{ngay}">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('ngay')}" th:errors="*{ngay}"></div>
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Giá Sản Phẩm</label>
-                                        <input type="number" class="form-control" name="gia" placeholder="Giá Sản Phẩm">
-                                    </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Số Lượng</label>
+                                            <input type="number" class="form-control" th:field="*{soLuong}" placeholder="Số Lượng">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('soLuong')}" th:errors="*{soLuong}"></div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Giá Sản Phẩm</label>
+                                            <input type="number" class="form-control" th:field="*{gia}" placeholder="Giá Sản Phẩm">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('gia')}" th:errors="*{gia}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label>Trạng thái</label><br>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="trangThai" value="1"> Còn hàng
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="trangThai" value="0"> Hết hàng
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Màu sắc</label>
-                                        <select class="form-control" name="mauSac">
-                                            <option value="" disabled selected>-- Chọn màu --</option>
-                                            <option th:each="m : ${dsMauSac}" th:value="${m.id}" th:text="${m.tenmauSac}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label>Kích thước</label>
-                                        <select class="form-control" name="kichThuoc">
-                                            <option value="" disabled selected>-- Chọn kích thước --</option>
-                                            <option th:each="k : ${dsKichThuoc}" th:value="${k.id}" th:text="${k.tenkichThuoc}"></option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Chất liệu</label>
-                                        <select class="form-control" th:field="*{chatLieu}">
-                                            <option value="" disabled selected>-- Chọn Chất liệu --</option>
-                                            <option th:each="k : ${dsChatLieu}" th:value="${k.id}" th:text="${k.tencl}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label>Cổ áo</label>
-                                        <select class="form-control" th:field="*{coAo}">
-                                            <option value="" disabled selected>-- Chọn Cổ áo --</option>
-                                            <option th:each="k : ${dsCoAo}" th:value="${k.id}" th:text="${k.tencoAo}"></option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Đường may</label>
-                                        <select class="form-control" th:field="*{duongMay}">
-                                            <option value="" disabled selected>-- Chọn Đường may --</option>
-                                            <option th:each="k : ${dsDuongMay}" th:value="${k.id}" th:text="${k.tenduongMay}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label>Họa tiết</label>
-                                        <select class="form-control" th:field="*{hoaTiet}">
-                                            <option value="" disabled selected>-- Chọn Họa tiết --</option>
-                                            <option th:each="k : ${dsHoaTiet}" th:value="${k.id}" th:text="${k.tenhoaTiet}"></option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Khuy áo</label>
-                                        <select class="form-control" th:field="*{khuyAo}">
-                                            <option value="" disabled selected>-- Chọn Khuy áo --</option>
-                                            <option th:each="k : ${dsKhuyAo}" th:value="${k.id}" th:text="${k.tenkhuyAo}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label>Kiểu dáng</label>
-                                        <select class="form-control" th:field="*{kieuDang}">
-                                            <option value="" disabled selected>-- Chọn Kiểu dáng --</option>
-                                            <option th:each="k : ${dsKieuDang}" th:value="${k.id}" th:text="${k.tenkieuDang}"></option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Phong cách</label>
-                                        <select class="form-control" th:field="*{phongCach}">
-                                            <option value="" disabled selected>-- Chọn Phong cách --</option>
-                                            <option th:each="k : ${dsPhongCach}" th:value="${k.id}" th:text="${k.tenphongCach}"></option>
-                                        </select>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" th:field="*{trangThai}" value="1" id="conHang">
+                                            <label class="form-check-label" for="conHang">Còn hàng</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" th:field="*{trangThai}" value="0" id="hetHang">
+                                            <label class="form-check-label" for="hetHang">Hết hàng</label>
+                                        </div>
                                     </div>
 
-                                    <div class="form-group col-md-6">
-                                        <label>Phong cách</label>
-                                        <select class="form-control" th:field="*{danhMuc}">
-                                            <option value="" disabled selected>-- Chọn Danh Mục Sản Phẩm --</option>
-                                            <option th:each="k : ${dsDanhMuc}" th:value="${k.id}" th:text="${k.tendanhMuc}"></option>
-                                        </select>
-                                    </div>
-                                </div>
+                                    <hr class="my-4">
 
-                                <div class="row">
-                                    <div class="form-group col-md-6">
+                                    <!-- THÔNG TIN CHI TIẾT -->
+                                    <h5 class="text-secondary">Thông tin chi tiết</h5>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Màu sắc</label>
+                                            <select class="form-control" th:field="*{mauSac}">
+                                                <option value="" disabled selected>-- Chọn màu --</option>
+                                                <option th:each="m : ${dsMauSac}" th:value="${m.id}" th:text="${m.tenmauSac}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('mauSac')}" th:errors="*{mauSac}"></div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Kích thước</label>
+                                            <select class="form-control" th:field="*{kichThuoc}">
+                                                <option value="" disabled selected>-- Chọn kích thước --</option>
+                                                <option th:each="k : ${dsKichThuoc}" th:value="${k.id}" th:text="${k.tenkichThuoc}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('kichThuoc')}" th:errors="*{kichThuoc}"></div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Chất liệu</label>
+                                            <select class="form-control" th:field="*{chatLieu}">
+                                                <option value="" disabled selected>-- Chọn chất liệu --</option>
+                                                <option th:each="k : ${dsChatLieu}" th:value="${k.id}" th:text="${k.tencl}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('chatLieu')}" th:errors="*{chatLieu}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Cổ áo</label>
+                                            <select class="form-control" th:field="*{coAo}">
+                                                <option value="" disabled selected>-- Chọn cổ áo --</option>
+                                                <option th:each="k : ${dsCoAo}" th:value="${k.id}" th:text="${k.tencoAo}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('coAo')}" th:errors="*{coAo}"></div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Đường may</label>
+                                            <select class="form-control" th:field="*{duongMay}">
+                                                <option value="" disabled selected>-- Chọn đường may --</option>
+                                                <option th:each="k : ${dsDuongMay}" th:value="${k.id}" th:text="${k.tenduongMay}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('duongMay')}" th:errors="*{duongMay}"></div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Họa tiết</label>
+                                            <select class="form-control" th:field="*{hoaTiet}">
+                                                <option value="" disabled selected>-- Chọn họa tiết --</option>
+                                                <option th:each="k : ${dsHoaTiet}" th:value="${k.id}" th:text="${k.tenhoaTiet}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('hoaTiet')}" th:errors="*{hoaTiet}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Khuy áo</label>
+                                            <select class="form-control" th:field="*{khuyAo}">
+                                                <option value="" disabled selected>-- Chọn khuy áo --</option>
+                                                <option th:each="k : ${dsKhuyAo}" th:value="${k.id}" th:text="${k.tenkhuyAo}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('khuyAo')}" th:errors="*{khuyAo}"></div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Kiểu dáng</label>
+                                            <select class="form-control" th:field="*{kieuDang}">
+                                                <option value="" disabled selected>-- Chọn kiểu dáng --</option>
+                                                <option th:each="k : ${dsKieuDang}" th:value="${k.id}" th:text="${k.tenkieuDang}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('kieuDang')}" th:errors="*{kieuDang}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Phong cách</label>
+                                            <select class="form-control" th:field="*{phongCach}">
+                                                <option value="" disabled selected>-- Chọn phong cách --</option>
+                                                <option th:each="k : ${dsPhongCach}" th:value="${k.id}" th:text="${k.tenphongCach}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('phongCach')}" th:errors="*{phongCach}"></div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Danh mục</label>
+                                            <select class="form-control" th:field="*{danhMuc}">
+                                                <option value="" disabled selected>-- Chọn danh mục --</option>
+                                                <option th:each="k : ${dsDanhMuc}" th:value="${k.id}" th:text="${k.tendanhMuc}"></option>
+                                            </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('danhMuc')}" th:errors="*{danhMuc}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label>Tay áo</label>
                                         <select class="form-control" th:field="*{tayAo}">
-                                            <option value="" disabled selected>-- Chọn Tay áo --</option>
+                                            <option value="" disabled selected>-- Chọn tay áo --</option>
                                             <option th:each="k : ${dsTayAo}" th:value="${k.id}" th:text="${k.tentayAo}"></option>
                                         </select>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('tayAo')}" th:errors="*{tayAo}"></div>
                                     </div>
-                                    <div class="form-group col-md-6">
+
+                                    <hr class="my-4">
+
+                                    <!-- MÔ TẢ -->
+                                    <div class="form-group">
                                         <label>Mô tả</label>
-                                        <textarea class="form-control" name="moTa" rows="3" placeholder="Nhập mô tả ..."></textarea>
+                                        <textarea class="form-control" th:field="*{moTa}" rows="3" placeholder="Nhập mô tả..."></textarea>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('moTa')}" th:errors="*{moTa}"></div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="box-footer">
-                                <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
-                            </div>
+                                <!-- NÚT SUBMIT -->
+                                <div class="card-footer d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-success">Thêm sản phẩm</button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
-
+                    </div>
                 </div>
-                <!-- /.box-body -->
             </div>
-            <!-- /.box -->
         </div>
 
 
@@ -215,11 +240,11 @@
     <!-- /.content-wrapper -->
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>Version</b> 2.4.13
+            <b>Phiên bản</b> 1.0.0
         </div>
-        <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io/">AdminLTE</a>.</strong> All rights
-        reserved.
+        <strong>&copy; 2025 <a href="#">Trendora</a>.</strong> Hệ thống quản trị bán áo phông. Thiết kế và phát triển bởi nhóm IT Trendora.
     </footer>
+
 </div>
 
 <script>

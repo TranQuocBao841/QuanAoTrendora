@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Mirrored from html.tf.dreamitsolution.net/printmax/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 12:11:24 GMT -->
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Wellcome to Trendora</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        .cart-thumb { width: 80px; height: 80px; object-fit: cover; }
+        .remove-btn { border: none; background: transparent; color: red; font-size: 1.2rem; }
+        .product-quantity-count input { width: 60px; text-align: center; }
+    </style>
+    <!-- Favicon -->
+    <link
+            rel="icon"
+            type="image/png"
+            sizes="56x56"
+            th:href="@{/fe/images/fav-icon/icon.png}"
+    />
+    <!-- bootstrap CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/bootstrap.min.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- carousel CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/owl.carousel.min.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- animate CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/animate.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- animated-text CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/animated-text.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- font-awesome CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/all.min.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- theme-default CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/theme-default.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- meanmenu CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/meanmenu.min.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- transitions CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/owl.transitions.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- venobox CSS -->
+    <link
+            rel="stylesheet"
+            href="venobox/venobox.css"
+            type="text/css"
+            media="all"
+    />
+    <!-- flaticon -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/bootstrap-icons.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- bootstrap icons -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/flaticon.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- Main Style CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/style.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- responsive CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/responsive.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- Coustom Animation CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/coustom-animation.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- odometer CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/odometer-theme-default.css}"
+            type="text/css"
+            media="all"
+    />
+
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/scroll-up.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- modernizr js -->
+    <script th:src="@{/fe/js/vendor/modernizr-3.5.0.min.js}"></script>
+</head>
+
+<body>
+<!--========= End Prealoader ============== -->
+
+<!-- ======= Start Topber Area  -->
+<section class="topber_area">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-lg-4">
+                <div class="topber_right_social">
+                    <h4 class="topber_follow">FOLLOW US :</h4>
+                    <ul>
+                        <li>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        </li>
+                        <li>
+                            <a class="top-social-icon-left" href="#"
+                            ><i class="fa-brands fa-x-twitter"></i
+                            ></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="top_print_text">
+                    <p>The Best Printing Agency in California, USA</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="header-address-info">
+                    <p>
+                        <i class="bi bi-headset-vr"></i><span>+123 (4567) 890</span
+                    ><i class="bi bi-telephone-fill"></i
+                    ><span>example@gmail.com</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ======= End Topber Area  -->
+
+<!--==================================================-->
+<!-- Start printmax Header Area-->
+<!--==================================================-->
+<div class="printmax-header-area style_two" id="sticky-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-lg-5">
+                <div class="header-menu">
+                    <ul class="nav_scroll">
+                        <li>
+                            <a href="/san-pham/trang-chu"
+                            >Home <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="/san-pham/trang-chu">Home Trendora</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="about.html">About</a></li>
+                        <li>
+                            <a href="#"
+                            >Page <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="service.html">Our Service</a></li>
+                                <li><a href="service-details.html">Service Details</a></li>
+                                <li><a href="team.html">Our Team</a></li>
+                                <li><a href="portfolio.html">Portfolio</a></li>
+                                <li>
+                                    <a href="portfolio-details.html">Portfolio Details</a>
+                                </li>
+                                <li><a href="checkout.html">Checkout</a></li>
+                                <li><a href="cart.html">Cart</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/san-pham/hien-thi"
+                            >Shop <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="/san-pham/hien-thi">Shop</a></li>
+
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"
+                            >Blog <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="blog-details.html">Blog Details</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="header-logo">
+                    <a class="active_logo" href="index.html"
+                    ><img th:src="@{/fe/images/thuonghieuht.png}" alt="logo" style="max-height: 60px ; width: auto"
+                    /></a>
+                    <a class="logo_two" href="index.html"
+                    ><img th:src="@{/fe/images/thuonghieuht.png}"  alt="logo" style="max-height: 60px ; width: auto"
+                    /></a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="header_right style_two">
+                    <div class="search-containers">
+                        <form action="#">
+                            <input type="text" placeholder="Search.." name="search" />
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                    <button class="cart_btn headers-button" type="button">
+                        <i class="bi bi-cart3"></i>
+                        <small class="cart_counter">0</small>
+                    </button>
+                    <div class="header-button printmax_btn">
+                        <a href="contact.html"
+                        >Get Started <i class="bi bi-chevron-double-right"></i>
+                            <span></span
+                            ></a>
+                    </div>
+                    <div class="sidebar-btn">
+                        <div class="nav-btn navSidebar-button">
+                            <span><i class="bi bi-grid-3x3-gap"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==================================================-->
+<!-- End printmax Header Area -->
+<!--==================================================-->
+
+<!--========= Start Mobile Memu========== -->
+
+<div class="mobile-menu-area sticky d-sm-block d-md-block d-lg-none">
+    <div class="mobile-menu">
+        <nav class="header-menu">
+            <div class="mobile-logo">
+                <a class="logo_two" href="index.html"
+                ><img th:src="@{/fe/images/thuonghieuht.png}"  alt="logo" style="max-height: 60px ; width: auto"
+                /></a>
+            </div>
+            <ul class="nav_scroll">
+                <li>
+                    <a href="/san-pham/trang-chu">Home</a>
+                    <ul class="sub_menu">
+                        <li><a href="/san-pham/trang-chu">Home Version 01</a></li>
+
+                    </ul>
+                </li>
+                <li><a href="about.html">About</a></li>
+                <li>
+                    <a href="#">Page</a>
+                    <ul class="sub_menu">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="service.html">Our Service</a></li>
+                        <li><a href="service-details.html">Service Details</a></li>
+                        <li><a href="team.html">Our Team</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                        <li><a href="portfolio-details.html">Portfolio Details</a></li>
+                        <li><a href="checkout.html">Checkout</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/san-pham/hien-thi">Shop</a>
+                    <ul class="sub_menu">
+                        <li><a href="/san-pham/hien-thi">Shop</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Blog</a>
+                    <ul class="sub_menu">
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="blog-details.html">Blog Details</a></li>
+                    </ul>
+                </li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!--========= End Mobile Memu========== -->
+
+<!-- Sidebar Cart Item -->
+<div class="xs-sidebar-group info-group">
+    <div class="xs-overlay xs-bg-black"></div>
+    <div class="xs-sidebar-widget">
+        <div class="sidebar-widget-container">
+            <div class="widget-heading">
+                <a href="#" class="close-side-widget">
+                    <i class="far fa-times-circle"></i>
+                </a>
+            </div>
+            <div class="sidebar-textwidget">
+                <!-- Sidebar Info Content -->
+                <div class="sidebar-info-contents">
+                    <div class="content-inner">
+                        <div class="nav-logo">
+                            <a href="index.html"
+                            ><img th:src="@{/fe/images/thuonghieuht.png}"  alt="logo" style="max-height: 60px ; width: auto"
+                            /></a>
+                        </div>
+                        <div class="row padding-two">
+                            <div class="col-lg-6">
+                                <div class="content-thumb-box">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img1.png}"
+                                            alt=""
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="content-thumb-box">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img2.png}"
+                                            alt=""
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="content-thumb-box">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img3.png}"
+                                            alt=""
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="content-thumb-box">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img4.png}"
+                                            alt=""
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contact-info">
+                            <h2>Contact Info</h2>
+                            <ul class="list-style-one">
+                                <li>
+                                    <i class="bi bi-envelope"></i>Chicago 12, Melborne City,
+                                    USA
+                                </li>
+                                <li><i class="bi bi-envelope"></i>(+001) 123-456-7890</li>
+                                <li><i class="bi bi-envelope"></i>Example.com</li>
+                                <li>
+                                    <i class="bi bi-envelope"></i>Week Days: 09.00 to 18.00
+                                    Sunday: Closed
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Social Box -->
+                        <ul class="social-box">
+                            <li class="facebook">
+                                <a href="#" class="fab fa-facebook-f"></a>
+                            </li>
+                            <li class="twitter">
+                                <a href="#" class="fab fa-instagram"></a>
+                            </li>
+                            <li class="linkedin">
+                                <a href="#" class="fa-brands fa-x-twitter"></a>
+                            </li>
+                            <li class="instagram">
+                                <a href="#" class="fab fa-pinterest-p"></a>
+                            </li>
+                            <li class="youtube">
+                                <a href="#" class="fab fa-linkedin-in"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==================================================-->
+<!-- End Buddy Sidebar Section Here -->
+<!--==================================================-->
+<div class="sidebar-menu-wrapper">
+    <div class="cart_sidebar">
+        <button type="button" class="close_btn">
+            <i class="fas fa-times"></i>
+        </button>
+        <h2 class="heading_title text-uppercase">
+            Cart Items - <span>4</span>
+        </h2>
+
+        <div class="cart_items_list">
+            <div class="cart_item">
+                <div class="item_image">
+                    <img th:src="@{/fe/images/home_one/collection1.jpg}" alt="" />
+                </div>
+                <div class="item_content">
+                    <h4 class="item_title">
+                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
+                    </h4>
+                    <span class="item_price">$19.00</span>
+                    <button type="button" class="remove_btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="cart_item">
+                <div class="item_image">
+                    <img th:src="@{/fe/images/home_one/collection2.jpg}" alt="" />
+                </div>
+                <div class="item_content">
+                    <h4 class="item_title">
+                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
+                    </h4>
+                    <span class="item_price">$19.00</span>
+                    <button type="button" class="remove_btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="cart_item">
+                <div class="item_image">
+                    <img th:src="@{/fe/images/home_one/collection3.jpg}" alt="" />
+                </div>
+                <div class="item_content">
+                    <h4 class="item_title">
+                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
+                    </h4>
+                    <span class="item_price">$19.00</span>
+                    <button type="button" class="remove_btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="cart_item">
+                <div class="item_image">
+                    <img th:src="@{/fe/images/home_one/collection4.jpg}" alt="" />
+                </div>
+                <div class="item_content">
+                    <h4 class="item_title">
+                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
+                    </h4>
+                    <span class="item_price">$19.00</span>
+                    <button type="button" class="remove_btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="total_price text-uppercase">
+            <span>Sub Total:</span>
+            <span>$76.00</span>
+        </div>
+        <ul class="btns_group ul_li">
+            <li>
+                <a href="cart.html" class="btn btn_primary text-uppercase"
+                >View Cart</a
+                >
+            </li>
+            <li>
+                <a
+                        href="checkout.html"
+                        class="btn btn_border border_black text-uppercase"
+                >Checkout</a
+                >
+            </li>
+        </ul>
+    </div>
+    <div class="cart_sidebar_overlay"></div>
+</div>
+<!--==================================================-->
+<!-- End Buddy Sidebar Section Here -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Breadcumb Area -->
+<!--==================================================-->
+<div class="breadcumb-area d-flex style_two">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div class="breadcumb-content">
+                    <div class="breadcumb-title">
+                        <h4>Cart</h4>
+                    </div>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Cart</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==================================================-->
+<!-- End printmax Breadcumb Area -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Cart Area-->
+<!--==================================================-->
+<section class="cart-section py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <h2 class="cart-title mb-4">Giỏ Hàng Của Bạn</h2>
+
+            <!-- Thông báo -->
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+            <!-- Nếu giỏ hàng trống -->
+            <div th:if="${#lists.isEmpty(cart.allItems)}">
+                <p>Giỏ hàng đang trống. <a th:href="@{/san-pham/hien-thi}">Tiếp tục mua sắm</a></p>
+            </div>
+
+            <!-- Nếu giỏ hàng có sản phẩm -->
+            <div class="col-12 mb-4" th:if="${!#lists.isEmpty(cart.allItems)}">
+                <form th:action="@{/gio-hang/update-all}" method="post" id="updateForm">
+                    <div class="table-responsive">
+                        <table class="cart-table table table-bordered text-center align-middle mb-4">
+                            <thead>
+                            <tr>
+                                <th>Ảnh</th>
+                                <th>Sản phẩm</th>
+                                <th>Đơn giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                                <th>Xóa</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${cart.allItems}">
+                                <td><img class="cart-thumb" th:src="${item.anh}" alt="Ảnh sản phẩm" /></td>
+                                <td th:text="${item.tenSanPham}">Tên SP</td>
+                                <td th:utext="${#numbers.formatDecimal(item.donGia, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
+                                <td>
+                                    <input type="number" name="quantities" min="1" th:value="${item.soLuong}" />
+                                    <input type="hidden" name="ids" th:value="${item.id}" />
+                                </td>
+                                <td th:utext="${#numbers.formatDecimal(item.thanhTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
+                                <td>
+                                    <a th:href="@{'/gio-hang/remove/' + ${item.id}}" class="remove-btn"
+                                       onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này không?')">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Nút hành động -->
+                    <div class="row justify-content-between">
+                        <div class="col-auto">
+                            <a th:href="@{/san-pham/hien-thi}" class="btn btn-secondary">Tiếp tục mua hàng</a>
+                        </div>
+                        <div class="col-auto d-flex gap-2">
+                            <form th:action="@{/gio-hang/update-all}" method="post" id="updateForm">
+                                <button type="submit" class="btn btn-outline-primary">Cập nhật giỏ hàng</button>
+                            </form>
+                            <form th:action="@{/gio-hang/xoa-tat-ca}" method="post" style="display:inline;" onsubmit="return confirm('Xóa toàn bộ giỏ hàng?')">
+                                <button type="submit" class="btn btn-outline-danger">Xóa toàn bộ</button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </form>
+
+
+
+            </div>
+
+            <!-- Tổng tiền -->
+            <div class="col-12 col-md-6 mt-4" th:if="${!#lists.isEmpty(cart.allItems)}">
+                <div class="border p-4 rounded">
+                    <h4 class="mb-3">Tổng cộng</h4>
+                    <table class="table table-borderless mb-0">
+                        <tr>
+                            <th>Tổng tiền:</th>
+                            <td>
+                                <strong th:utext="${#numbers.formatDecimal(cart.tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</strong>
+                            </td>
+                        </tr>
+                    </table>
+                    <a th:href="@{/thanh-toan}" class="btn btn-success w-100 mt-3">Thanh toán</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--==================================================-->
+<!-- End printmax Cart Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Footer Area -->
+<!--==================================================-->
+<section class="footer_area boxed">
+    <div class="container">
+        <div class="row">
+            <!-- Logo và giới thiệu -->
+            <div class="col-lg-4 col-md-6">
+                <div class="footer_logo">
+                    <a href="index.html">
+                        <img th:src="@{/fe/images/thuonghieuht.png}" alt="Logo"  style="max-height: 60px ; width: auto" />
+                    </a>
+                </div>
+                <p class="footer_desc">
+                    Chuyên cung cấp áo phông thời trang chất lượng cao với phong cách trẻ trung, năng động. Cam kết mang đến trải nghiệm mua sắm tốt nhất cho khách hàng.
+                </p>
+                <div class="footer_info">
+                    <p><i class="bi bi-headset-vr"></i> Hỗ trợ khách hàng:</p>
+                    <h6>+84 912 345 678</h6>
+                </div>
+            </div>
+
+            <!-- Cột Giới thiệu -->
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-widget-content">
+                    <div class="footer-widget-title">
+                        <h4>Về Chúng Tôi</h4>
+                    </div>
+                    <div class="footer-widget-menu">
+                        <ul>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Giới thiệu</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Dịch vụ</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Bảng giá</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Tin tức</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Liên hệ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột Dịch vụ -->
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-widget-content">
+                    <div class="footer-widget-title">
+                        <h4>Dịch Vụ</h4>
+                    </div>
+                    <div class="footer-widget-menu">
+                        <ul>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Sản phẩm</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Mẫu áo mới</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Đối tác</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Chính sách bảo mật</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Câu hỏi thường gặp</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột Liên hệ và nhận bản tin -->
+            <div class="col-lg-1"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-widget-contact">
+                    <div class="footer-widget-title">
+                        <h4>Liên Hệ</h4>
+                    </div>
+                    <p class="subscribe_text">
+                        Đăng ký nhận bản tin để không bỏ lỡ các khuyến mãi và cập nhật mới nhất từ chúng tôi.
+                    </p>
+                    <div class="footer_from">
+                        <form action="https://formspree.io/f/myyleorq" method="POST" id="dreamit-form">
+                            <div class="subscribe_form">
+                                <input type="email" name="email" id="email" class="form-control" required="" placeholder="Nhập email của bạn" />
+                                <button type="submit" class="btn">
+                                    <i class="flaticon flaticon-right-arrow"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="footer_social_icon">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer bottom -->
+        <div class="row add-border align-items-center mt-4 pt-3">
+            <div class="col-md-7">
+                <div class="footer-bottom-content">
+                    <div class="footer-bottom-content-copy">
+                        <p>© 2025 Áo Phông Trendora. Bản quyền được bảo hộ.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 text-right">
+                <div class="payments">
+                    <img th:src="@{/fe/images/home_one/payments.png}" alt="Phương thức thanh toán" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--==================================================-->
+<!-- End printmax Footer Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Scroll Up-->
+<!--==================================================-->
+<div class="prgoress_indicator active-progress">
+    <svg
+            class="progress-circle svg-content"
+            width="100%"
+            height="100%"
+            viewBox="-1 -1 102 102"
+    >
+        <path
+                d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"
+                style="
+            transition: stroke-dashoffset 10ms linear 0s;
+            stroke-dasharray: 307.919, 307.919;
+            stroke-dashoffset: 212.78;
+          "
+        ></path>
+    </svg>
+</div>
+<!--==================================================-->
+<!-- End printmax Scroll Up-->
+<!--==================================================-->
+
+<!-- jquery js -->
+
+<script th:src="@{/fe/js/vendor/jquery-3.6.2.min.js}"></script>
+<script th:src="@{/fe/js/popper.min.js}"></script>
+<!-- bootstrap js -->
+<script th:src="@{/fe/js/bootstrap.min.js}"></script>
+<!-- carousel js -->
+<script th:src="@{/fe/js/owl.carousel.min.js}"></script>
+<!-- counterup js -->
+<script th:src="@{/fe/js/jquery.counterup.min.js}"></script>
+<!-- waypoints js -->
+<script th:src="@{/fe/js/waypoints.min.js}"></script>
+<!-- wow js -->
+<script th:src="@{/fe/js/wow.js}"></script>
+<!-- imagesloaded js -->
+<script th:src="@{/fe/js/imagesloaded.pkgd.min.js}"></script>
+<!-- venobox js -->
+<script src="venobox/venobox.js"></script>
+<!--  animated-text js -->
+<script th:src="@{/fe/js/animated-text.js}"></script>
+<!-- venobox min js -->
+<script src="venobox/venobox.min.js"></script>
+<!-- isotope js -->
+<script th:src="@{/fe/js/isotope.pkgd.min.js}"></script>
+<!-- jquery meanmenu js -->
+<script th:src="@{/fe/js/jquery.meanmenu.js}"></script>
+<!-- jquery scrollup js -->
+<script th:src="@{/fe/js/jquery.scrollUp.js}"></script>
+<!-- barfiller -->
+<script th:src="@{/fe/js/jquery.barfiller.js}"></script>
+<!-- theme js -->
+<script th:src="@{/fe/js/theme.js}"></script>
+</body>
+
+<!-- Mirrored from html.tf.dreamitsolution.net/printmax/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 12:11:24 GMT -->
+</html>

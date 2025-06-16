@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{ViewSanPham2/layout/head :: head}"></head>
+
+<body>
+<!-- ========= Prealoader ==============-->
+<div class="loading-screen" id="loading-screen">
+    <span class="bar top-bar"></span>
+    <span class="bar down-bar"></span>
+    <div class="animation-preloader">
+        <div class="spinner"></div>
+        <div class="txt-loading">
+            <span data-text-preloader="T" class="letters-loading">T</span>
+            <span data-text-preloader="r" class="letters-loading">r</span>
+            <span data-text-preloader="e" class="letters-loading">e</span>
+            <span data-text-preloader="n" class="letters-loading">n</span>
+            <span data-text-preloader="d" class="letters-loading">d</span>
+            <span data-text-preloader="o" class="letters-loading">o</span>
+            <span data-text-preloader="r" class="letters-loading">r</span>
+            <span data-text-preloader="a" class="letters-loading">a</span>
+        </div>
+    </div>
+</div>
+<!--========= End Prealoader ============== -->
+
+<!--==================================================-->
+<!-- Start printmax Header Area-->
+<!--==================================================-->
+<header  th:replace="~{ViewSanPham2/layout/header :: header}" ></header>
+<!--==================================================-->
+<!-- End printmax Header Area -->
+<!--==================================================-->
+
+<!--========= Start Mobile Memu========== -->
+<!--========= End Mobile Memu========== -->
+
+<!-- Sidebar Cart Item -->
+
+
+<!--==================================================-->
+
+
+<!--==================================================-->
+<!-- End Buddy Sidebar Section Here -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Hero Area Area -->
+<!--==================================================-->
+<section class="hero_area d-flex align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <!-- hero content -->
+                <div class="hero_content">
+                    <h4>Áo phông thời trang</h4>
+                    <h1>Giá tốt mỗi ngày<br />Chất lượng đảm bảo<br />Mua sắm dễ dàng</h1>
+
+                    <!-- slider button -->
+                    <div class="slider_button">
+                        <div class="banner_btn printmax_btn">
+                            <a href="contact.html">
+                                Bắt đầu ngay <i class="flaticon flaticon-right-arrow"></i><span></span>
+                            </a>
+                        </div>
+                        <div class="slider_info">
+                            <span>
+                                <img th:src="@{/fe/images/home_one/setting_icon.png}" alt="" />
+                                <a href="#">Giá chỉ từ: 1tr VND</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-thumb">
+                    <img th:src="@{/fe/images/home_one/hero_thumb.png}" alt="" />
+                    <div class="hero_container_shape bounce-animate">
+                        <img th:src="@{/fe/images/home_one/hero_img.png}" alt="" />
+                    </div>
+                    <div class="hero_container_shape2 bounce-animate2">
+                        <img th:src="@{/fe/images/home_one/shape2.png}" alt="" />
+                    </div>
+                    <div class="hero_container_shape3 bounce-animate4">
+                        <img th:src="@{/fe/images/home_one/hero_shpe1.png}" alt="" />
+                    </div>
+                    <div class="hero_container_shape4 bounce-animate-3">
+                        <img th:src="@{/fe/images/home_one/banner_dote.png}" alt="" />
+                    </div>
+                    <div class="banner_counter dance2">
+                        <div class="banner_counter-_number">
+                            <h1 class="counter">5</h1>
+                            <span>K+</span>
+                        </div>
+                        <div class="counter_text">
+                            <p>
+                                <i class="flaticon flaticon-right-arrow"></i>
+                                <span>Đã hoàn thành hơn 5.000 đơn hàng</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero_container">
+        <div class="hero_cotaner_social">
+            <div class="hero_follow">
+                <h3>Theo dõi chúng tôi</h3>
+            </div>
+            <div class="hero_social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="hero_rotate rotate">
+        <img th:src="@{/fe/images/home_one/rotate.png}" alt="" />
+    </div>
+</section>
+
+<!--==================================================-->
+<!-- End printmax Hero  Area -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Feature Area-->
+<!--==================================================-->
+<section class="feature_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="feature_title">
+                    <h2>Tính Năng Nổi Bật<br />Của Sản Phẩm</h2>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <!-- feature item -->
+                        <div class="feature_item">
+                            <div class="feature_icon">
+                                <i class="bi bi-check"></i>
+                            </div>
+                            <div class="feature_content">
+                                <h3>Giao hàng toàn quốc</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <!-- feature item -->
+                        <div class="feature_item">
+                            <div class="feature_icon">
+                                <i class="bi bi-check"></i>
+                            </div>
+                            <div class="feature_content">
+                                <h3>Chất vải mềm mại, thoáng mát</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <!-- feature item -->
+                        <div class="feature_item">
+                            <div class="feature_icon">
+                                <i class="bi bi-check"></i>
+                            </div>
+                            <div class="feature_content">
+                                <h3>Kiểu dáng hiện đại, dễ phối đồ</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--==================================================-->
+<!-- End printmax Feature Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Collection Area-->
+<!--==================================================-->
+<section class="collection_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <!-- feature item -->
+                <div class="collection_single_item">
+                    <div class="collection_content">
+                        <h3>Khám Phá Phong Cách<br />Thời Trang Của Bạn</h3>
+                        <p>
+                            Tự tin thể hiện cá tính với các mẫu áo phông hiện đại, phù hợp cho mọi dịp – đi chơi, đi làm, hay dạo phố.
+                        </p>
+                        <div class="collection_btn printmax_btn">
+                            <a href="product-list.html">
+                                Mua Ngay<i class="flaticon flaticon-right-arrow"></i>
+                                <span></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="collection_thumb">
+                        <img th:src="@{/fe/images/home_one/collection_img.png}" alt="áo phông phong cách" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <!-- feature item -->
+                <div class="collection_single_item second">
+                    <div class="collection_content">
+                        <h3>Hơn 1,000 Mẫu<br />Áo Phông Có Sẵn</h3>
+                        <p>
+                            Đa dạng mẫu mã, màu sắc và kích cỡ. Chọn ngay mẫu áo yêu thích phù hợp với phong cách của bạn.
+                        </p>
+                        <div class="collection_btn printmax_btn">
+                            <a href="product-list.html">
+                                Xem Ngay<i class="flaticon flaticon-right-arrow"></i>
+                                <span></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="collection_thumb">
+                        <img th:src="@{/fe/images/home_one/collection_img2.png}" alt="áo phông đa dạng mẫu mã" />
+                    </div>
+                    <div class="collection_shap">
+                        <img th:src="@{/fe/images/home_one/collection_shp2.png}" alt="hình trang trí" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--==================================================-->
+<!-- End printmax Service Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax About Area-->
+<!--==================================================-->
+<section class="about_area">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="about_thumb">
+                    <div class="about_thumb_inner">
+                        <img th:src="@{/fe/images/home_one/about_img.png}" alt="Ảnh giới thiệu" />
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="about_counter">
+                                <div class="about_counter-_number">
+                                    <h1 class="counter">12</h1>
+                                    <span>K+</span>
+                                </div>
+                                <p>Khách hàng hài lòng</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="about_img">
+                                <img th:src="@{/fe/images/aophong1.png}" alt="Ảnh phụ" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about_shap bounce-animate-3">
+                        <img th:src="@{/fe/images/home_one/about_shp.png}" alt="Hình trang trí" />
+                    </div>
+                    <div class="about_shap1 bounce-animate">
+                        <img th:src="@{/fe/images/home_one/about_icon.png}" alt="Hình trang trí" />
+                    </div>
+                    <div class="about_shap2 dance">
+                        <img th:src="@{/fe/images/home_one/about_shp2.png}" alt="Hình trang trí" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="about_content">
+                    <!-- section title -->
+                    <div class="section_title">
+                        <h4>Giới Thiệu</h4>
+                        <h1>Thời Trang Áo Phông<br />Phong Cách & Năng Động</h1>
+                    </div>
+                    <p>
+                        Chúng tôi mang đến những mẫu áo phông thời trang, chất lượng cao với phong cách đa dạng, từ năng động, trẻ trung đến lịch sự, thanh lịch. Mua sắm dễ dàng, giao hàng nhanh chóng – mọi trải nghiệm của bạn là ưu tiên của chúng tôi.
+                    </p>
+                    <div class="about_list">
+                        <ul>
+                            <li>
+                                <img th:src="@{/fe/images/home_one/setting_icon.png}" alt="" />
+                                Hơn 10.000 mẫu áo phông đa dạng
+                            </li>
+                            <li>
+                                <img th:src="@{/fe/images/home_one/setting_icon.png}" alt="" />
+                                Chất liệu vải thoáng mát, bền đẹp
+                            </li>
+                            <li>
+                                <img th:src="@{/fe/images/home_one/setting_icon.png}" alt="" />
+                                Giao hàng toàn quốc nhanh chóng
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="about_btn printmax_btn">
+                        <a href="about.html">
+                            Tìm Hiểu Thêm<i class="flaticon flaticon-right-arrow"></i>
+                            <span></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="about_shaps rotate">
+        <img th:src="@{/fe/images/home_one/rotate.png}" alt="Trang trí quay tròn" />
+    </div>
+</section>
+
+
+<!--==================================================-->
+<!-- End printmax About Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+</section>
+<!--==================================================-->
+<!-- End printmax Service Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Countdown Area  Csss-->
+<!--==================================================-->
+<section class="countdown_area">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-3 col-md-12">
+                <div class="countdown_thumbs">
+                    <img th:src="@{/fe/images/home_one/countdown_img.png}" alt="" />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="Countdown_content text-center">
+                    <h2>Extra Sale! 30% OFF</h2>
+                    <div class="countdown_item" id="clockdiv">
+                        <div class="countdown_number">
+                            <span class="days">10</span> <strong>:</strong>
+                        </div>
+                        <div class="countdown_number">
+                            <span class="hours">12 </span><strong>:</strong>
+                        </div>
+                        <div class="countdown_number">
+                            <span class="minutes">20 </span><strong>:</strong>
+                        </div>
+                        <div class="countdown_number">
+                            <span class="seconds">50 </span>
+                        </div>
+                    </div>
+                    <div class="countdown_btn printmax_btn">
+                        <a href="shop.html"
+                        >Shop Now<i class="flaticon flaticon-right-arrow"></i>
+                            <span></span
+                            ></a>
+                    </div>
+                    <div class="countdown_shape rotate">
+                        <img th:src="@{/fe/images/home_one/countdown_shape.png}" alt="" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12">
+                <div class="countdown_thumb">
+                    <img th:src="@{/fe/images/home_one/countdown_img2.png}" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--==================================================-->
+<!-- End printmax Countdown Area  Csss-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Product  Section Css -->
+<!--==================================================-->
+<section class="product-section">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-12">
+                    <div class="section_title style_left">
+                        <h4>Sản Phẩm Mới</h4>
+                        <h1>Sản Phẩm Vừa Nhập <br />Khám Phá Cửa Hàng Của Chúng Tôi</h1>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="banner-slider">
+            <div class="row">
+                <div class="product_list owl-carousel">
+                    <div class="col-lg-12" th:each="sp : ${list}">
+                        <div class="product_single_item">
+                            <div class="product-box-thumb">
+                                <img th:src="@{${sp.anhSanPham}}" alt="thumb"/>
+                                <div class="product-icon">
+                                    <ul>
+                                        <li>
+
+                                            <button class="product-action-btn cartConfirm" data-tooltip-text="Add to Wishlist">
+                                                <a th:href="@{'/san-pham/deltal?id=' + ${sp.id}}"><i class="bi bi-suit-heart"></i></a>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="product-action-btn product_btn">
+                                                <a th:href="@{'/gio-hang/add?id='+${sp.id}}"> <i class="bi bi-cart3"></i></a>
+                                            </button>
+                                        </li>
+
+                                        <li>
+                                            <button class="product-action-btn cartConfirm" data-tooltip-text="Compare">
+                                                <i class="bi bi-arrow-left-right"></i>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="product_contnet">
+                                <h6 th:text="${sp.tenSanPham}">Tên sản phẩm</h6>
+                                <p th:text="'$ ' + ${#numbers.formatDecimal(sp.gia, 0, 'COMMA', 2, 'POINT')}">Giá bán</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!--==================================================-->
+<!-- End printmax Product  Section Cs -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Feature Area-->
+<!--==================================================-->
+<section class="feature_area style_two">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section_title text-center">
+                    <h4>Bộ Sưu Tập Của Chúng Tôi</h4>
+                    <h1>Khám Phá Những Bộ Sưu Tập Mới Nhất <br />Tại Cửa Hàng  Của Chúng Tôi</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <!-- mục tính năng -->
+                <div class="feature_item style_two">
+                    <div class="feature_icon">
+                        <img th:src="@{/fe/images/home_one/feature_icon4.png}" alt="" />
+                    </div>
+                    <div class="feature_content">
+                        <h3>Tiêu Chuẩn Chất Lượng</h3>
+                        <p>
+                            Mở rộng hệ thống tiêu chuẩn mà không cần kỹ năng lãnh đạo phức tạp
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <!-- mục tính năng -->
+                <div class="feature_item style_two">
+                    <div class="feature_icon">
+                        <img th:src="@{/fe/images/home_one/feature_icon3.png}" alt="" />
+                    </div>
+                    <div class="feature_content">
+                        <h3>Tiết Kiệm Chi Phí</h3>
+                        <p>
+                            Mở rộng hệ thống tiêu chuẩn mà không cần kỹ năng lãnh đạo phức tạp
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <!-- mục tính năng -->
+                <div class="feature_item style_two">
+                    <div class="feature_icon">
+                        <img th:src="@{/fe/images/home_one/feature_icon2.png}" alt="" />
+                    </div>
+                    <div class="feature_content">
+                        <h3>Vận Chuyển Toàn Cầu</h3>
+                        <p>
+                            Mở rộng hệ thống tiêu chuẩn mà không cần kỹ năng lãnh đạo phức tạp
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <!-- mục tính năng -->
+                <div class="feature_item style_two">
+                    <div class="feature_icon">
+                        <img th:src="@{/fe/images/home_one/feature_icon2.png}" alt="" />
+                    </div>
+                    <div class="feature_content">
+                        <h3>Vận Chuyển Toàn Cầu</h3>
+                        <p>
+                            Mở rộng hệ thống tiêu chuẩn mà không cần kỹ năng lãnh đạo phức tạp
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <!-- mục tính năng -->
+                <div class="feature_item style_two">
+                    <div class="feature_icon">
+                        <img th:src="@{/fe/images/home_one/feature_icon4.png}" alt="" />
+                    </div>
+                    <div class="feature_content">
+                        <h3>Tiêu Chuẩn Chất Lượng</h3>
+                        <p>
+                            Mở rộng hệ thống tiêu chuẩn mà không cần kỹ năng lãnh đạo phức tạp
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <!-- mục tính năng -->
+                <div class="feature_item style_two">
+                    <div class="feature_icon">
+                        <img th:src="@{/fe/images/home_one/feature_icon3.png}" alt="" />
+                    </div>
+                    <div class="feature_content">
+                        <h3>Tiết Kiệm Chi Phí</h3>
+                        <p>
+                            Mở rộng hệ thống tiêu chuẩn mà không cần kỹ năng lãnh đạo phức tạp
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="feature_shape rotate">
+        <img th:src="@{/fe/images/home_one/feature_shape.png}" alt="" />
+    </div>
+    <div class="feature_shape2 bounce-animate2">
+        <img th:src="@{/fe/images/home_one/shape.png}" alt="" />
+    </div>
+</section>
+
+<!--==================================================-->
+<!-- End printmax Feature Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Marquee Area-->
+<!--==================================================-->
+<div class="marquee_area">
+    <div class="marquee_bg">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="marquee">
+                        <div class="marquee-block">
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >T-SHIRT PRINTING
+                            </h3>
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >PACKAGING PRINTING
+                            </h3>
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >PRODUCT DESIGNING
+                            </h3>
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >CUSTOM PRINTING
+                            </h3>
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >PACKAGING PRINTING
+                            </h3>
+                        </div>
+                        <div class="marquee-block">
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >T-SHIRT PRINTING
+                            </h3>
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >PACKAGING PRINTING
+                            </h3>
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >PRODUCT DESIGNING
+                            </h3>
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >CUSTOM PRINTING
+                            </h3>
+                            <h3>
+                    <span
+                    ><img
+                            th:src="@{/fe/images/home_one/marquee_img.png}"
+                            class="rotates"
+                            alt="" /></span
+                    >PACKAGING PRINTING
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==================================================-->
+<!-- End printmax  Marquee Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Popular  Area-->
+<!--==================================================-->
+<!--==================================================-->
+<!-- Start printmax Popular Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start Testimonial Area -->
+<!--==================================================-->
+<!--==================================================-->
+<!-- End printmax Testimonial Area -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Brand Area-->
+<!--==================================================-->
+<section class="brand_area">
+    <div class="container">
+        <div class="row">
+            <div class="brand_container">
+                <div class="brand_list owl-carousel">
+                    <div class="col-lg-12">
+                        <div class="single_brnd_item">
+                            <img th:src="@{/fe/images/home_one/01.png}" alt="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="single_brnd_item">
+                            <img th:src="@{/fe/images/home_one/02.png}" alt="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="single_brnd_item">
+                            <img th:src="@{/fe/images/home_one/03.png}" alt="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="single_brnd_item">
+                            <img th:src="@{/fe/images/home_one/04.png}" alt="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="single_brnd_item">
+                            <img th:src="@{/fe/images/home_one/05.png}" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--==================================================-->
+<!-- End printmax  Brand Area  -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Blog Area -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- End printmax Blog Area -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Footer Area -->
+<!--==================================================-->
+<section class="footer_area boxed">
+    <div class="container">
+        <div class="row">
+            <!-- Logo và giới thiệu -->
+            <div class="col-lg-4 col-md-6">
+                <div class="footer_logo">
+                    <a href="index.html">
+                        <img th:src="@{/fe/images/thuonghieuht.png}" alt="Logo"  style="max-height: 60px ; width: auto" />
+                    </a>
+                </div>
+                <p class="footer_desc">
+                    Chuyên cung cấp áo phông thời trang chất lượng cao với phong cách trẻ trung, năng động. Cam kết mang đến trải nghiệm mua sắm tốt nhất cho khách hàng.
+                </p>
+                <div class="footer_info">
+                    <p><i class="bi bi-headset-vr"></i> Hỗ trợ khách hàng:</p>
+                    <h6>+84 912 345 678</h6>
+                </div>
+            </div>
+
+            <!-- Cột Giới thiệu -->
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-widget-content">
+                    <div class="footer-widget-title">
+                        <h4>Về Chúng Tôi</h4>
+                    </div>
+                    <div class="footer-widget-menu">
+                        <ul>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Giới thiệu</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Dịch vụ</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Bảng giá</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Tin tức</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Liên hệ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột Dịch vụ -->
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-widget-content">
+                    <div class="footer-widget-title">
+                        <h4>Dịch Vụ</h4>
+                    </div>
+                    <div class="footer-widget-menu">
+                        <ul>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Sản phẩm</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Mẫu áo mới</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Đối tác</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Chính sách bảo mật</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Câu hỏi thường gặp</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột Liên hệ và nhận bản tin -->
+            <div class="col-lg-1"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-widget-contact">
+                    <div class="footer-widget-title">
+                        <h4>Liên Hệ</h4>
+                    </div>
+                    <p class="subscribe_text">
+                        Đăng ký nhận bản tin để không bỏ lỡ các khuyến mãi và cập nhật mới nhất từ chúng tôi.
+                    </p>
+                    <div class="footer_from">
+                        <form action="https://formspree.io/f/myyleorq" method="POST" id="dreamit-form">
+                            <div class="subscribe_form">
+                                <input type="email" name="email" id="email" class="form-control" required="" placeholder="Nhập email của bạn" />
+                                <button type="submit" class="btn">
+                                    <i class="flaticon flaticon-right-arrow"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="footer_social_icon">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer bottom -->
+        <div class="row add-border align-items-center mt-4 pt-3">
+            <div class="col-md-7">
+                <div class="footer-bottom-content">
+                    <div class="footer-bottom-content-copy">
+                        <p>© 2025 Áo Phông Trendora. Bản quyền được bảo hộ.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 text-right">
+                <div class="payments">
+                    <img th:src="@{/fe/images/home_one/payments.png}" alt="Phương thức thanh toán" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--==================================================-->
+<!-- End printmax Footer Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Scroll Up-->
+<!--==================================================-->
+<div class="prgoress_indicator active-progress">
+    <svg
+            class="progress-circle svg-content"
+            width="100%"
+            height="100%"
+            viewBox="-1 -1 102 102"
+    >
+        <path
+                d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"
+                style="
+            transition: stroke-dashoffset 10ms linear 0s;
+            stroke-dasharray: 307.919, 307.919;
+            stroke-dashoffset: 212.78;
+          "
+        ></path>
+    </svg>
+</div>
+<!--==================================================-->
+<!-- End printmax Scroll Up-->
+<!--==================================================-->
+
+<!-- jquery js -->
+<script th:src="@{/fe/js/vendor/jquery-3.6.2.min.js}"></script>
+<script th:src="@{/fe/js/popper.min.js}"></script>
+<!-- bootstrap js -->
+<script th:src="@{/fe/js/bootstrap.min.js}"></script>
+<!-- carousel js -->
+<script th:src="@{/fe/js/owl.carousel.min.js}"></script>
+<!-- counterup js -->
+<script th:src="@{/fe/js/jquery.counterup.min.js}"></script>
+<!-- waypoints js -->
+<script th:src="@{/fe/js/waypoints.min.js}"></script>
+<!-- wow js -->
+<script th:src="@{/fe/js/wow.js}"></script>
+<!-- imagesloaded js -->
+<script th:src="@{/fe/js/imagesloaded.pkgd.min.js}"></script>
+<!-- venobox js -->
+<script th:src="@{/fe/venobox/venobox.js}"></script>
+<!--  animated-text js -->
+<script th:src="@{/fe/js/animated-text.js}"></script>
+<!-- venobox min js -->
+<script th:src="@{/fe/venobox/venobox.min.js}"></script>
+<!-- isotope js -->
+<script th:src="@{/fe/js/isotope.pkgd.min.js}"></script>
+<!-- jquery meanmenu js -->
+<script th:src="@{/fe/js/jquery.meanmenu.js}"></script>
+<!-- jquery scrollup js -->
+<script th:src="@{/fe/js/jquery.scrollUp.js}"></script>
+<!-- barfiller -->
+<script th:src="@{/fe/js/jquery.barfiller.js}"></script>
+<!-- theme js -->
+<script th:src="@{/fe/js/theme.js}"></script>
+<script>
+    window.addEventListener('load', function () {
+        setTimeout(function () {
+            var loading = document.getElementById("loading-screen");
+            if (loading) {
+                loading.style.display = "none";
+            }
+        }, 1500); // thời gian delay = 1500ms (1.5 giây)
+    });
+
+
+</script>
+
+</body>
+
+</html>

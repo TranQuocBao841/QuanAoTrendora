@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,15 +60,22 @@ public class KhachHangController {
 
     @GetMapping("/update")
     public String showUpdate(@RequestParam("id") Integer id ,Model model){
-        model.addAttribute("kh",khachHangRepo.findById(id).get());
+        model.addAttribute("khachHang",khachHangRepo.findById(id).get());
         return "/ViewKhachHang/update";
     }
 
     @PostMapping("/update")
-    public String update(KhachHang khachHang){
+    public String update(@Valid @ModelAttribute("khachHang") KhachHang khachHang,
+                         BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("khachHang", khachHang);
+            return "/ViewKhachHang/update";
+        }
         khachHangRepo.save(khachHang);
         return "redirect:/khach-hang/hien-thi";
     }
+
+
 
     @GetMapping("/delete")
     public String delete(@RequestParam("id") Integer id){

@@ -1,119 +1,1317 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en-US">
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Mirrored from html.tf.dreamitsolution.net/printmax/shop-details.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 12:11:28 GMT -->
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Sản Phẩm</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .product-detail {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            height: 100%;
-        }
-        .product-image {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-        .product-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .product-info {
-            font-size: 1rem;
-            margin-bottom: 8px;
-            color: #555;
-        }
-        .btn-custom {
-            background-color: #007bff;
-            color: white;
-            padding: 8px 18px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border: none;
-            border-radius: 5px;
-        }
-        .btn-custom:hover {
-            background-color: #0056b3;
-        }
-        .btn-back {
-            background-color: #6c757d;
-            color: white;
-            padding: 10px 25px;
-            font-weight: 500;
-            border: none;
-            border-radius: 5px;
-        }
-        .btn-back:hover {
-            background-color: #5a6268;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Wellcome to Trendora</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Favicon -->
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+    <link
+            rel="icon"
+            type="image/png"
+            sizes="56x56"
+            th:href="@{/fe/images/fav-icon/icon.png}"
+    />
+    <!-- bootstrap CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/bootstrap.min.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- carousel CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/owl.carousel.min.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- animate CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/animate.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- animated-text CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/animated-text.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- font-awesome CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/all.min.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- theme-default CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/theme-default.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- meanmenu CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/meanmenu.min.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- transitions CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/owl.transitions.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- venobox CSS -->
+    <link
+            rel="stylesheet"
+            href="venobox/venobox.css"
+            type="text/css"
+            media="all"
+    />
+    <!-- flaticon -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/bootstrap-icons.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- bootstrap icons -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/flaticon.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- Main Style CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/style.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- responsive CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/responsive.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- Coustom Animation CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/coustom-animation.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- odometer CSS -->
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/odometer-theme-default.css}"
+            type="text/css"
+            media="all"
+    />
+
+    <link
+            rel="stylesheet"
+            th:href="@{/fe/css/scroll-up.css}"
+            type="text/css"
+            media="all"
+    />
+    <!-- modernizr js -->
+    <script th:src="@{/fe/js/vendor/modernizr-3.5.0.min.js}"></script>
 </head>
+
 <body>
+<!-- ========= Prealoader ==============-->
+<div class="loading-screen" id="loading-screen">
+    <span class="bar top-bar"></span>
+    <span class="bar down-bar"></span>
+    <div class="animation-preloader">
+        <div class="spinner"></div>
+        <div class="txt-loading">
+            <span data-text-preloader="T" class="letters-loading">T</span>
+            <span data-text-preloader="r" class="letters-loading">r</span>
+            <span data-text-preloader="e" class="letters-loading">e</span>
+            <span data-text-preloader="n" class="letters-loading">n</span>
+            <span data-text-preloader="d" class="letters-loading">d</span>
+            <span data-text-preloader="o" class="letters-loading">o</span>
+            <span data-text-preloader="r" class="letters-loading">r</span>
+            <span data-text-preloader="a" class="letters-loading">a</span>
+        </div>
+    </div>
+</div>
+<!--========= End Prealoader ============== -->
 
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Chi Tiết Sản Phẩm: [[${sanPham.ten}]]</h2>
-
-    <!-- Bắt đầu hiển thị theo nhóm 2 sản phẩm 1 hàng -->
-    <div th:each="ct, stat : ${listct}">
-        <div th:if="${stat.index % 2 == 0}" class="row">
-            <!-- Sản phẩm bên trái -->
-            <div class="col-md-6 mb-4">
-                <div class="product-detail">
-                    <img th:src="@{${ct.sanPham.anh}}" alt="Ảnh sản phẩm" class="product-image">
-                    <h5 class="product-title">[[${ct.sanPham.ten}]]</h5>
-                    <p class="product-info"><strong>Màu sắc:</strong> [[${ct.mauSac.ten}]]</p>
-                    <p class="product-info"><strong>Kích thước:</strong> [[${ct.kichThuoc.ten}]]</p>
-                    <p class="product-info"><strong>Đơn giá:</strong>
-                        <span class="donGia" th:text="${ct.donGia}"></span> VND
-                    </p>
-                    <p class="product-info"><strong>Số lượng:</strong> [[${ct.soLuong}]]</p>
-                    <p class="product-info"><strong>Trạng thái:</strong> [[${ct.trangThai == 1 ? 'Còn hàng' : 'Hết hàng'}]]</p>
-                    <a class="btn btn-custom" th:href="@{|/gio-hang/add?id=${ct.id}|}">Thêm vào giỏ hàng</a>
+<!-- ======= Start Topber Area  -->
+<section class="topber_area">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-lg-4">
+                <div class="topber_right_social">
+                    <h4 class="topber_follow">FOLLOW US :</h4>
+                    <ul>
+                        <li>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        </li>
+                        <li>
+                            <a class="top-social-icon-left" href="#"
+                            ><i class="fa-brands fa-x-twitter"></i
+                            ></a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-
-            <!-- Sản phẩm bên phải -->
-            <div class="col-md-6 mb-4" th:if="${stat.index + 1 < listct.size()}">
-                <div class="product-detail" th:with="ct2=${listct[stat.index + 1]}">
-                    <img th:src="@{${ct2.sanPham.anh}}" alt="Ảnh sản phẩm" class="product-image">
-                    <h5 class="product-title">[[${ct2.sanPham.ten}]]</h5>
-                    <p class="product-info"><strong>Màu sắc:</strong> [[${ct2.mauSac.ten}]]</p>
-                    <p class="product-info"><strong>Kích thước:</strong> [[${ct2.kichThuoc.ten}]]</p>
-                    <p class="product-info"><strong>Đơn giá:</strong>
-                        <span class="donGia" th:text="${ct2.donGia}"></span> VND
+            <div class="col-lg-4">
+                <div class="top_print_text">
+                    <p>The Best Printing Agency in California, USA</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="header-address-info">
+                    <p>
+                        <i class="bi bi-headset-vr"></i><span>+123 (4567) 890</span
+                    ><i class="bi bi-telephone-fill"></i
+                    ><span>example@gmail.com</span>
                     </p>
-                    <p class="product-info"><strong>Số lượng:</strong> [[${ct2.soLuong}]]</p>
-                    <p class="product-info"><strong>Trạng thái:</strong> [[${ct2.trangThai == 1 ? 'Còn hàng' : 'Hết hàng'}]]</p>
-                    <a class="btn btn-custom" th:href="@{|/gio-hang/add?id=${ct2.id}|}">Thêm vào giỏ hàng</a>
                 </div>
             </div>
         </div>
     </div>
+</section>
+<!-- ======= End Topber Area  -->
 
-    <!-- Nút quay lại -->
-    <div class="text-center mt-4">
-        <a href="/san-pham/hien-thi" class="btn btn-back">Quay lại</a>
+<!--==================================================-->
+<!-- Start printmax Header Area-->
+<!--==================================================-->
+<div class="printmax-header-area style_two" id="sticky-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-lg-5">
+                <div class="header-menu">
+                    <ul class="nav_scroll">
+                        <li>
+                            <a href="/san-pham/trang-chu"
+                            >Home <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="/san-pham/trang-chu">Home </a></li>
+                            </ul>
+                        </li>
+                        <li><a href="about.html">About</a></li>
+                        <li>
+                            <a href="#"
+                            >Page <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="service.html">Our Service</a></li>
+                                <li><a href="service-details.html">Service Details</a></li>
+                                <li><a href="team.html">Our Team</a></li>
+                                <li><a href="portfolio.html">Portfolio</a></li>
+                                <li>
+                                    <a href="portfolio-details.html">Portfolio Details</a>
+                                </li>
+                                <li><a href="checkout.html">Checkout</a></li>
+                                <li><a href="cart.html">Cart</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/san-pham/hien-thi"
+                            >Shop <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="/san-pham/hien-thi">Shop</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"
+                            >Blog <span><i class="bi bi-chevron-double-right"></i></span
+                            ></a>
+                            <ul class="sub_menu">
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="blog-details.html">Blog Details</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="header-logo">
+                    <a class="active_logo" href="index.html"
+                    ><img th:src="@{/fe/images/thuonghieuht.png}" alt="logo" style="max-height: 60px ; width: auto"
+                    /></a>
+                    <a class="logo_two" href="index.html"
+                    ><img th:src="@{/fe/images/thuonghieuht.png}" alt="logo" style="max-height: 60px ; width: auto"
+                    /></a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="header_right style_two">
+                    <div class="search-containers">
+                        <form action="#">
+                            <input type="text" placeholder="Search.." name="search" />
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                    <button class="cart_btn headers-button"
+                            type="button"
+                            th:onclick="'window.location.href=\'/gio-hang/hien-thi\''">
+                        <i class="bi bi-cart3"></i>
+                        <small class="cart_counter">0</small>
+                    </button>
+                    <div class="header-button printmax_btn">
+                        <a href="/san-pham/hien-thi"
+                        >Get Started <i class="bi bi-chevron-double-right"></i>
+                            <span></span
+                            ></a>
+                    </div>
+                    <div class="sidebar-btn">
+                        <div class="nav-btn navSidebar-button">
+                            <span><i class="bi bi-grid-3x3-gap"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==================================================-->
+<!-- End printmax Header Area -->
+<!--==================================================-->
+
+<!--========= Start Mobile Memu========== -->
+
+<div class="mobile-menu-area sticky d-sm-block d-md-block d-lg-none">
+    <div class="mobile-menu">
+        <nav class="header-menu">
+            <div class="mobile-logo">
+                <a class="logo_two" href="index.html"
+                ><img th:src="@{/fe/images/thuonghieuht.png}" alt="logo" style="max-height: 60px ; width: auto"
+                /></a>
+            </div>
+            <ul class="nav_scroll">
+                <li>
+                    <a href="#">Home</a>
+                    <ul class="sub_menu">
+                        <li><a href="index.html">Home Version 01</a></li>
+                        <li><a href="index-2.html">Home Version 02</a></li>
+                        <li><a href="index-3.html">Home Version 03</a></li>
+                    </ul>
+                </li>
+                <li><a href="about.html">About</a></li>
+                <li>
+                    <a href="#">Page</a>
+                    <ul class="sub_menu">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="service.html">Our Service</a></li>
+                        <li><a href="service-details.html">Service Details</a></li>
+                        <li><a href="team.html">Our Team</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                        <li><a href="portfolio-details.html">Portfolio Details</a></li>
+                        <li><a href="checkout.html">Checkout</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Shop</a>
+                    <ul class="sub_menu">
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="shop-two.html">Shop Two</a></li>
+                        <li><a href="shop-details.html">Shop Details</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Blog</a>
+                    <ul class="sub_menu">
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="blog-details.html">Blog Details</a></li>
+                    </ul>
+                </li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!--========= End Mobile Memu========== -->
+
+<!-- Sidebar Cart Item -->
+<div class="xs-sidebar-group info-group">
+    <div class="xs-overlay xs-bg-black"></div>
+    <div class="xs-sidebar-widget">
+        <div class="sidebar-widget-container">
+            <div class="widget-heading">
+                <a href="#" class="close-side-widget">
+                    <i class="far fa-times-circle"></i>
+                </a>
+            </div>
+            <div class="sidebar-textwidget">
+                <!-- Sidebar Info Content -->
+                <div class="sidebar-info-contents">
+                    <div class="content-inner">
+                        <div class="nav-logo">
+                            <a href="index.html"
+                            ><img th:src="@{/fe/images/thuonghieuht.png}" alt="sid img" style="max-height: 60px ; width: auto"
+                            /></a>
+                        </div>
+                        <div class="row padding-two">
+                            <div class="col-lg-6">
+                                <div class="content-thumb-box">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img1.png}"
+                                            alt=""
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="content-thumb-box">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img2.png}"
+                                            alt=""
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="content-thumb-box">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img3.png}"
+                                            alt=""
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="content-thumb-box">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img4.png}"
+                                            alt=""
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contact-info">
+                            <h2>Contact Info</h2>
+                            <ul class="list-style-one">
+                                <li>
+                                    <i class="bi bi-envelope"></i>Chicago 12, Melborne City,
+                                    USA
+                                </li>
+                                <li><i class="bi bi-envelope"></i>(+001) 123-456-7890</li>
+                                <li><i class="bi bi-envelope"></i>Example.com</li>
+                                <li>
+                                    <i class="bi bi-envelope"></i>Week Days: 09.00 to 18.00
+                                    Sunday: Closed
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Social Box -->
+                        <ul class="social-box">
+                            <li class="facebook">
+                                <a href="#" class="fab fa-facebook-f"></a>
+                            </li>
+                            <li class="twitter">
+                                <a href="#" class="fab fa-instagram"></a>
+                            </li>
+                            <li class="linkedin">
+                                <a href="#" class="fa-brands fa-x-twitter"></a>
+                            </li>
+                            <li class="instagram">
+                                <a href="#" class="fab fa-pinterest-p"></a>
+                            </li>
+                            <li class="youtube">
+                                <a href="#" class="fab fa-linkedin-in"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+<!--==================================================-->
+<!-- End Buddy Sidebar Section Here -->
+<!--==================================================-->
+<div class="sidebar-menu-wrapper">
+    <div class="cart_sidebar">
+        <button type="button" class="close_btn">
+            <i class="fas fa-times"></i>
+        </button>
+        <h2 class="heading_title text-uppercase">
+            Cart Items - <span>4</span>
+        </h2>
+
+        <div class="cart_items_list">
+            <div class="cart_item">
+                <div class="item_image">
+                    <img th:src="@{/fe/images/home_one/collection1.jpg}" alt="" />
+                </div>
+                <div class="item_content">
+                    <h4 class="item_title">
+                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
+                    </h4>
+                    <span class="item_price">$19.00</span>
+                    <button type="button" class="remove_btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="cart_item">
+                <div class="item_image">
+                    <img th:src="@{/fe/images/home_one/collection2.jpg}" alt="" />
+                </div>
+                <div class="item_content">
+                    <h4 class="item_title">
+                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
+                    </h4>
+                    <span class="item_price">$19.00</span>
+                    <button type="button" class="remove_btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="cart_item">
+                <div class="item_image">
+                    <img th:src="@{/fe/images/home_one/collection3.jpg}" alt="" />
+                </div>
+                <div class="item_content">
+                    <h4 class="item_title">
+                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
+                    </h4>
+                    <span class="item_price">$19.00</span>
+                    <button type="button" class="remove_btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="cart_item">
+                <div class="item_image">
+                    <img th:src="@{/fe/images/home_one/collection4.jpg}" alt="" />
+                </div>
+                <div class="item_content">
+                    <h4 class="item_title">
+                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
+                    </h4>
+                    <span class="item_price">$19.00</span>
+                    <button type="button" class="remove_btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="total_price text-uppercase">
+            <span>Sub Total:</span>
+            <span>$76.00</span>
+        </div>
+        <ul class="btns_group ul_li">
+            <li>
+                <a href="cart.html" class="btn btn_primary text-uppercase"
+                >View Cart</a
+                >
+            </li>
+            <li>
+                <a
+                        href="checkout.html"
+                        class="btn btn_border border_black text-uppercase"
+                >Checkout</a
+                >
+            </li>
+        </ul>
+    </div>
+    <div class="cart_sidebar_overlay"></div>
+</div>
+<!--==================================================-->
+<!-- End Buddy Sidebar Section Here -->
+<!--==================================================-->
+<div class="sidebar-product-wrapper">
+    <div class="product_sidebar">
+        <div class="container">
+            <div class="product_inner">
+                <button type="button" class="close_btns">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="row product_card_item align-items-center">
+                    <div class="col-lg-6 col-md-6">
+                        <!-- / tab -->
+                        <div class="tab style-three">
+                            <ul class="tabs active">
+                                <li class="">
+                                    <a href="#"
+                                    ><img
+                                            th:src="@{/fe/images/home_one/collection1.jpg}"
+                                            alt=""
+                                    /></a>
+                                </li>
+                                <li class="">
+                                    <a href="#"
+                                    ><img
+                                            th:src="@{/fe/images/home_one/collection2.jpg}"
+                                            alt=""
+                                    /></a>
+                                </li>
+                                <li class="">
+                                    <a href="#"
+                                    ><img
+                                            th:src="@{/fe/images/home_one/collection3.jpg}"
+                                            alt=""
+                                    /></a>
+                                </li>
+                            </ul>
+                            <!-- / tabs -->
+                            <!-- / tab_content -->
+                            <div class="tab_content">
+                                <!-- / tabs_item -->
+                                <div class="tabs_item" style="display: none">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img1.png}"
+                                            alt=""
+                                    />
+                                </div>
+                                <!-- / tabs_item -->
+                                <div class="tabs_item" style="display: block">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img2.png}"
+                                            alt=""
+                                    />
+                                </div>
+                                <!-- / tabs_item -->
+                                <div class="tabs_item" style="display: none">
+                                    <img
+                                            th:src="@{/fe/images/home_one/product_img3.png}"
+                                            alt=""
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="shop-dtls-info">
+                            <!-- category title -->
+                            <div class="category-title">
+                                <h2>Modern Black Blouse</h2>
+                            </div>
+                            <!-- category icon -->
+                            <div class="category-icon-list">
+                                <ul>
+                                    <li><i class="bi bi-star-fill"></i></li>
+                                    <li><i class="bi bi-star-fill"></i></li>
+                                    <li><i class="bi bi-star-fill"></i></li>
+                                    <li><i class="bi bi-star-fill"></i></li>
+                                    <li><i class="bi bi-star"></i></li>
+                                    <li class="category-text">4.5(10+ Reviews)</li>
+                                </ul>
+                            </div>
+                            <!-- category price -->
+                            <div class="category-price">
+                                <h1>£150.98 <span>£190.00</span></h1>
+                            </div>
+                            <!-- description -->
+                            <div class="category-description">
+                                <p>
+                                    Discovered had get considered projection who favourable.
+                                    Necessary up knowledge it tolerably. Unwilling departure
+                                    education is be dashwoods or an. Use off agreeable law
+                                    unwilling sir deficient curiosity instantly.
+                                </p>
+                            </div>
+                            <!-- product size box -->
+                            <div class="product-size">
+                                <span class="sub-title">Size:</span>
+                                <ul>
+                                    <li><a href="#">S</a></li>
+                                    <li><a href="#">M</a></li>
+                                    <li><a href="#">L</a></li>
+                                    <li><a href="#">X</a></li>
+                                </ul>
+                            </div>
+                            <!-- product color -->
+                            <div class="product-color">
+                                <span class="sub-title">Color:</span>
+                                <select class="select_option">
+                                    <option>black</option>
+                                    <option>Blue</option>
+                                    <option>Red</option>
+                                    <option>Pink</option>
+                                </select>
+                            </div>
+                            <div class="category-count-button">
+                                <!-- product count -->
+                                <div class="quantity">
+                                    <div class="cart-plus-minus">
+                                        <input
+                                                class="cart-plus-minus-box"
+                                                value="0"
+                                                type="text"
+                                        />
+                                        <div class="dec ctnbutton">-</div>
+                                        <div class="inc ctnbutton">+</div>
+                                    </div>
+                                </div>
+                                <!-- product button -->
+                                <div class="category-button">
+                                    <a href="cart.html"
+                                    >Add to Cart <i class="bi bi-cart3"></i
+                                    ></a>
+                                </div>
+                            </div>
+                            <!-- category table -->
+                            <table class="category-table">
+                                <tbody>
+                                <tr>
+                                    <!-- table data -->
+                                    <td class="table-title">SKU</td>
+                                    <td class="table-text">Carburetors</td>
+                                </tr>
+                                <tr>
+                                    <!-- table data -->
+                                    <td class="table-title">Categories</td>
+                                    <td class="table-text">Decoration, Documents</td>
+                                </tr>
+                                <tr>
+                                    <!-- table data -->
+                                    <td class="table-title">Tags</td>
+                                    <td class="table-text">
+                                        Calendar, Cup, Invitation, Magazine
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- category table End -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==================================================-->
+<!-- Start printmax Breadcumb Area -->
+<!--==================================================-->
+<div class="breadcumb-area d-flex style_two">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div class="breadcumb-content">
+                    <div class="breadcumb-title">
+                        <h4>Shop Details</h4>
+                    </div>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Contact Us</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==================================================-->
+<!-- End printmax Breadcumb Area -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Strt printmax Shop Details -->
+<!--==================================================-->
+<div class="shop-detials">
+    <div class="container">
+
+        <div class="row align-items-center">
+            <!-- Cột ảnh bên trái -->
+            <div class="col-lg-6 col-md-6">
+                <div class="product-image text-center mb-3">
+                    <img th:src="@{${sp.anhSanPham}}" alt="Ảnh sản phẩm"
+                         style="max-width: 100%; height: auto; border-radius: 8px;" />
+                </div>
+
+                <!-- Thumbnail (nếu muốn dùng sau này) -->
+                <!--
+                <div id="thumb" class="owl-carousel product-thumb2">
+                    <div th:each="thumb : ${#arrays.asList(sp.anhSanPham)}" class="item text-center">
+                        <img th:src="@{${thumb}}" alt="Ảnh thumb"
+                             style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; margin: auto;" />
+                    </div>
+                </div>
+                -->
+            </div>
+
+        <div class="col-lg-6 col-md-6">
+            <div class="shop-dtls-info">
+                <!-- Tên sản phẩm -->
+                <div class="category-title">
+                    <h2 th:text="${sp.tenSanPham}">Tên sản phẩm</h2>
+                </div>
+
+                <!-- Giá -->
+                <div class="category-price">
+                    <h1 th:text="'₫' + ${sp.gia}">₫0</h1>
+                </div>
+
+                <!-- Mô tả -->
+                <div class="category-description mb-2">
+                    <p th:text="${sp.moTa}">Mô tả sản phẩm</p>
+                </div>
+
+                <!-- Màu sắc -->
+                <div class="category-color mb-3">
+                    <p>Colors: <span th:text="${sp.mauSac.tenmauSac}">Màu Sắc</span></p>
+                </div>
+
+                <!-- 🟡 Thêm bảng thông tin bên dưới -->
+                <table class="category-table mb-4">
+                    <tr>
+                        <td class="table-title">SKU</td>
+                        <td class="table-text" th:text="${sp.maSanPham}">Mã sản phẩm</td>
+                        <td class="table-title">Danh mục</td>
+                        <td class="table-text" th:text="${sp.danhMuc.tendanhMuc}">Tên danh mục</td>
+                    </tr>
+                    <tr>
+                        <td class="table-title">Kích thước</td>
+                        <td class="table-text" th:text="${sp.kichThuoc.tenkichThuoc}">Kích thước</td>
+                        <td class="table-title">Cổ Áo</td>
+                        <td class="table-text" th:text="${sp.coAo.tencoAo}">Cổ áo</td>
+                    </tr>
+                    <tr>
+                        <td class="table-title">Khuy Áo</td>
+                        <td class="table-text" th:text="${sp.khuyAo.tenkhuyAo}">Khuy áo</td>
+                        <td class="table-title">Kiểu Dáng</td>
+                        <td class="table-text" th:text="${sp.kieuDang.tenkieuDang}">Kiểu dáng</td>
+                    </tr>
+                    <tr>
+                        <td class="table-title">Đường May</td>
+                        <td class="table-text" th:text="${sp.duongMay.tenduongMay}">Đường may</td>
+                        <td class="table-title">Họa Tiết</td>
+                        <td class="table-text" th:text="${sp.hoaTiet.tenhoaTiet}">Họa tiết</td>
+                    </tr>
+                    <tr>
+                        <td class="table-title">Phong Cách</td>
+                        <td class="table-text" th:text="${sp.phongCach.tenphongCach}">Phong cách</td>
+                        <td class="table-title">Chất Liệu</td>
+                        <td class="table-text" th:text="${sp.chatLieu.tencl}">Chất liệu</td>
+                    </tr>
+                    <tr>
+                        <td class="table-title">Tay Áo</td>
+                        <td class="table-text" th:text="${sp.tayAo.tentayAo}">Tay áo</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+
+                <!-- Số lượng + nút mua -->
+                <div class="category-count-button d-flex align-items-center gap-3">
+                    <div class="quantity">
+                        <div class="cart-plus-minus">
+                            <input class="cart-plus-minus-box" value="1" type="text" />
+                            <div class="dec ctnbutton">-</div>
+                            <div class="inc ctnbutton">+</div>
+                        </div>
+                    </div>
+                    <div class="category-button">
+                        <a th:href="@{'/gio-hang/add?id=' +${sp.id}}" class="btn btn-primary">
+                            Add to Cart <i class="bi bi-cart3"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="appoinment-tab">
+                    <!-- / tab -->
+                    <div class="tab">
+                        <!-- / tabs -->
+                        <ul class="tabs">
+                            <li><a href="#">Description</a></li>
+                            <li><a href="#">Additional Info </a></li>
+                            <li><a href="#">Review (2)</a></li>
+                        </ul>
+                        <div class="tab_content">
+                            <!-- / tabs_item -->
+                            <div class="tabs_item">
+                                <!-- post comment -->
+                                <div class="post-comment-description">
+                                    <p>
+                                        Chúng tôi tận dụng các nền tảng thương mại điện tử hàng đầu để cung cấp trải nghiệm mua sắm áo phông hiện đại, tiện lợi và đáng tin cậy.
+                                        Chúng tôi luôn đổi mới nhằm mang đến những thiết kế thời trang độc đáo, phù hợp với xu hướng, nhưng vẫn đảm bảo mức giá hợp lý.
+
+                                        Chúng tôi đầu tư vào hạ tầng kỹ thuật số mạnh mẽ, giúp bạn dễ dàng lựa chọn, thanh toán và nhận hàng nhanh chóng.
+                                        Với nền tảng linh hoạt, chúng tôi cung cấp trải nghiệm mua sắm cá nhân hóa – từ người yêu phong cách basic, thể thao đến cá tính.
+
+                                        Cam kết của chúng tôi là:
+
+                                        Chất lượng vải tốt, bền và thoải mái
+
+                                        Mẫu mã cập nhật liên tục
+
+                                        Giao hàng nhanh trên toàn quốc
+
+                                        Hỗ trợ đổi trả dễ dàng
+                                    </p>
+                                    <p class="pt-2">
+                                        Chúng tôi xây dựng một hệ thống bán hàng thông minh, thân thiện và dễ sử dụng, giúp bạn dễ dàng tìm thấy những mẫu áo phông phù hợp với phong cách riêng.
+
+                                        Với nền tảng linh hoạt và kết nối mạnh mẽ, chúng tôi mang đến:
+
+                                        Trải nghiệm mua sắm thế hệ mới: giao diện mượt mà, dễ dùng trên mọi thiết bị.
+
+                                        Sự lựa chọn đa dạng: từ áo phông basic, local brand đến thiết kế cá tính.
+
+                                        Mua sắm không lo rủi ro: hỗ trợ đổi trả, chăm sóc tận tình.
+
+                                        Lợi ích cộng hưởng: kết nối người dùng với ưu đãi hấp dẫn, chương trình thành viên, và nhiều tiện ích giá trị <khác class=""></khác>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- / tabs_item -->
+                            <div class="tabs_item">
+                                <!-- post comment -->
+                                <table class="tab-items-table">
+                                    <tr>
+                                        <!-- table data -->
+                                        <td class="table-title">Stand Up</td>
+                                        <td class="table-text">: KKAL</td>
+                                    </tr>
+                                    <tr class="tabs-bg">
+                                        <!-- table data -->
+                                        <td class="table-title">Colors</td>
+                                        <td class="table-text">: Black, Blue, Purple</td>
+                                    </tr>
+                                    <tr>
+                                        <!-- table data -->
+                                        <td class="table-title">Weight</td>
+                                        <td class="table-text">: 35 KG</td>
+                                    </tr>
+                                    <tr class="tabs-bg">
+                                        <!-- table data -->
+                                        <td class="table-title">Wheels</td>
+                                        <td class="table-text">
+                                            : 12” air/ Wide Truck Sleek Trade
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!-- table data -->
+                                        <td class="table-title">Back Height</td>
+                                        <td class="table-text">: 21.5”</td>
+                                    </tr>
+                                    <tr class="tabs-bg">
+                                        <!-- table data -->
+                                        <td class="table-title">Address</td>
+                                        <td class="table-text">
+                                            : 18F Keangnam Landmark 72, PhamHung Str Hanoi, FL
+                                            100000
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!-- table data -->
+                                        <td class="table-title">Rating</td>
+                                        <td class="table-text">
+                                            : 4.40 rating from 5 reviews <i class="bi bi-star"></i
+                                        ><i class="bi bi-star"></i><i class="bi bi-star"></i
+                                        ><i class="bi bi-star"></i><i class="bi bi-star"></i>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- widget table End -->
+                            </div>
+                            <!-- / tabs_item -->
+                            <div class="tabs_item">
+                                <!-- post comment -->
+                                <div class="post-comment">
+                                    <div class="post-comment-thumb">
+                                        <a href="blog-details.html"
+                                        ><img
+                                                th:src="@{/fe/images/inner-img/aouthor.png}"
+                                                alt=""
+                                        /></a>
+                                    </div>
+                                    <div class="post-content">
+                                        <!-- comment icon -->
+                                        <ul class="comment-icon-list">
+                                            <li><i class="bi bi-star-fill"></i></li>
+                                            <li><i class="bi bi-star-fill"></i></li>
+                                            <li><i class="bi bi-star-fill"></i></li>
+                                            <li><i class="bi bi-star-fill"></i></li>
+                                            <li><i class="bi bi-star"></i></li>
+                                        </ul>
+                                        <h4 class="post-title">
+                                            David Alexon
+                                            <span class="left-date">October 01, 2022</span>
+                                        </h4>
+                                        <p class="posts-reply">
+                                            Dramatically reinvent adaptive bandwidth vis reliable
+                                            infrastructures to the progressively iterate
+                                            distributed interfaces.
+                                        </p>
+                                        <span class="rights-reply">
+                          <i class="bi bi-reply-fill"></i>Reply</span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="product-details-respond">
+                                    <div class="contact-form-box2">
+                                        <!-- sidebar title -->
+                                        <div class="sidebar-title">
+                                            <h2>Add a Review</h2>
+                                        </div>
+                                        <!-- sidebar description -->
+                                        <div class="sidebar-description">
+                                            <p>
+                                                Your email address will not be published. Required
+                                                fields are marked *
+                                            </p>
+                                        </div>
+                                        <div class="sidebar-rating-list">
+                                            <p class="sidebar-text">Your Ratings</p>
+                                            <ul>
+                                                <li><i class="bi bi-star"></i></li>
+                                                <li><i class="bi bi-star"></i></li>
+                                                <li><i class="bi bi-star"></i></li>
+                                                <li><i class="bi bi-star"></i></li>
+                                                <li><i class="bi bi-star"></i></li>
+                                            </ul>
+                                        </div>
+                                        <!-- contact form box -->
+                                        <div class="contact-form-box2">
+                                            <form
+                                                    action="https://formspree.io/f/myyleorq"
+                                                    method="POST"
+                                                    id="dreamit-form"
+                                            >
+                                                <div class="row">
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <h6 class="form-title">Name*</h6>
+                                                        <div class="form-box">
+                                                            <input type="text" placeholder="Your Name" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <h6 class="form-title">Your E-Mail*</h6>
+                                                        <div class="form-box">
+                                                            <input
+                                                                    type="email"
+                                                                    name="Enter Email"
+                                                                    placeholder="Enter E-Mail"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="form-box">
+                                                            <h6 class="form-title">Comment*</h6>
+                                                            <textarea
+                                                                    name="massage"
+                                                                    id="massage"
+                                                                    cols="30"
+                                                                    rows="10"
+                                                                    placeholder="Write Comment"
+                                                            ></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="contact-form style-Two">
+                                                            <button type="submit">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div id="status"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / tab_content -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="product-item-title">
+                    <h2>Related Products</h2>
+                </div>
+            </div>
+            <!-- Wrapper Swiper -->
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <!-- Mỗi sản phẩm là 1 slide -->
+                    <div class="swiper-slide" th:each="sp : ${list}">
+                        <div class="single-products-box">
+                            <!-- products thumb -->
+                            <div class="products-thumb">
+                                <img th:src="${sp.anhSanPham}" alt="" />
+                                <div class="product-sale"><span> SALE </span></div>
+                                <div class="product-thumb-icon">
+                                    <a href="#"> <i class="bi bi-cart3"></i> </a>
+                                    <a th:href="@{'/san-pham/deltal?id=' + ${sp.id}}"><i class="bi bi-suit-heart"></i></a>
+                                </div>
+                            </div>
+                            <!-- product content -->
+                            <div class="product-content">
+                                <ul class="product-rating">
+                                    <li><i class="bi bi-star-fill"></i></li>
+                                    <li><i class="bi bi-star-fill"></i></li>
+                                    <li><i class="bi bi-star-fill"></i></li>
+                                    <li><i class="bi bi-star-fill"></i></li>
+                                    <li><i class="bi bi-star-half"></i></li>
+                                </ul>
+                                <div class="product-title">
+                                    <h2 th:text="${sp.tenSanPham}">Tên sản phẩm</h2>
+                                </div>
+                                <div class="product-price">
+                                    <p th:text="${#numbers.formatDecimal(sp.gia, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0 ₫</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Navigation (tuỳ chọn) -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+<!--==================================================-->
+<!-- Strt printmax Shop Details -->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Footer Area -->
+<!--==================================================-->
+<section class="footer_area boxed">
+    <div class="container">
+        <div class="row">
+            <!-- Logo và giới thiệu -->
+            <div class="col-lg-4 col-md-6">
+                <div class="footer_logo">
+                    <a href="index.html">
+                        <img th:src="@{/fe/images/thuonghieuht.png}" alt="Logo"  style="max-height: 60px ; width: auto" />
+                    </a>
+                </div>
+                <p class="footer_desc">
+                    Chuyên cung cấp áo phông thời trang chất lượng cao với phong cách trẻ trung, năng động. Cam kết mang đến trải nghiệm mua sắm tốt nhất cho khách hàng.
+                </p>
+                <div class="footer_info">
+                    <p><i class="bi bi-headset-vr"></i> Hỗ trợ khách hàng:</p>
+                    <h6>+84 912 345 678</h6>
+                </div>
+            </div>
+
+            <!-- Cột Giới thiệu -->
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-widget-content">
+                    <div class="footer-widget-title">
+                        <h4>Về Chúng Tôi</h4>
+                    </div>
+                    <div class="footer-widget-menu">
+                        <ul>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Giới thiệu</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Dịch vụ</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Bảng giá</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Tin tức</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Liên hệ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột Dịch vụ -->
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-widget-content">
+                    <div class="footer-widget-title">
+                        <h4>Dịch Vụ</h4>
+                    </div>
+                    <div class="footer-widget-menu">
+                        <ul>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Sản phẩm</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Mẫu áo mới</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Đối tác</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Chính sách bảo mật</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-double-right"></i> Câu hỏi thường gặp</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột Liên hệ và nhận bản tin -->
+            <div class="col-lg-1"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-widget-contact">
+                    <div class="footer-widget-title">
+                        <h4>Liên Hệ</h4>
+                    </div>
+                    <p class="subscribe_text">
+                        Đăng ký nhận bản tin để không bỏ lỡ các khuyến mãi và cập nhật mới nhất từ chúng tôi.
+                    </p>
+                    <div class="footer_from">
+                        <form action="https://formspree.io/f/myyleorq" method="POST" id="dreamit-form">
+                            <div class="subscribe_form">
+                                <input type="email" name="email" id="email" class="form-control" required="" placeholder="Nhập email của bạn" />
+                                <button type="submit" class="btn">
+                                    <i class="flaticon flaticon-right-arrow"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="footer_social_icon">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer bottom -->
+        <div class="row add-border align-items-center mt-4 pt-3">
+            <div class="col-md-7">
+                <div class="footer-bottom-content">
+                    <div class="footer-bottom-content-copy">
+                        <p>© 2025 Áo Phông Trendora. Bản quyền được bảo hộ.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 text-right">
+                <div class="payments">
+                    <img th:src="@{/fe/images/home_one/payments.png}" alt="Phương thức thanh toán" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--==================================================-->
+<!-- End printmax Footer Area-->
+<!--==================================================-->
+
+<!--==================================================-->
+<!-- Start printmax Scroll Up-->
+<!--==================================================-->
+<div class="prgoress_indicator active-progress">
+    <svg
+            class="progress-circle svg-content"
+            width="100%"
+            height="100%"
+            viewBox="-1 -1 102 102"
+    >
+        <path
+                d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"
+                style="
+            transition: stroke-dashoffset 10ms linear 0s;
+            stroke-dasharray: 307.919, 307.919;
+            stroke-dashoffset: 212.78;
+          "
+        ></path>
+    </svg>
+</div>
+<!--==================================================-->
+<!-- End printmax Scroll Up-->
+<!--==================================================-->
+
+<!-- jquery js -->
+
 <script>
-    document.querySelectorAll(".donGia").forEach(el => {
-        const gia = parseInt(el.textContent);
-        if (!isNaN(gia)) {
-            el.textContent = gia.toLocaleString();
+    window.addEventListener('load', function () {
+        setTimeout(function () {
+            var loading = document.getElementById("loading-screen");
+            if (loading) {
+                loading.style.display = "none";
+            }
+        }, 1500); // thời gian delay = 1500ms (1.5 giây)
+    });
+
+
+</script>
+<script th:src="@{/fe/js/vendor/jquery-3.6.2.min.js}"></script>
+<script th:src="@{/fe/js/popper.min.js}"></script>
+<!-- bootstrap js -->
+<script th:src="@{/fe/js/bootstrap.min.js}"></script>
+<!-- carousel js -->
+<script th:src="@{/fe/js/owl.carousel.min.js}"></script>
+<!-- counterup js -->
+<script th:src="@{/fe/js/jquery.counterup.min.js}"></script>
+<!-- waypoints js -->
+<script th:src="@{/fe/js/waypoints.min.js}"></script>
+<!-- wow js -->
+<script th:src="@{/fe/js/wow.js}"></script>
+<!-- imagesloaded js -->
+<script th:src="@{/fe/js/imagesloaded.pkgd.min.js}"></script>
+<!-- venobox js -->
+<script src="venobox/venobox.js"></script>
+<!--  animated-text js -->
+<script th:src="@{/fe/js/animated-text.js}"></script>
+<!-- venobox min js -->
+<script src="venobox/venobox.min.js"></script>
+<!-- isotope js -->
+<script th:src="@{/fe/js/isotope.pkgd.min.js}"></script>
+<!-- jquery meanmenu js -->
+<script th:src="@{/fe/js/jquery.meanmenu.js}"></script>
+<!-- jquery scrollup js -->
+<script th:src="@{/fe/js/jquery.scrollUp.js}"></script>
+<!-- barfiller -->
+<script th:src="@{/fe/js/jquery.barfiller.js}"></script>
+<!-- theme js -->
+<script th:src="@{/fe/js/theme.js}"></script>
+
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 4,        // số sản phẩm hiển thị 1 lúc
+        spaceBetween: 30,        // khoảng cách giữa các slide
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        loop: true,              // lặp vô hạn
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        breakpoints: {
+            1024: { slidesPerView: 4 },
+            768: { slidesPerView: 2 },
+            480: { slidesPerView: 1 }
         }
     });
 </script>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
+<!-- Mirrored from html.tf.dreamitsolution.net/printmax/shop-details.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 12:11:29 GMT -->
 </html>

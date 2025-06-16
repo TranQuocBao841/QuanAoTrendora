@@ -1,5 +1,6 @@
 package com.example.Trendora.DuAn.controller;
 
+import com.example.Trendora.DuAn.model.Cart;
 import com.example.Trendora.DuAn.repository.KichThuocRepo;
 import com.example.Trendora.DuAn.repository.MauSacRepo;
 import com.example.Trendora.DuAn.repository.SanPhamRepo;
@@ -24,25 +25,29 @@ public class SanPhamController {
    @Autowired
    MauSacRepo mauSacRepo;
 
-//
-//   @GetMapping("hien-thi")
-//   public String HienThiDanhSachSanPham(Model model){
-//      model.addAttribute("listct",sanPhamChiTietRepo.findAll());
-//      model.addAttribute("list",sanPhamRepo.findAll());
-//      return "/ViewSanPham2/hien-thi";
-//   }
 
-//
-//   @GetMapping("/deltal")
-//   public String ShowChitietSanPham(@RequestParam("id") Integer id, Model model){
-//      var sanPham = sanPhamRepo.findById(id).orElse(null);
-//      var danhSachChiTiet = sanPhamChiTietRepo.findAllBySanPham_Id(id);
-//
-//      model.addAttribute("sanPham", sanPham); // để hiển thị thông tin chính
-//      model.addAttribute("listct", danhSachChiTiet); // tất cả bản thể của sản phẩm
-//
-//      return "/ViewSanPham2/deltal";
-//   }
+   @GetMapping("trang-chu")
+   public String HienThiTrangChu( Model model) {
+      model.addAttribute("list", sanPhamRepo.findAll());
+      return "/ViewSanPham2/trang-chu";
+   }
+
+
+
+
+   @GetMapping("hien-thi")
+   public String HienThiDanhSachSanPham(Model model){
+      model.addAttribute("list",sanPhamRepo.findAll());
+      return "/ViewSanPham2/hien-thi";
+   }
+
+
+   @GetMapping("/deltal")
+   public String ShowChitietSanPham(@RequestParam("id")Integer id , Model model){
+      model.addAttribute("list",sanPhamRepo.findAll());
+      model.addAttribute("sp",sanPhamRepo.findById(id).get());
+      return "/ViewSanPham2/deltal";
+   }
 
 
 //   @GetMapping("/timkiem")

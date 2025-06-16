@@ -7,23 +7,32 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class CartItem {
-    private Integer idSpChiTiet;
+    private Integer id;           // id của SanPham
     private String tenSanPham;
-    private String mauSac;
-    private String kichThuoc;
+    private String mauSac;        // để null nếu không có
+    private String kichThuoc;     // để null nếu không có
     private int soLuong;
     private BigDecimal donGia;
     private String anh;
 
-
-    public BigDecimal getThanhTien() {
-        return donGia.multiply(new BigDecimal(soLuong));
+    public CartItem(Integer id, String tenSanPham, String mauSac, String kichThuoc,
+                    int soLuong, BigDecimal donGia, String anh) {
+        this.id = id;
+        this.tenSanPham = tenSanPham;
+        this.mauSac = mauSac;
+        this.kichThuoc = kichThuoc;
+        this.soLuong = soLuong;
+        this.donGia = donGia;
+        this.anh = anh;
     }
 
+    public BigDecimal getThanhTien() {
+        return donGia.multiply(BigDecimal.valueOf(soLuong));
+    }
 
+    // Getter & Setter cho tất cả các thuộc tính
 }
 

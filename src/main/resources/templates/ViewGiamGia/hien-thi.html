@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{ViewSanPham/layout/head :: head}"></head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <header th:replace="~{ViewSanPham/layout/header :: header}"></header>
+
+    <aside th:replace="~{ViewSanPham/layout/aside :: aside}"></aside>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                Quản lý Mã Giảm Giá
+                <small>Danh sách chương trình khuyến mãi</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+                <li class="active">Giảm Giá</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Danh Sách Giảm Giá</h3>
+
+                        <div>
+                            <a class="btn btn-success" th:href="@{/giam-gia/add}">
+                                <i class="fas fa-plus"></i> Thêm mới
+                            </a>
+                        </div>
+
+                        <div class="box-tools">
+                            <form action="/giam-gia/search" method="get">
+                                <div class="input-group input-group-sm hidden-xs" style="width: 250px;">
+                                    <input type="text" name="keyword" class="form-control pull-right"
+                                           placeholder="Tìm mã hoặc tên giảm giá..."
+                                           th:value="${keyword}">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Mã Giảm Giá</th>
+                                    <th>Tên Chương Trình</th>
+                                    <th>Ngày Bắt Đầu</th>
+                                    <th>Ngày Kết Thúc</th>
+                                    <th>Loại</th>
+                                    <th>Giá Trị</th>
+                                    <th>Số Lượng</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="gg : ${list}">
+                                    <td th:text="${gg.maGiamGia}">Mã</td>
+                                    <td th:text="${gg.tenGiamGia}">Tên</td>
+                                    <td th:text="${gg.ngayBatDau}">Bắt đầu</td>
+                                    <td th:text="${gg.ngayKetThuc}">Kết thúc</td>
+                                    <td th:text="${gg.loaiGiamGia}">Loại</td>
+                                    <td th:text="${gg.giaTriGiam}">Giá trị</td>
+                                    <td th:text="${gg.soLuong}">Số lượng</td>
+                                    <td th:text="${gg.trangThai == 1 ? 'Hoạt động' : 'Ngừng'}">Trạng thái</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" th:href="@{/giam-gia/update(id=${gg.id})}">Sửa</a>
+                                        <a class="btn btn-danger btn-sm" th:href="@{/giam-gia/delete(id=${gg.id})}"
+                                           onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+        </section>
+    </div>
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.4.13
+        </div>
+        <strong>Bản quyền &copy; 2024 <a href="#">Trendora</a>.</strong> All rights reserved.
+    </footer>
+</div>
+
+<script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/assets/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/dist/js/adminlte.min.js}"></script>
+</body>
+</html>

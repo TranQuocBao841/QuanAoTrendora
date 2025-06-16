@@ -18,7 +18,7 @@
         <section class="content-header">
             <h1>
                 Trang Quản Trị Admin Bán Áo Phông
-                <small>Sản Phẩm</small>
+                <small>Control panel</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -31,13 +31,13 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Danh Sách Sản  Phẩm</h3>
+                    <h3 class="box-title">Danh Sách Sản phẩm</h3>
 
-                   <div>
-                       <a class="btn btn-success" href="/admin/san-pham/view-add">
-                           <i class="fas fa-plus"></i>Thêm mới
-                       </a>
-                   </div>
+                    <div>
+                        <a class="btn btn-success" href="/admin/san-pham/view-add">
+                            <i class="fas fa-plus"></i>Thêm mới
+                        </a>
+                    </div>
                     <div class="box-tools">
                         <form action="/admin/san-pham/timkiem" method="get">
                             <div class="input-group input-group-sm hidden-xs" style="width: 150px;">
@@ -49,6 +49,91 @@
                             </div>
                         </form>
                     </div>
+                    <form th:action="@{/admin/san-pham/loc}" method="get">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Lọc Sản Phẩm</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <!-- Tên sản phẩm -->
+                                    <div class="form-group col-md-4">
+                                        <label for="tenSanPham">Tên Sản Phẩm</label>
+                                        <input type="text" class="form-control" id="tenSanPham" name="tenSanPham"
+                                               placeholder="Nhập tên sản phẩm" th:value="${tenSanPham}">
+                                    </div>
+
+                                    <!-- Trạng thái -->
+                                    <div class="form-group col-md-4">
+                                        <label for="trangThai">Trạng Thái</label>
+                                        <select class="form-control" id="trangThai" name="trangThai">
+                                            <option value="">-- Tất cả --</option>
+                                            <option value="1" th:selected="${trangThai == 1}">Còn hàng</option>
+                                            <option value="0" th:selected="${trangThai == 0}">Hết hàng</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Màu sắc -->
+                                    <div class="form-group col-md-4">
+                                        <label>Màu Sắc</label>
+                                        <select name="mauSac" class="form-control">
+                                            <option value="">-- Tất cả --</option>
+                                            <option th:each="m : ${dsMauSac}"
+                                                    th:value="${m.id}"
+                                                    th:text="${m.tenmauSac}"
+                                                    th:selected="${param.mauSac.id == m.id}"></option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <!-- Kích thước -->
+                                    <div class="form-group col-md-4">
+                                        <label for="kichThuoc">Kích Thước</label>
+                                        <select class="form-control" id="kichThuoc" name="kichThuoc">
+                                            <option value="">-- Tất cả --</option>
+                                            <option th:each="k : ${dsKichThuoc}" th:value="${k.id}"
+                                                    th:text="${k.tenkichThuoc}" th:selected="${kichThuoc == k.id}">
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Danh mục -->
+                                    <div class="form-group col-md-4">
+                                        <label for="danhMuc">Danh Mục</label>
+                                        <select class="form-control" id="danhMuc" name="danhMuc">
+                                            <option value="">-- Tất cả --</option>
+                                            <option th:each="dm : ${dsDanhMuc}" th:value="${dm.id}"
+                                                    th:text="${dm.tendanhMuc}" th:selected="${danhMuc == dm.id}">
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Giá từ - đến -->
+                                    <div class="form-group col-md-4">
+                                        <label for="giaTu">Giá từ - đến</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="giaTu" name="giaTu"
+                                                   placeholder="Từ" th:value="${giaTu}">
+                                            <span class="input-group-addon">-</span>
+                                            <input type="number" class="form-control" id="giaDen" name="giaDen"
+                                                   placeholder="Đến" th:value="${giaDen}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-filter"></i> Lọc sản phẩm
+                                </button>
+                                <a th:href="@{/admin/san-pham}" class="btn btn-default">Reset</a>
+                            </div>
+                        </div>
+                    </form>
+
+
+
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body table-responsive no-padding">
@@ -58,10 +143,13 @@
                             <th>Mã</th>
                             <th>Ảnh</th>
                             <th>Tên</th>
-                            <th>Mô Tả</th>
-                            <th>Loại Sản Phẩm</th>
                             <th>Số Lượng</th>
-                            <th>Đơn Giá</th>
+                            <th>Size</th>
+                            <th>Màu sắc</th>
+                            <th>Chất liệu</th>
+                            <th>Danh Mục</th>
+                            <th>Mô Tả</th>
+                            <th>Giá</th>
                             <th>Trạng Thái</th>
                             <th>Hành Động</th>
                         </tr>
@@ -76,11 +164,13 @@
                                 </td>
 
                                 <td th:text="${sanpham.tenSanPham}"></td>
-                                <td th:text="${sanpham.moTa}"></td>
-                                <td th:text="${sanpham.danhMuc.tendanhMuc}"></td>
                                 <td th:text="${sanpham.soLuong}"></td>
-                                <td th:text="${#numbers.formatDecimal(sanpham.gia, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></td>
-
+                                <td th:text="${sanpham.kichThuoc.tenkichThuoc}"></td>
+                                <td th:text="${sanpham.mauSac.tenmauSac}"></td>
+                                <td th:text="${sanpham.chatLieu.tencl}"></td>
+                                <td th:text="${sanpham.danhMuc.tendanhMuc}"></td>
+                                <td th:text="${sanpham.moTa}"></td>
+                                <td th:text="${sanpham.gia}"></td>
                                 <td th:text="${sanpham.trangThai==1? 'Còn Hàng':'Hết Hàng'}"></td>
                                 <td>
                                     <a th:href="@{'/admin/san-pham/update?id=' + ${sanpham.id}}" class="btn btn-warning btn-sm">
@@ -93,7 +183,6 @@
                                     <a th:href="@{'/admin/san-pham/deltal?id=' + ${sanpham.id}}" class="btn btn-info btn-sm">
                                         <i class="fas fa-eye"></i>
                                     </a>
-
                                 </td>
                             </tr>
                         </th:block>
@@ -105,7 +194,7 @@
         </div>
 
 
-            <!-- /.content -->
+        <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
@@ -115,7 +204,52 @@
         <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io/">AdminLTE</a>.</strong> All rights
         reserved.
     </footer>
-    </div>
+</div>
+
+
+
+<script>
+    // document.addEventListener("DOMContentLoaded", function () {
+    const formLoc = document.querySelector("form[action='/admin/san-pham/loc']");
+    const selectGia = document.getElementById("giaDropdown");
+
+    if (formLoc && selectGia) {
+        // Bắt sự kiện submit form lọc
+        formLoc.addEventListener("submit", function (e) {
+            const val = selectGia.value.trim();
+
+            // Nếu có chọn khoảng giá thì kiểm tra
+            if (val !== "") {
+                // Kiểm tra định dạng "min-max"
+                const parts = val.split("-");
+                if (parts.length !== 2) {
+                    alert("Khoảng giá không hợp lệ!");
+                    e.preventDefault();
+                    return;
+                }
+                const min = parseInt(parts[0]);
+                const max = parseInt(parts[1]);
+
+                if (isNaN(min) || isNaN(max)) {
+                    alert("Khoảng giá phải là số hợp lệ!");
+                    e.preventDefault();
+                    return;
+                }
+
+                // Giới hạn giá trị hợp lệ
+                if (min < 100000 || max > 5000000 || min > max) {
+                    alert("Khoảng giá phải nằm trong khoảng từ 100.000 đến 5.000.000 và hợp lệ.");
+                    e.preventDefault();
+                    return;
+                }
+            }
+        });
+
+        // Nếu bạn muốn, có thể bỏ onchange submit tự động và để người dùng nhấn nút "Lọc"
+        // hoặc vẫn giữ nguyên onchange nếu muốn submit ngay khi chọn.
+    }
+</script>
+
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->

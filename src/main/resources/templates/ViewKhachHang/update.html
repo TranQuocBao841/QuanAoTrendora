@@ -11,10 +11,7 @@
 
     <div class="content-wrapper">
         <section class="content-header">
-            <h1>
-                Cập Nhật Khách Hàng
-                <small>Chỉnh sửa thông tin khách hàng</small>
-            </h1>
+            <h1>Cập Nhật Khách Hàng <small>Chỉnh sửa thông tin khách hàng</small></h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li><a href="/khach-hang/hien-thi">Khách hàng</a></li>
@@ -28,53 +25,57 @@
                     <h3 class="box-title">Thông tin khách hàng</h3>
                 </div>
 
-                <form th:action="@{/khach-hang/update}" th:object="${kh}" method="post">
+                <form th:action="@{/khach-hang/update}" th:object="${khachHang}" method="post">
                     <div class="box-body">
-                        <input type="hidden" th:field="*{idKh}"/>
+                        <input type="hidden" th:field="*{idKh}" />
 
                         <div class="form-group">
                             <label for="maKh">Mã KH</label>
-                            <input type="text" th:field="*{maKh}" class="form-control" id="maKh" placeholder="Nhập mã khách hàng" required>
+                            <input type="text" th:field="*{maKh}" class="form-control" id="maKh" placeholder="Nhập mã khách hàng">
+                            <div class="text-danger" th:if="${#fields.hasErrors('maKh')}" th:errors="*{maKh}"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="tenKh">Tên KH</label>
-                            <input type="text" th:field="*{tenKh}" class="form-control" id="tenKh" placeholder="Nhập tên khách hàng" required>
+                            <input type="text" th:field="*{tenKh}" class="form-control" id="tenKh" placeholder="Nhập tên khách hàng">
+                            <div class="text-danger" th:if="${#fields.hasErrors('tenKh')}" th:errors="*{tenKh}"></div>
                         </div>
 
                         <div class="form-group">
                             <label>Giới tính</label><br>
-                            <label>
-                                <input type="radio" th:field="*{gioiTinh}" value="true" checked> Nam
-                            </label>
-                            <label style="margin-left: 10px;">
-                                <input type="radio" th:field="*{gioiTinh}" value="false"> Nữ
-                            </label>
+                            <label><input type="radio" th:field="*{gioiTinh}" value="true"> Nam</label>
+                            <label style="margin-left: 10px;"><input type="radio" th:field="*{gioiTinh}" value="false"> Nữ</label>
+                            <div class="text-danger" th:if="${#fields.hasErrors('gioiTinh')}" th:errors="*{gioiTinh}"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="ngaySinh">Ngày sinh</label>
-                            <input type="text" th:field="*{ngaySinh}"  class="form-control" id="ngaySinh" required>
+                            <input type="date" th:field="*{ngaySinh}" class="form-control" id="ngaySinh">
+                            <div class="text-danger" th:if="${#fields.hasErrors('ngaySinh')}" th:errors="*{ngaySinh}"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="diaChi">Địa chỉ</label>
                             <input type="text" th:field="*{diaChi}" class="form-control" id="diaChi" placeholder="Nhập địa chỉ">
+                            <div class="text-danger" th:if="${#fields.hasErrors('diaChi')}" th:errors="*{diaChi}"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="sdt">SĐT</label>
                             <input type="text" th:field="*{sdt}" class="form-control" id="sdt" placeholder="Nhập số điện thoại">
+                            <div class="text-danger" th:if="${#fields.hasErrors('sdt')}" th:errors="*{sdt}"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Nhập email">
+                            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="quocTich">Quốc tịch</label>
                             <input type="text" th:field="*{quocTich}" class="form-control" id="quocTich" placeholder="Nhập quốc tịch">
+                            <div class="text-danger" th:if="${#fields.hasErrors('quocTich')}" th:errors="*{quocTich}"></div>
                         </div>
 
                         <div class="form-group">
@@ -83,6 +84,7 @@
                                 <option value="1">Hoạt động</option>
                                 <option value="0">Không hoạt động</option>
                             </select>
+                            <div class="text-danger" th:if="${#fields.hasErrors('trangThai')}" th:errors="*{trangThai}"></div>
                         </div>
                     </div>
 
@@ -97,14 +99,13 @@
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>Version</b> 2.4.13
+            <b>Phiên bản</b> 1.0.0
         </div>
-        <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io/">AdminLTE</a>.</strong>
-        All rights reserved.
+        <strong>&copy; 2025 <a href="#">Trendora</a>.</strong> Hệ thống quản trị bán áo phông. Thiết kế và phát triển bởi nhóm IT Trendora.
     </footer>
+
 </div>
 
-<!-- Các script -->
 <script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
 <script th:src="@{/assets/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
 <script th:src="@{/assets/dist/js/adminlte.min.js}"></script>

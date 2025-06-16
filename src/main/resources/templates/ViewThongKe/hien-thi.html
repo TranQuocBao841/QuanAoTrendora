@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{ViewSanPham/layout/head :: head}"></head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+    h4 {
+        font-size: 18px;
+        font-weight: bold;
+        color: #3c8dbc;
+    }
+
+    canvas {
+        background: #fefefe;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="wrapper">
+
+    <header th:replace="~{ViewSanPham/layout/header :: header}"></header>
+    <aside th:replace="~{ViewSanPham/layout/aside :: aside}"></aside>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                Trang Quản Trị Admin Bán Áo Phông
+                <small>Thống Kê & Báo Cáo</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Dashboard</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="box box-primary">
+                <div class="box-header with-border clearfix">
+                    <h3 class="box-title pull-left" style="padding-top: 7px;"> Thống Kê & Báo Cáo</h3>
+                    <form action="#" method="get" class="pull-right" style="min-width: 250px;">
+                        <div class="input-group input-group-sm">
+                            <input type="text" id="ten" name="ten" class="form-control"
+                                   placeholder="Tìm kiếm ..." th:value="${ten}">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="box-body">
+                    <form method="get" class="form-inline" style="margin-bottom: 25px;">
+                        <div class="form-group">
+                            <label for="fromDate">Từ ngày:</label>
+                            <input type="date" id="fromDate" name="fromDate" class="form-control"
+                                   th:value="${fromDate}" style="margin-left: 10px; margin-right: 30px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="toDate">Đến ngày:</label>
+                            <input type="date" id="toDate" name="toDate" class="form-control"
+                                   th:value="${toDate}" style="margin-left: 10px; margin-right: 30px;">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Lọc</button>
+                    </form>
+
+                    <div class="well well-sm" style="background-color: #f9f9f9; border: 1px solid #ddd;">
+                        <h3>
+                            Tổng doanh thu:
+                            <span th:text="${tongDoanhThu != null ? #numbers.formatDecimal(tongDoanhThu, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : '0 VNĐ'}"></span>
+
+                        </h3>
+                        <p><strong>Số hóa đơn:</strong> <span th:text="${soHoaDon}"></span></p>
+                        <p><strong>Số lượng sản phẩm bán ra:</strong> <span th:text="${soLuongSanPham}"></span></p>
+                    </div>
+
+                    <h4>Top sản phẩm bán chạy</h4>
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead style="background-color: #3c8dbc; color: white;">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng bán</th>
+                            <th>Thành tiền (VNĐ)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="sp : ${topSanPham}">
+                            <td th:text="${sp[0]}">Tên sản phẩm</td>
+                            <td th:text="${sp[1]}">Số lượng</td>
+                            <td th:text="${#numbers.formatDecimal(sp[2], 0, 'COMMA', 0, 'POINT')} + ' ₫'">Thành tiền</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Hai biểu đồ cạnh nhau trong card UI -->
+                    <div style="display: flex; gap: 40px; margin-top: 40px; flex-wrap: wrap;">
+                        <div style="flex: 1; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <h4 style="border-bottom: 2px solid #3c8dbc; padding-bottom: 5px;">Biểu đồ doanh thu theo ngày</h4>
+                            <canvas id="bieuDo" height="250"></canvas>
+                        </div>
+                        <div style="flex: 1; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <h4 style="border-bottom: 2px solid #3c8dbc; padding-bottom: 5px;">Tỷ lệ doanh thu Top sản phẩm</h4>
+                            <canvas id="pieChart" height="250"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Phiên bản</b> 1.0.0
+        </div>
+        <strong>&copy; 2025 <a href="#">Trendora</a>.</strong> Hệ thống quản trị bán áo phông. Thiết kế và phát triển bởi nhóm IT Trendora.
+    </footer>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    // Dữ liệu từ controller
+    let labels = /*[[${ngayList}]]*/ [];
+    let data = /*[[${doanhThuList}]]*/ [];
+
+    // Màu gradient cho biểu đồ đường
+    const ctxLine = document.getElementById('bieuDo').getContext('2d');
+    const gradient = ctxLine.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(54, 162, 235, 0.4)');
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0.2)');
+
+    // Biểu đồ đường - Doanh thu theo ngày
+    new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu (VNĐ)',
+                data: data,
+                fill: true,
+                backgroundColor: gradient,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                pointBackgroundColor: '#fff',
+                pointBorderColor: 'rgba(54, 162, 235, 1)',
+                pointHoverRadius: 6,
+                pointRadius: 4,
+                tension: 0.45
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => 'Doanh thu: ' + ctx.parsed.y.toLocaleString('vi-VN') + ' ₫'
+                    },
+                    backgroundColor: '#333',
+                    titleFont: { weight: 'bold' },
+                    bodyFont: { size: 14 }
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: value => value.toLocaleString('vi-VN') + ' ₫'
+                    },
+                    grid: {
+                        color: '#eee'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Dữ liệu biểu đồ tròn
+    let topSanPham = /*[[${topSanPham}]]*/ [];
+    let pieLabels = topSanPham.map(sp => sp[0]);
+    let pieData = topSanPham.map(sp => sp[2]);
+
+    // Tạo dải màu gradient đẹp
+    const pieColors = [
+        '#36A2EB', '#FF6384', '#FFCE56',
+        '#4BC0C0', '#9966FF', '#FF9F40',
+        '#66FF66', '#FF6666', '#6699FF', '#CCCC00'
+    ];
+
+    // Biểu đồ tròn - Tỷ lệ doanh thu theo sản phẩm
+    new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+            labels: pieLabels,
+            datasets: [{
+                data: pieData,
+                backgroundColor: pieColors.slice(0, pieLabels.length),
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 14,
+                        padding: 15,
+                        font: { size: 13 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ctx.label + ': ' + ctx.parsed.toLocaleString('vi-VN') + ' ₫'
+                    }
+                },
+                title: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+
+
+<!-- Các thư viện JS cần thiết -->
+<script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/assets/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/dist/js/adminlte.min.js}"></script>
+
+</body>
+</html>
