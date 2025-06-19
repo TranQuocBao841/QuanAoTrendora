@@ -53,4 +53,8 @@ public interface SanPhamRepo extends JpaRepository<SanPham,Integer> {
     @Query("SELECT DISTINCT s.chatLieu FROM SanPham s")
     List<String> findDistinctChatLieuAsString();
 
+
+
+    @Query("SELECT sp FROM SanPham sp WHERE sp.tenSanPham = :tenSanPham")
+    List<SanPham> findByTenSanPham(@Param("tenSanPham") String tenSanPham);
 }

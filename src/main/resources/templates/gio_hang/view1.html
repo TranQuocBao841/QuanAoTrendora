@@ -611,6 +611,8 @@
                             <a th:href="@{/san-pham/hien-thi}" class="btn btn-secondary">Tiếp tục mua hàng</a>
                         </div>
                         <div class="col-auto d-flex gap-2">
+
+
                             <form th:action="@{/gio-hang/update-all}" method="post" id="updateForm">
                                 <button type="submit" class="btn btn-outline-primary">Cập nhật giỏ hàng</button>
                             </form>
@@ -618,7 +620,30 @@
                                 <button type="submit" class="btn btn-outline-danger">Xóa toàn bộ</button>
                             </form>
 
+
                         </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <form th:action="@{/gio-hang/ap-ma-giam}" method="post" class="d-flex gap-2">
+                                    <select name="tenGiamGia" class="form-select">
+                                        <option value="">-- Chọn mã giảm giá đang có --</option>
+                                        <option th:each="g : ${danhSachGiamGia}"
+                                                th:value="${g.maGiamGia}"
+                                                th:text="${g.tenGiamGia }">
+                                        </option>
+                                    </select>
+                                    <div th:if="${#lists.isEmpty(danhSachGiamGia)}" class="text-danger">
+                                        Không có mã giảm giá nào đang hoạt động!
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Áp dụng</button>
+                                </form>
+
+                                <div class="mt-2 text-danger" th:if="${loiMaGiam}" th:text="${loiMaGiam}"></div>
+                                <div class="mt-2 text-success" th:if="${thongBaoThanhCong}" th:text="${thongBaoThanhCong}"></div>
+                            </div>
+                        </div>
+
+
                     </div>
 
                 </form>
@@ -632,16 +657,45 @@
                 <div class="border p-4 rounded">
                     <h4 class="mb-3">Tổng cộng</h4>
                     <table class="table table-borderless mb-0">
+                        <!-- Tổng tiền -->
                         <tr>
                             <th>Tổng tiền:</th>
                             <td>
-                                <strong th:utext="${#numbers.formatDecimal(cart.tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</strong>
+                                <strong th:utext="${#numbers.formatDecimal(tongTienTruocGiam, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</strong>
+                            </td>
+                        </tr>
+
+                        <!-- Nếu có mã giảm giá -->
+                        <tr th:if="${giamGiaDangApDung != null}">
+                            <th>Tên Vocher:</th>
+
+                            <td>
+                                <span th:text="${giamGiaDangApDung.tenGiamGia}">Tên mã</span>
+                                <span class="text-success ms-2" th:if="${giamGiaDangApDung.loaiGiamGia == 'Phần trăm'}">
+                        (-<span th:text="${giamGiaDangApDung.giaTriGiam}">0</span>%)
+                    </span>
+                                <span class="text-success ms-2" th:if="${giamGiaDangApDung.loaiGiamGia == 'Tiền mặt'}">
+                        (-<span th:utext="${#numbers.formatDecimal(giamGiaDangApDung.giaTriGiam, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>)
+                    </span>
+                            </td>
+                        </tr>
+
+                        <!-- Thành tiền sau giảm -->
+                        <tr th:if="${giamGiaDangApDung != null}">
+                            <th>Thành tiền:</th>
+                            <td>
+                                <strong class="text-danger fs-5"
+                                        th:utext="${#numbers.formatDecimal(tongTienSauGiam, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</strong>
                             </td>
                         </tr>
                     </table>
+
                     <a th:href="@{/thanh-toan}" class="btn btn-success w-100 mt-3">Thanh toán</a>
                 </div>
             </div>
+
+
+
         </div>
     </div>
 </section>

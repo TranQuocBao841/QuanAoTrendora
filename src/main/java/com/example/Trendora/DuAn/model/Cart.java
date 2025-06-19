@@ -31,6 +31,30 @@ public class Cart {
                 .map(CartItem::getThanhTien)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+    public BigDecimal getTongTienTruocGiam() {
+        return getTongTien();
+    }
+
+    public BigDecimal getTongTienSauGiam(GiamGia giamGia) {
+        if (giamGia == null) return getTongTien();
+
+        BigDecimal tongTien = getTongTien();
+        BigDecimal tienGiam = BigDecimal.ZERO;
+
+        String loai = giamGia.getLoaiGiamGia().toLowerCase();
+
+        if (loai.contains("phần") || loai.contains("phan")) {
+            // phần trăm
+            tienGiam = tongTien.multiply(BigDecimal.valueOf(giamGia.getGiaTriGiam()))
+                    .divide(BigDecimal.valueOf(100));
+        } else {
+            // tiền mặt
+            tienGiam = BigDecimal.valueOf(giamGia.getGiaTriGiam());
+        }
+
+        BigDecimal ketQua = tongTien.subtract(tienGiam);
+        return ketQua.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : ketQua;
+    }
 
     public void clear() {
         items.clear();
@@ -43,6 +67,8 @@ public class Cart {
         }
     }
 
+
+
     public CartItem getItemById(Integer idSanPham) {
         return items.get(idSanPham);
     }
@@ -51,4 +77,5 @@ public class Cart {
     public Map<Integer, CartItem> getItems() {
         return items;
     }
+
 }

@@ -3,7 +3,9 @@ package com.example.Trendora.DuAn.controller;
 
 import com.example.Trendora.DuAn.model.Cart;
 import com.example.Trendora.DuAn.model.CartItem;
+import com.example.Trendora.DuAn.model.GiamGia;
 import com.example.Trendora.DuAn.model.SanPham;
+import com.example.Trendora.DuAn.repository.GiamGiaRepo;
 import com.example.Trendora.DuAn.repository.SanPhamRepo;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -23,6 +28,8 @@ public class GioHangController {
     private SanPhamRepo sanPhamRepo;
 
 
+    @Autowired
+    GiamGiaRepo giamGiaRepo;
 
     @GetMapping("/gio-hang")
     public String show (){
@@ -66,63 +73,40 @@ public class GioHangController {
 
         return "redirect:/gio-hang/hien-thi";
     }
-
     @GetMapping("/hien-thi")
     public String xemGio(Model model, HttpSession session) {
         Cart cart = (Cart) session.getAttribute("gioHang");
-
         if (cart == null) {
-            cart = new Cart(); // tạo cart mới nếu chưa có
+            cart = new Cart();
             session.setAttribute("gioHang", cart);
         }
 
+        // Lấy mã giảm giá từ session
+        GiamGia giamGia = (GiamGia) session.getAttribute("maGiamGiaDaApDung");
+
+        // Tính tổng
+        BigDecimal tongTienTruocGiam = cart.getTongTien();
+        BigDecimal tongTienSauGiam = cart.getTongTienSauGiam(giamGia);
+
+        // Truyền dữ liệu ra view
         model.addAttribute("cart", cart);
+        model.addAttribute("giamGiaDangApDung", giamGia);
+        model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);
+        model.addAttribute("tongTienSauGiam", tongTienSauGiam);
+
+        List<GiamGia> danhSachGiamGia = giamGiaRepo.findMaGiamGiaConHieuLuc(LocalDateTime.now());
+        model.addAttribute("danhSachGiamGia", danhSachGiamGia);
+
         return "gio_hang/view1";
     }
 
 
 
-//    @GetMapping("/update/{id}")
-//    public String updateItemQuantity(@PathVariable("id") Integer idSanPham,
-//                                     @RequestParam("quantity") int quantity,
-//                                     HttpSession session,
-//                                     RedirectAttributes redirectAttributes) {
-//
-//        Cart cart = (Cart) session.getAttribute("gioHang");
-//        if (cart == null) {
-//            redirectAttributes.addFlashAttribute("error", "Giỏ hàng của bạn hiện không có sản phẩm nào.");
-//            return "redirect:/gio-hang/hien-thi";
-//        }
-//
-//        CartItem item = cart.getItemById(idSanPham);
-//        if (item == null) {
-//            redirectAttributes.addFlashAttribute("error", "Sản phẩm không có trong giỏ hàng.");
-//            return "redirect:/gio-hang/hien-thi";
-//        }
-//
-//        if (quantity <= 0) {
-//            redirectAttributes.addFlashAttribute("error", "Số lượng phải lớn hơn 0.");
-//            return "redirect:/gio-hang/hien-thi";
-//        }
-//
-//        SanPham sp = sanPhamRepo.findById(idSanPham).orElse(null);
-//        if (sp == null) {
-//            redirectAttributes.addFlashAttribute("error", "Không tìm thấy sản phẩm.");
-//            return "redirect:/gio-hang/hien-thi";
-//        }
-//
-//        if (quantity > sp.getSoLuong()) {
-//            redirectAttributes.addFlashAttribute("error", "Số lượng yêu cầu vượt quá tồn kho (" + sp.getSoLuong() + ").");
-//            return "redirect:/gio-hang/hien-thi";
-//        }
-//
-//        item.setSoLuong(quantity);
-//        cart.updateItem(item);
-//        session.setAttribute("gioHang", cart);
-//        redirectAttributes.addFlashAttribute("success", "Cập nhật số lượng thành công!");
-//
-//        return "redirect:/gio-hang/hien-thi";
-//    }
+
+
+
+
+
 
 
 
@@ -205,6 +189,39 @@ public class GioHangController {
         redirectAttributes.addFlashAttribute("success", "Đã xóa toàn bộ sản phẩm trong giỏ hàng.");
         return "redirect:/gio-hang/hien-thi";
     }
+
+    //giảm giá
+    @PostMapping("/ap-ma-giam")
+    public String apDungMaGiamGia(@RequestParam("tenGiamGia") String maGiamGia,
+                                  HttpSession session,
+                                  RedirectAttributes redirect) {
+
+        Cart cart = (Cart) session.getAttribute("gioHang");
+        if (cart == null || cart.getAllItems().isEmpty()) {
+            redirect.addFlashAttribute("loiMaGiam", "Giỏ hàng trống. Không thể áp dụng mã giảm giá.");
+            return "redirect:/gio-hang/hien-thi";
+        }
+
+        Optional<GiamGia> optionalGiamGia = giamGiaRepo.findByMaGiamGia(maGiamGia);
+        if (optionalGiamGia.isEmpty()) {
+            redirect.addFlashAttribute("loiMaGiam", "Mã giảm giá không tồn tại.");
+            return "redirect:/gio-hang/hien-thi";
+        }
+
+        GiamGia giamGia = optionalGiamGia.get();
+        if (giamGia.getTrangThai() != 1 ||
+                giamGia.getNgayBatDau().isAfter(LocalDateTime.now()) ||
+                giamGia.getNgayKetThuc().isBefore(LocalDateTime.now())) {
+
+            redirect.addFlashAttribute("loiMaGiam", "Mã giảm giá đã hết hạn hoặc không hợp lệ.");
+            return "redirect:/gio-hang/hien-thi";
+        }
+
+        session.setAttribute("maGiamGiaDaApDung", giamGia);
+        redirect.addFlashAttribute("thongBaoThanhCong", "Áp dụng mã giảm giá thành công!");
+        return "redirect:/gio-hang/hien-thi";
+    }
+
 
 }
 

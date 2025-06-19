@@ -48,7 +48,7 @@ public class GiamGia {
     @NotNull(message = "Giá trị giảm không được để trống")
     @DecimalMin(value = "0.0", inclusive = false, message = "Giá trị giảm phải lớn hơn 0")
     @Column(name = "gia_tri_giam", nullable = false)
-    private BigDecimal giaTriGiam;
+    private Integer giaTriGiam;
 
     @NotNull(message = "Số lượng không được để trống")
     @Min(value = 0, message = "Số lượng phải lớn hơn hoặc bằng 0")

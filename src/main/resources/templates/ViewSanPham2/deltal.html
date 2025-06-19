@@ -740,111 +740,139 @@
 <!-- Strt printmax Shop Details -->
 <!--==================================================-->
 <div class="shop-detials">
-    <div class="container">
-
-        <div class="row align-items-center">
-            <!-- Cột ảnh bên trái -->
-            <div class="col-lg-6 col-md-6">
-                <div class="product-image text-center mb-3">
-                    <img th:src="@{${sp.anhSanPham}}" alt="Ảnh sản phẩm"
-                         style="max-width: 100%; height: auto; border-radius: 8px;" />
-                </div>
-
-                <!-- Thumbnail (nếu muốn dùng sau này) -->
-                <!--
-                <div id="thumb" class="owl-carousel product-thumb2">
-                    <div th:each="thumb : ${#arrays.asList(sp.anhSanPham)}" class="item text-center">
-                        <img th:src="@{${thumb}}" alt="Ảnh thumb"
-                             style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; margin: auto;" />
-                    </div>
-                </div>
-                -->
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Ảnh sản phẩm -->
+            <div class="col-lg-6 col-md-6 mb-4">
+                <img th:src="@{${sp.anhSanPham}}" alt="Ảnh sản phẩm" class="img-fluid rounded shadow" />
             </div>
 
-        <div class="col-lg-6 col-md-6">
-            <div class="shop-dtls-info">
-                <!-- Tên sản phẩm -->
-                <div class="category-title">
+            <!-- Thông tin sản phẩm -->
+            <div class="col-lg-6 col-md-6">
+                <div class="shop-dtls-info">
+
+                    <!-- Tên -->
                     <h2 th:text="${sp.tenSanPham}">Tên sản phẩm</h2>
-                </div>
 
-                <!-- Giá -->
-                <div class="category-price">
-                    <h1 th:text="'₫' + ${sp.gia}">₫0</h1>
-                </div>
+                    <!-- Giá -->
+                    <h1 class="text-success" th:text="'₫' + ${sp.gia}">₫0</h1>
 
-                <!-- Mô tả -->
-                <div class="category-description mb-2">
-                    <p th:text="${sp.moTa}">Mô tả sản phẩm</p>
-                </div>
-
-                <!-- Màu sắc -->
-                <div class="category-color mb-3">
-                    <p>Colors: <span th:text="${sp.mauSac.tenmauSac}">Màu Sắc</span></p>
-                </div>
-
-                <!-- 🟡 Thêm bảng thông tin bên dưới -->
-                <table class="category-table mb-4">
-                    <tr>
-                        <td class="table-title">SKU</td>
-                        <td class="table-text" th:text="${sp.maSanPham}">Mã sản phẩm</td>
-                        <td class="table-title">Danh mục</td>
-                        <td class="table-text" th:text="${sp.danhMuc.tendanhMuc}">Tên danh mục</td>
-                    </tr>
-                    <tr>
-                        <td class="table-title">Kích thước</td>
-                        <td class="table-text" th:text="${sp.kichThuoc.tenkichThuoc}">Kích thước</td>
-                        <td class="table-title">Cổ Áo</td>
-                        <td class="table-text" th:text="${sp.coAo.tencoAo}">Cổ áo</td>
-                    </tr>
-                    <tr>
-                        <td class="table-title">Khuy Áo</td>
-                        <td class="table-text" th:text="${sp.khuyAo.tenkhuyAo}">Khuy áo</td>
-                        <td class="table-title">Kiểu Dáng</td>
-                        <td class="table-text" th:text="${sp.kieuDang.tenkieuDang}">Kiểu dáng</td>
-                    </tr>
-                    <tr>
-                        <td class="table-title">Đường May</td>
-                        <td class="table-text" th:text="${sp.duongMay.tenduongMay}">Đường may</td>
-                        <td class="table-title">Họa Tiết</td>
-                        <td class="table-text" th:text="${sp.hoaTiet.tenhoaTiet}">Họa tiết</td>
-                    </tr>
-                    <tr>
-                        <td class="table-title">Phong Cách</td>
-                        <td class="table-text" th:text="${sp.phongCach.tenphongCach}">Phong cách</td>
-                        <td class="table-title">Chất Liệu</td>
-                        <td class="table-text" th:text="${sp.chatLieu.tencl}">Chất liệu</td>
-                    </tr>
-                    <tr>
-                        <td class="table-title">Tay Áo</td>
-                        <td class="table-text" th:text="${sp.tayAo.tentayAo}">Tay áo</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
+                    <!-- Mô tả -->
+                    <p class="mb-3" th:text="${sp.moTa}">Mô tả sản phẩm</p>
 
 
-                <!-- Số lượng + nút mua -->
-                <div class="category-count-button d-flex align-items-center gap-3">
-                    <div class="quantity">
-                        <div class="cart-plus-minus">
-                            <input class="cart-plus-minus-box" value="1" type="text" />
-                            <div class="dec ctnbutton">-</div>
-                            <div class="inc ctnbutton">+</div>
+                    <div class="mb-3">
+                        <div class="d-flex flex-wrap gap-2">
+                            <th:block th:each="ms : ${listMauSac}">
+                                <th:block th:each="bt : ${bienTheList}">
+                                    <th:block th:if="${bt.mauSac.id == ms.id and bt.kichThuoc.id == sp.kichThuoc.id and bt.chatLieu.id == sp.chatLieu.id}">
+                                        <label class="btn btn-outline-dark" th:classappend="${ms.id} == ${sp.mauSac.id} ? 'active'">
+                                            <input type="radio" name="colorOption" hidden
+                                                   th:checked="${ms.id} == ${sp.mauSac.id}"
+                                                   th:onclick="'window.location.href=\'/san-pham/deltal?id=' + ${bt.id} + '\''"/>
+                                            <span th:text="${ms.tenmauSac}">Màu</span>
+                                        </label>
+                                    </th:block>
+                                </th:block>
+                            </th:block>
                         </div>
                     </div>
-                    <div class="category-button">
-                        <a th:href="@{'/gio-hang/add?id=' +${sp.id}}" class="btn btn-primary">
-                            Add to Cart <i class="bi bi-cart3"></i>
-                        </a>
+
+                    <!-- Kích thước -->
+                    <div class="mb-3">
+                        <div class="d-flex flex-wrap gap-2">
+                            <th:block th:each="kt : ${listKichThuoc}">
+                                <th:block th:each="bt : ${bienTheList}">
+                                    <th:block th:if="${bt.kichThuoc.id == kt.id and bt.mauSac.id == sp.mauSac.id and bt.chatLieu.id == sp.chatLieu.id}">
+                                        <label class="btn btn-outline-primary" th:classappend="${kt.id} == ${sp.kichThuoc.id} ? 'active'">
+                                            <input type="radio" name="sizeOption" hidden
+                                                   th:checked="${kt.id} == ${sp.kichThuoc.id}"
+                                                   th:onclick="'window.location.href=\'/san-pham/deltal?id=' + ${bt.id} + '\''"/>
+                                            <span th:text="${kt.tenkichThuoc}">Size</span>
+                                        </label>
+                                    </th:block>
+                                </th:block>
+                            </th:block>
+                        </div>
                     </div>
+
+                    <!-- Chất liệu -->
+                    <div class="mb-4">
+                        <div class="d-flex flex-wrap gap-2">
+                            <th:block th:each="cl : ${listChatLieu}">
+                                <th:block th:each="bt : ${bienTheList}">
+                                    <th:block th:if="${bt.chatLieu.id == cl.id and bt.kichThuoc.id == sp.kichThuoc.id and bt.mauSac.id == sp.mauSac.id}">
+                                        <label class="btn btn-outline-success" th:classappend="${cl.id} == ${sp.chatLieu.id} ? 'active'">
+                                            <input type="radio" name="materialOption" hidden
+                                                   th:checked="${cl.id} == ${sp.chatLieu.id}"
+                                                   th:onclick="'window.location.href=\'/san-pham/deltal?id=' + ${bt.id} + '\''"/>
+                                            <span th:text="${cl.tencl}">Chất</span>
+                                        </label>
+                                    </th:block>
+                                </th:block>
+                            </th:block>
+                        </div>
+                    </div>
+
+
+                    <!-- Bảng thông tin -->
+                    <table class="table table-bordered mb-4">
+                        <tr>
+                            <td><b>SKU</b></td>
+                            <td th:text="${sp.maSanPham}">Mã</td>
+                            <td><b>Danh mục</b></td>
+                            <td th:text="${sp.danhMuc.tendanhMuc}">Danh mục</td>
+                        </tr>
+                        <tr>
+                            <td><b>Cổ Áo</b></td>
+                            <td th:text="${sp.coAo.tencoAo}">Cổ</td>
+                            <td><b>Khuy Áo</b></td>
+                            <td th:text="${sp.khuyAo.tenkhuyAo}">Khuy</td>
+                        </tr>
+                        <tr>
+                            <td><b>Kiểu Dáng</b></td>
+                            <td th:text="${sp.kieuDang.tenkieuDang}">Kiểu</td>
+                            <td><b>Đường May</b></td>
+                            <td th:text="${sp.duongMay.tenduongMay}">May</td>
+                        </tr>
+                        <tr>
+                            <td><b>Họa Tiết</b></td>
+                            <td th:text="${sp.hoaTiet.tenhoaTiet}">Họa tiết</td>
+                            <td><b>Phong Cách</b></td>
+                            <td th:text="${sp.phongCach.tenphongCach}">Phong cách</td>
+                        </tr>
+                        <tr>
+                            <td><b>Tay Áo</b></td>
+                            <td th:text="${sp.tayAo.tentayAo}">Tay</td>
+                            <td><b>Chất Liệu</b></td>
+                            <td th:text="${sp.chatLieu.tencl}">Chất</td>
+                        </tr>
+                    </table>
+
+                    <!-- Số lượng + Add to Cart -->
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="quantity">
+                            <div class="cart-plus-minus">
+                                <input class="cart-plus-minus-box" value="1" type="text" />
+                                <div class="dec ctnbutton">-</div>
+                                <div class="inc ctnbutton">+</div>
+                            </div>
+                        </div>
+                        <div>
+                            <a th:href="@{'/gio-hang/add?id=' + ${sp.id}}" class="btn btn-primary">
+                                Add to Cart <i class="bi bi-cart3"></i>
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-
     </div>
-            </div>
-        </div>
+
+
+
+</div>
 
         <div class="row">
             <div class="col-lg-12">
