@@ -8,6 +8,17 @@
     <title>Wellcome to Trendora</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        .uniform-img {
+            width: 80px;           /* Chiều ngang cố định */
+            height: 80px;          /* Chiều cao cố định */
+            object-fit: cover;     /* Cắt ảnh để vừa khung mà không méo */
+            border-radius: 6px;    /* Tuỳ chọn: bo góc cho đẹp */
+            display: block;
+        }
+
+    </style>
     <!-- Favicon -->
     <link
             rel="icon"
@@ -739,203 +750,126 @@
             <div class="col-lg-3 col-md-12 pr-0 pl-0">
                 <!-- widget check box -->
                 <div class="widget-check-box">
-                    <!-- categories title -->
                     <div class="categories-title">
-                        <h4>Categories</h4>
+                        <h4>Thương Hiệu</h4>
                     </div>
-                    <!-- label -->
-                    <label class="widget-check"
-                    >Uncategories <span>(18)</span>
-                        <input type="checkbox" checked="checked" />
-                        <span class="checkmark"></span>
-                    </label>
-                    <!-- label -->
-                    <label class="widget-check"
-                    >Accessories <span>(12)</span>
-                        <input type="checkbox" />
-                        <span class="checkmark"></span>
-                    </label>
-                    <!-- label -->
-                    <label class="widget-check"
-                    >Whashing Tools <span>(23)</span>
-                        <input type="checkbox" />
-                        <span class="checkmark"></span>
-                    </label>
-                    <!-- label -->
-                    <label class="widget-check">
-                        Equipments <span>(15)</span>
-                        <input type="checkbox" />
-                        <span class="checkmark"></span>
-                    </label>
-                    <!-- label -->
-                    <label class="widget-check"
-                    >Uncategories <span>(18)</span>
-                        <input type="checkbox" />
-                        <span class="checkmark"></span>
-                    </label>
-                    <!-- label -->
-                    <label class="widget-check"
-                    >Accessories <span>(12)</span>
-                        <input type="checkbox" />
-                        <span class="checkmark"></span>
-                    </label>
-                    <!-- label -->
-                    <label class="widget-check"
-                    >Whashing Tools <span>(23)</span>
-                        <input type="checkbox" />
-                        <span class="checkmark"></span>
-                    </label>
-                    <!-- label -->
-                    <label class="widget-check">
-                        Equipments <span>(15)</span>
-                        <input type="checkbox" />
-                        <span class="checkmark"></span>
-                    </label>
+
+                    <div th:each="dm : ${danhMucList}" class="category-item" style="margin-bottom: 8px;">
+                        <label class="widget-check" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox"
+                                   class="category-filter"
+                                   th:value="${dm.tendanhMuc}"
+                                   th:checked="${selectedCategories != null and selectedCategories.contains(dm.tendanhMuc)}" />
+                            <span class="checkmark"></span>
+                            <span th:text="${dm.tendanhMuc}">Tên danh mục</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Danh sách sản phẩm -->
+                <div id="product-list" th:fragment="productList">
+                    <div th:each="sp : ${sanPhamList}" class="product-item">
+                        <h5 th:text="${sp.tenSanPham}">Tên sản phẩm</h5>
+                    </div>
                 </div>
                 <!-- range wrapper Start -->
-                <div class="range-wrapper-box">
-                    <!-- categories title -->
+                <div class="widget-check-box">
                     <div class="categories-title">
-                        <h4>Price Range</h4>
+                        <h4>Màu sắc</h4>
                     </div>
-                    <div id="slider-range"></div>
-                    <div class="slider-labels">
-                        <div class="caption">
-                            <strong>Filter</strong> <span id="slider-range-value1"></span>
-                        </div>
-                        <div class="text-right caption">
-                            <span>-</span> <span id="slider-range-value2"></span>
+
+                    <!-- Bộ lọc màu sắc -->
+                    <div th:each="mau : ${mauSacList}" class="color-item" style="margin-bottom: 8px;">
+                        <label class="widget-check" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox"
+                                   name="colors"
+                                   class="color-filter"
+                                   th:value="${mau.tenmauSac}"
+                                   th:checked="${selectedColors != null and selectedColors.contains(mau.tenmauSac)}" />
+                            <span class="checkmark"></span>
+                            <span th:text="${mau.tenmauSac}">Màu</span>
+                        </label>
+                    </div>
+
+                    <!-- Danh sách sản phẩm -->
+                    <div id="product-list" th:fragment="productList">
+                        <div th:each="sp : ${sanPhamList}" class="product-item">
+                            <h5 th:text="${sp.tenSanPham}">Tên sản phẩm</h5>
                         </div>
                     </div>
-                    <form>
-                        <input type="hidden" name="min-value" value="" />
-                        <input type="hidden" name="max-value" value="" />
-                    </form>
                 </div>
-                <!-- range wrapper End -->
+
+                    <!-- range wrapper End -->
+
+                <div class="widget-check-box">
+                    <div class="categories-title">
+                        <h4>Kích thước</h4>
+                    </div>
+
+                    <!-- Bộ lọc Kich thuoc -->
+                    <div th:each="mau : ${kichthuocList}" class="color-item" style="margin-bottom: 8px;">
+                        <label class="widget-check" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox"
+                                   name="sizes"
+                                   class="size-filter"
+                                   th:value="${mau.tenkichThuoc}"
+                                   th:checked="${selectedSizes  != null and selectedSizes .contains(mau.tenkichThuoc)}" />
+                            <span class="checkmark"></span>
+                            <span th:text="${mau.tenkichThuoc}">Màu</span>
+                        </label>
+                    </div>
+
+                    <!-- Danh sách sản phẩm -->
+                    <div id="product-list" th:fragment="productList">
+                        <div th:each="sp : ${sanPhamList}" class="product-item">
+                            <h5 th:text="${sp.tenSanPham}">Tên sản phẩm</h5>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- product category box -->
                 <div class="product-categories-box">
                     <!-- categories title -->
                     <div class="categories-title">
-                        <h4>Popular Products</h4>
+                        <h4>Top 5 Sản Phẩm</h4>
                     </div>
+
                     <!-- product collection -->
-                    <div class="products-collection">
+                    <div th:each="sp : ${top5SanPham}" class="products-collection mb-3">
                         <!-- product thumb -->
-                        <div class="product-thumb">
-                            <img th:src="@{/fe/images/inner-img/sort_porduct1.png}" alt="" />
-                        </div>
-                        <!-- products content -->
-                        <div class="products-content">
-                            <!-- title -->
-                            <div class="products-title">
-                                <h6>Measure Tape</h6>
+                        <div class="products-collection d-flex align-items-start gap-3 mb-3">
+                            <div class="product-thumb">
+                                <img th:src="${sp.anhSanPham}" class="uniform-img" alt="Ảnh sản phẩm" />
                             </div>
-                            <!-- proice -->
-                            <div class="product-price">
-                                <span>£30.00</span>
-                            </div>
-                            <div class="product-icon-list">
-                                <ul>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- product collection -->
-                    <div class="products-collection">
-                        <!-- product thumb -->
-                        <div class="product-thumb">
-                            <img th:src="@{/fe/images/inner-img/sort_porduct2.png}" alt="" />
-                        </div>
-                        <!-- products content -->
-                        <div class="products-content">
-                            <!-- title -->
-                            <div class="products-title">
-                                <h6>Electric Dril Machine</h6>
-                            </div>
-                            <!-- proice -->
-                            <div class="product-price">
-                                <span>£15.00</span>
-                            </div>
-                            <div class="product-icon-list">
-                                <ul>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star"></i></li>
-                                </ul>
+                            <div class="products-content">
+                                <div class="products-title">
+                                    <h6 th:text="${sp.tenSanPham}">Tên sản phẩm</h6>
+                                </div>
+                                <div class="product-price">
+                                    <span th:text="'₫' + ${#numbers.formatDecimal(sp.gia, 0, 'COMMA', 0, 'POINT')}">₫0</span>
+                                </div>
+                                <div class="product-icon-list">
+                                    <ul class="d-flex gap-1">
+                                        <li><i class="bi bi-star-fill"></i></li>
+                                        <li><i class="bi bi-star-fill"></i></li>
+                                        <li><i class="bi bi-star-fill"></i></li>
+                                        <li><i class="bi bi-star-fill"></i></li>
+                                        <li><i class="bi bi-star"></i></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- product collection -->
-                    <div class="products-collection">
-                        <!-- product thumb -->
-                        <div class="product-thumb">
-                            <img th:src="@{/fe/images/inner-img/sort_porduct3.png}" alt="" />
-                        </div>
-                        <!-- products content -->
-                        <div class="products-content">
-                            <!-- title -->
-                            <div class="products-title">
-                                <h6>Electric Meter</h6>
-                            </div>
-                            <!-- proice -->
-                            <div class="product-price">
-                                <span>£45.00</span>
-                            </div>
-                            <div class="product-icon-list">
-                                <ul>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- product collection -->
-                    <div class="products-collection">
-                        <!-- product thumb -->
-                        <div class="product-thumb">
-                            <img th:src="@{/fe/images/inner-img/sort_porduct4.png}" alt="" />
-                        </div>
-                        <!-- products content -->
-                        <div class="products-content">
-                            <!-- title -->
-                            <div class="products-title">
-                                <h6>Electricity Clip</h6>
-                            </div>
-                            <!-- proice -->
-                            <div class="product-price">
-                                <span>£22.00</span>
-                            </div>
-                            <div class="product-icon-list">
-                                <ul>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star"></i></li>
-                                </ul>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
+
             </div>
             <div class="col-lg-9 col-md-12">
                 <div class="row products">
                     <div class="col-lg-6 col-md-6">
                         <div class="form_box">
                             <p class="form-text">Show on Page</p>
-                            <select id="cars" name="carlist" form="carform">
+                            <select id="cars" name="carlist" >
                                 <option value="service">10 items</option>
                                 <option value="volvo">9 items</option>
                                 <option value="saab">8 items</option>
@@ -1156,6 +1090,52 @@
 
 
 </script>
+<script>
+    function updateFilters() {
+        // Lấy các danh mục được chọn
+        const selectedCategories = Array.from(document.querySelectorAll('.category-filter:checked'))
+            .map(cb => cb.value);
+
+        // Lấy các màu sắc được chọn
+        const selectedColors = Array.from(document.querySelectorAll('.color-filter:checked'))
+            .map(cb => cb.value);
+
+        // Lấy các kích thước được chọn
+        const selectedSizes = Array.from(document.querySelectorAll('.size-filter:checked'))
+            .map(cb => cb.value);
+
+        // Tạo URL với nhiều tham số như: ?categories=A&colors=Red&sizes=M
+        const params = new URLSearchParams();
+
+        selectedCategories.forEach(c => params.append('categories', c));
+        selectedColors.forEach(c => params.append('colors', c));
+        selectedSizes.forEach(s => params.append('sizes', s));
+
+        // Điều hướng đến URL có chứa tất cả các bộ lọc
+        window.location.href = `/san-pham/hien-thi?${params.toString()}`;
+    }
+
+    // Gắn sự kiện change cho checkbox danh mục
+    document.querySelectorAll('.category-filter').forEach(cb => {
+        cb.addEventListener('change', updateFilters);
+    });
+
+    // Gắn sự kiện change cho checkbox màu sắc
+    document.querySelectorAll('.color-filter').forEach(cb => {
+        cb.addEventListener('change', updateFilters);
+    });
+
+    // Gắn sự kiện change cho checkbox kích thước
+    document.querySelectorAll('.size-filter').forEach(cb => {
+        cb.addEventListener('change', updateFilters);
+    });
+</script>
+
+
+
+
+
+
 <script th:src="@{/fe/js/vendor/jquery-3.6.2.min.js}"></script>
 <script th:src="@{/fe/js/popper.min.js}"></script>
 <!-- bootstrap js -->

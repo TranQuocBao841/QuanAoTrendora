@@ -5,6 +5,7 @@ import com.example.Trendora.DuAn.model.KhachHang;
 import com.example.Trendora.DuAn.model.TaiKhoan;
 import com.example.Trendora.DuAn.repository.KhachHangRepo;
 import com.example.Trendora.DuAn.repository.TaiKhoanRepo;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.stereotype.Controller;
@@ -85,7 +86,8 @@ public class TaiKhoanController {
     @PostMapping("/login")
     public String login(@RequestParam String email,
                         @RequestParam String matKhau,
-                        Model model) {
+                        Model model,
+                        HttpSession session) { // 👈 THÊM HttpSession
 
         TaiKhoan user = taiKhoanRepository.findByEmailAndMatKhau(email, matKhau);
 
@@ -94,19 +96,25 @@ public class TaiKhoanController {
             return "ViewTrendora/login";
         }
 
-        // Kiểm tra trạng thái tài khoản
         if (!user.getTrangThai()) {
             model.addAttribute("error", "Tài khoản của bạn đã bị khóa hoặc ngừng hoạt động!");
             return "ViewTrendora/login";
         }
 
-        model.addAttribute("user", user);
+        // ✅ Lưu thông tin đăng nhập vào session
+        session.setAttribute("khachHangDangNhap", user); // 👈 dùng key này để kiểm tra ở giỏ hàng
 
         if ("1".equalsIgnoreCase(String.valueOf(user.getLoaiTaiKhoan()))) {
-            return "redirect:/admin/san-pham/hien-thi"; // Trang quản lý dành cho nhân viên
+            return "redirect:/admin/san-pham/hien-thi";
         } else {
-            return "redirect:/san-pham/hien-thi"; // Trang bình thường dành cho khách hàng
+            return "redirect:/san-pham/hien-thi";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // Xóa hết dữ liệu phiên
+        return "redirect:/quan-ao/login";
     }
 
 }

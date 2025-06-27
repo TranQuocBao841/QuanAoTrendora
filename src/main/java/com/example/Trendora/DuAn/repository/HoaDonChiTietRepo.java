@@ -1,8 +1,11 @@
 package com.example.Trendora.DuAn.repository;
 
 
+import com.example.Trendora.DuAn.DTO.HoaDonChiTietDTO;
 import com.example.Trendora.DuAn.model.HoaDonChiTiet;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet,Integer> {
@@ -75,4 +79,18 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet,Integer> 
             @Param("from") LocalDate from,
             @Param("to") LocalDate to
     );
+
+
+
+    @Query("SELECT new com.example.Trendora.DuAn.DTO.HoaDonChiTietDTO(" +
+            "ct.id, ct.hoaDon.id, ct.maHdct, sp.tenSanPham, ct.donGia, ct.soLuong, ct.thanhTien, ct.trangThai) " +
+            "FROM HoaDonChiTiet ct " +
+            "JOIN ct.sanPham sp " +
+            "WHERE ct.hoaDon.id = :hoaDonId")
+    Optional<HoaDonChiTietDTO> findDTOByHoaDonId(@Param("hoaDonId") Integer hoaDonId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE HoaDonChiTiet c SET c.trangThai = :trangThai WHERE c.hoaDon.id = :hoaDonId")
+    void updateTrangThaiByHoaDonId(@Param("hoaDonId") Integer hoaDonId, @Param("trangThai") Integer trangThai);
 }

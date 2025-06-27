@@ -44,6 +44,15 @@ public class GioHangController {
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
+        // 🔒 Kiểm tra đăng nhập
+        Object user = session.getAttribute("khachHangDangNhap");
+        if (user == null) {
+            // ✅ Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập trước khi thêm sản phẩm vào giỏ hàng.");
+            return "redirect:/quan-ao/login";  // 🔁 Đường dẫn trang đăng nhập của bạn
+        }
+
+        // ✅ Nếu đã đăng nhập thì tiếp tục thêm vào giỏ hàng
         Optional<SanPham> optional = sanPhamRepo.findById(idSanPham);
         if (optional.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Sản phẩm không tồn tại.");
@@ -60,19 +69,20 @@ public class GioHangController {
         CartItem item = new CartItem(
                 sp.getId(),
                 sp.getTenSanPham(),
-                null,             // Không có màu sắc
-                null,             // Không có kích thước
+                null,
+                null,
                 soLuong,
-                sp.getGia(),   // Giá sản phẩm
-                sp.getAnhSanPham()       // Ảnh sản phẩm
+                sp.getGia(),
+                sp.getAnhSanPham()
         );
 
         cart.addItem(item);
         session.setAttribute("gioHang", cart);
         redirectAttributes.addFlashAttribute("success", "Đã thêm vào giỏ hàng!");
-
         return "redirect:/gio-hang/hien-thi";
     }
+
+
     @GetMapping("/hien-thi")
     public String xemGio(Model model, HttpSession session) {
         Cart cart = (Cart) session.getAttribute("gioHang");

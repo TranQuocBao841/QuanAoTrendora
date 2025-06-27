@@ -57,4 +57,18 @@ public interface SanPhamRepo extends JpaRepository<SanPham,Integer> {
 
     @Query("SELECT sp FROM SanPham sp WHERE sp.tenSanPham = :tenSanPham")
     List<SanPham> findByTenSanPham(@Param("tenSanPham") String tenSanPham);
+
+
+
+    @Query("SELECT sp FROM SanPham sp WHERE "
+            + "(:categories IS NULL OR sp.danhMuc.tendanhMuc IN :categories) AND "
+            + "(:colors IS NULL OR sp.mauSac.tenmauSac IN :colors) AND "
+            + "(:sizes IS NULL OR sp.kichThuoc.tenkichThuoc IN :sizes)")
+    List<SanPham> locTheoDanhMucMauSacVaSize(@Param("categories") List<String> categories,
+                                             @Param("colors") List<String> colors,
+                                             @Param("sizes") List<String> sizes);
+
+    List<SanPham> findTop5ByOrderByGiaDesc();
+
+
 }

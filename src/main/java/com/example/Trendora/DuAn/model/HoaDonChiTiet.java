@@ -32,13 +32,13 @@ public class HoaDonChiTiet {
     private String maHdct;
 
     @Column(name = "don_gia")
-    private BigDecimal donGia;
+    private Integer donGia;
 
     @Column(name = "so_luong")
     private Integer soLuong;
 
     @Column(name = "thanh_tien")
-    private BigDecimal thanhTien;
+    private Integer thanhTien;
 
     @Column(name = "trang_thai")
     private Integer trangThai;

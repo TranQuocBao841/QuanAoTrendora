@@ -1,6 +1,7 @@
 package com.example.Trendora.DuAn.controller;
 
 import com.example.Trendora.DuAn.model.*;
+import com.example.Trendora.DuAn.repository.DanhMucRepo;
 import com.example.Trendora.DuAn.repository.KichThuocRepo;
 import com.example.Trendora.DuAn.repository.MauSacRepo;
 import com.example.Trendora.DuAn.repository.SanPhamRepo;
@@ -27,6 +28,8 @@ public class SanPhamController {
    @Autowired
    MauSacRepo mauSacRepo;
 
+   @Autowired
+   DanhMucRepo danhMucRepo;
 
    @GetMapping("trang-chu")
    public String HienThiTrangChu( Model model) {
@@ -38,10 +41,41 @@ public class SanPhamController {
 
 
    @GetMapping("hien-thi")
-   public String HienThiDanhSachSanPham(Model model){
-      model.addAttribute("list",sanPhamRepo.findAll());
+   public String HienThiDanhSachSanPham(
+           @RequestParam(value = "categories", required = false) List<String> categories,
+           @RequestParam(value = "colors", required = false) List<String> colors,
+           @RequestParam(value = "sizes", required = false) List<String> sizes,
+           Model model) {
+
+      List<SanPham> list;
+
+      // Lọc theo danh mục, màu sắc, kích thước nếu có chọn
+      if ((categories != null && !categories.isEmpty()) ||
+              (colors != null && !colors.isEmpty()) ||
+              (sizes != null && !sizes.isEmpty())) {
+
+         list = sanPhamRepo.locTheoDanhMucMauSacVaSize(categories, colors, sizes);
+      } else {
+         list = sanPhamRepo.findAll();
+      }
+
+      // Gửi dữ liệu ra view
+      model.addAttribute("list", list); // danh sách sản phẩm hiển thị
+      model.addAttribute("danhMucList", danhMucRepo.findAll()); // danh mục
+      model.addAttribute("mauSacList", mauSacRepo.findAll());   // màu sắc
+      model.addAttribute("kichthuocList", kichThuocRepo.findAll()); // kích thước
+      model.addAttribute("top5SanPham", sanPhamRepo.findTop5ByOrderByGiaDesc());
+
+      // Giữ lại giá trị đã chọn sau khi lọc
+      model.addAttribute("selectedCategories", categories != null ? categories : List.of());
+      model.addAttribute("selectedColors", colors != null ? colors : List.of());
+      model.addAttribute("selectedSizes", sizes != null ? sizes : List.of());
+
       return "/ViewSanPham2/hien-thi";
    }
+
+
+
 
 
    @GetMapping("/deltal")
@@ -80,6 +114,21 @@ public class SanPhamController {
       return "/ViewSanPham2/deltal";
    }
 
+   @GetMapping("/loc-theo-danh-muc")
+   public String locTheoDanhMuc(
+           @RequestParam(value = "categories", required = false) List<String> categories,
+           @RequestParam(value = "colors", required = false) List<String> colors,
+           @RequestParam(value = "sizes", required = false) List<String> sizes,
+           Model model) {
+
+      List<SanPham> filteredList = sanPhamRepo.locTheoDanhMucMauSacVaSize(categories, colors,sizes);
+
+      model.addAttribute("sanPhamList", filteredList);
+      model.addAttribute("selectedCategories", categories != null ? categories : List.of());
+      model.addAttribute("selectedColors", colors != null ? colors : List.of());
+      model.addAttribute("selectedSizes", sizes != null ? sizes : List.of());
+      return "ViewSanPham2/hien-thi :: productList"; // chỉ render lại danh sách sản phẩm
+   }
 
 //   @GetMapping("/timkiem")
 //   public String timKiemSanPham(@RequestParam(value = "ten", required = false, defaultValue = "") String ten, Model model) {

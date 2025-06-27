@@ -44,7 +44,7 @@ public class HoaDon {
     private LocalDateTime ngayTao;
 
     @Column(name = "tong_tien")
-    private BigDecimal tongTien;
+    private Integer tongTien;
 
     @Column(name = "trang_thai")
     private Integer trangThai;
