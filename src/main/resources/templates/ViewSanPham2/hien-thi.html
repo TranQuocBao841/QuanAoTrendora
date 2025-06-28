@@ -931,9 +931,11 @@
                     <div class="col-lg-12">
                         <div class="pagination-menu text-center">
                             <ul>
-                                <li><a href="#" class="#">1</a></li>
-                                <li><a href="#" class="active">3</a></li>
-                                <li><a href="#" class="#">2</a></li>
+                                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                                    <a th:href="@{/san-pham/hien-thi(page=${i})}"
+                                       th:text="${i + 1}"
+                                       th:classappend="${i} == ${currentPage} ? 'active' : ''"></a>
+                                </li>
                             </ul>
                         </div>
                     </div>

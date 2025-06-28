@@ -6,6 +6,9 @@ import com.example.Trendora.DuAn.repository.KichThuocRepo;
 import com.example.Trendora.DuAn.repository.MauSacRepo;
 import com.example.Trendora.DuAn.repository.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +48,7 @@ public class SanPhamController {
            @RequestParam(value = "categories", required = false) List<String> categories,
            @RequestParam(value = "colors", required = false) List<String> colors,
            @RequestParam(value = "sizes", required = false) List<String> sizes,
+           @RequestParam(defaultValue = "0") int page,
            Model model) {
 
       List<SanPham> list;
@@ -71,6 +75,12 @@ public class SanPhamController {
       model.addAttribute("selectedColors", colors != null ? colors : List.of());
       model.addAttribute("selectedSizes", sizes != null ? sizes : List.of());
 
+      Pageable pageable = PageRequest.of(page, 6); // 5 sản phẩm mỗi trang
+      Page<SanPham> pageSanPham = sanPhamRepo.findAll(pageable);
+
+      model.addAttribute("list", pageSanPham.getContent());
+      model.addAttribute("currentPage", page);
+      model.addAttribute("totalPages", pageSanPham.getTotalPages());
       return "/ViewSanPham2/hien-thi";
    }
 

@@ -2,6 +2,8 @@ package com.example.Trendora.DuAn.repository;
 
 
 import com.example.Trendora.DuAn.model.SanPham;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,22 +38,6 @@ public interface SanPhamRepo extends JpaRepository<SanPham,Integer> {
 
     boolean existsByMaSanPham(String maSanPham);
 
-    // Tên sản phẩm
-    @Query("SELECT DISTINCT s.tenSanPham FROM SanPham s")
-    List<String> findDistinctTenSanPham();
-
-    // Kích thước - đảm bảo chỉ lấy chuỗi, không lấy đối tượng
-    @Query("SELECT DISTINCT s.kichThuoc.tenkichThuoc FROM SanPham s")
-    List<String> findDistinctKichThuocAsString(); // ✅ đúng
-
-
-    // Màu sắc
-    @Query("SELECT DISTINCT s.mauSac FROM SanPham s")
-    List<String> findDistinctMauSacAsString();
-
-    // Chất liệu
-    @Query("SELECT DISTINCT s.chatLieu FROM SanPham s")
-    List<String> findDistinctChatLieuAsString();
 
 
 
@@ -71,4 +57,22 @@ public interface SanPhamRepo extends JpaRepository<SanPham,Integer> {
     List<SanPham> findTop5ByOrderByGiaDesc();
 
 
+    @Query("SELECT sp FROM SanPham sp WHERE " +
+            "(:tenSanPham IS NULL OR LOWER(sp.tenSanPham) LIKE LOWER(CONCAT('%', :tenSanPham, '%'))) AND " +
+            "(:mauSac IS NULL OR sp.mauSac.id = :mauSac) AND " +
+            "(:chatLieu IS NULL OR sp.chatLieu.id = :chatLieu) AND " +
+            "(:kichThuoc IS NULL OR sp.kichThuoc.id = :kichThuoc) AND " +
+            "(:danhMuc IS NULL OR sp.danhMuc.id = :danhMuc) AND " +
+            "(:giaMin IS NULL OR sp.gia >= :giaMin) AND " +
+            "(:giaMax IS NULL OR sp.gia <= :giaMax)")
+    Page<SanPham> locSanPhamPhanTrang(
+            @Param("tenSanPham") String tenSanPham,
+            @Param("mauSac") Long mauSac,
+            @Param("chatLieu") Long chatLieu,
+            @Param("kichThuoc") Long kichThuoc,
+            @Param("danhMuc") Long danhMuc,
+            @Param("giaMin") BigDecimal giaMin,
+            @Param("giaMax") BigDecimal giaMax,
+            Pageable pageable
+    );
 }

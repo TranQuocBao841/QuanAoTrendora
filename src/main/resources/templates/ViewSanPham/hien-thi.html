@@ -49,87 +49,77 @@
                             </div>
                         </form>
                     </div>
-                    <form th:action="@{/admin/san-pham/loc}" method="get">
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Lọc Sản Phẩm</h3>
-                            </div>
-                            <div class="box-body">
-                                <div class="row">
-                                    <!-- Tên sản phẩm -->
-                                    <div class="form-group col-md-4">
-                                        <label for="tenSanPham">Tên Sản Phẩm</label>
-                                        <input type="text" class="form-control" id="tenSanPham" name="tenSanPham"
-                                               placeholder="Nhập tên sản phẩm" th:value="${tenSanPham}">
-                                    </div>
+                    <form th:action="@{/admin/san-pham/hien-thi}" method="get" class="row" style="margin-bottom: 20px;">
 
-                                    <!-- Trạng thái -->
-                                    <div class="form-group col-md-4">
-                                        <label for="trangThai">Trạng Thái</label>
-                                        <select class="form-control" id="trangThai" name="trangThai">
-                                            <option value="">-- Tất cả --</option>
-                                            <option value="1" th:selected="${trangThai == 1}">Còn hàng</option>
-                                            <option value="0" th:selected="${trangThai == 0}">Hết hàng</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Màu sắc -->
-                                    <div class="form-group col-md-4">
-                                        <label>Màu Sắc</label>
-                                        <select name="mauSac" class="form-control">
-                                            <option value="">-- Tất cả --</option>
-                                            <option th:each="m : ${dsMauSac}"
-                                                    th:value="${m.id}"
-                                                    th:text="${m.tenmauSac}"
-                                                    th:selected="${param.mauSac.id == m.id}"></option>
-                                        </select>
-
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <!-- Kích thước -->
-                                    <div class="form-group col-md-4">
-                                        <label for="kichThuoc">Kích Thước</label>
-                                        <select class="form-control" id="kichThuoc" name="kichThuoc">
-                                            <option value="">-- Tất cả --</option>
-                                            <option th:each="k : ${dsKichThuoc}" th:value="${k.id}"
-                                                    th:text="${k.tenkichThuoc}" th:selected="${kichThuoc == k.id}">
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Danh mục -->
-                                    <div class="form-group col-md-4">
-                                        <label for="danhMuc">Danh Mục</label>
-                                        <select class="form-control" id="danhMuc" name="danhMuc">
-                                            <option value="">-- Tất cả --</option>
-                                            <option th:each="dm : ${dsDanhMuc}" th:value="${dm.id}"
-                                                    th:text="${dm.tendanhMuc}" th:selected="${danhMuc == dm.id}">
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Giá từ - đến -->
-                                    <div class="form-group col-md-4">
-                                        <label for="giaTu">Giá từ - đến</label>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" id="giaTu" name="giaTu"
-                                                   placeholder="Từ" th:value="${giaTu}">
-                                            <span class="input-group-addon">-</span>
-                                            <input type="number" class="form-control" id="giaDen" name="giaDen"
-                                                   placeholder="Đến" th:value="${giaDen}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-footer">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-filter"></i> Lọc sản phẩm
-                                </button>
-                                <a th:href="@{/admin/san-pham}" class="btn btn-default">Reset</a>
-                            </div>
+                        <!-- Màu sắc -->
+                        <div class="form-group col-md-2">
+                            <label for="mauSac">Màu sắc</label>
+                            <select name="mauSac" id="mauSac" class="form-control" onchange="this.form.submit()">
+                                <option value="">-- Màu sắc --</option>
+                                <option th:each="ms : ${dsMauSac}"
+                                        th:value="${ms.id}"
+                                        th:text="${ms.tenmauSac}"
+                                        th:selected="${ms.id == mauSac}">
+                                </option>
+                            </select>
                         </div>
+
+                        <!-- Kích thước -->
+                        <div class="form-group col-md-2">
+                            <label for="kichThuoc">Kích thước</label>
+                            <select name="kichThuoc" id="kichThuoc" class="form-control" onchange="this.form.submit()">
+                                <option value="">-- Kích thước --</option>
+                                <option th:each="kt : ${dsKichThuoc}"
+                                        th:value="${kt.id}"
+                                        th:text="${kt.tenkichThuoc}"
+                                        th:selected="${kt.id == kichThuoc}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Chất liệu -->
+                        <div class="form-group col-md-2">
+                            <label for="chatLieu">Chất liệu</label>
+                            <select name="chatLieu" id="chatLieu" class="form-control" onchange="this.form.submit()">
+                                <option value="">-- Chất liệu --</option>
+                                <option th:each="cl : ${dsChatLieu}"
+                                        th:value="${cl.id}"
+                                        th:text="${cl.tencl}"
+                                        th:selected="${cl.id == chatLieu}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Danh mục -->
+                        <div class="form-group col-md-2">
+                            <label for="danhMuc">Danh mục</label>
+                            <select name="danhMuc" id="danhMuc" class="form-control" onchange="this.form.submit()">
+                                <option value="">-- Danh mục --</option>
+                                <option th:each="dm : ${dsDanhMuc}"
+                                        th:value="${dm.id}"
+                                        th:text="${dm.tendanhMuc}"
+                                        th:selected="${dm.id == danhMuc}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Khoảng giá -->
+                        <div class="form-group col-md-2">
+                            <label for="khoangGia">Khoảng giá</label>
+                            <select name="khoangGia" id="khoangGia" class="form-control" onchange="this.form.submit()">
+                                <option value="">-- Khoảng giá --</option>
+                                <option value="100000-500000" th:selected="${khoangGia == '100000-500000'}">100.000 - 500.000</option>
+                                <option value="500000-1000000" th:selected="${khoangGia == '500000-1000000'}">500.000 - 1.000.000</option>
+                                <option value="1000000-5000000" th:selected="${khoangGia == '1000000-5000000'}">1.000.000 - 5.000.000</option>
+                            </select>
+                        </div>
+
+                        <!-- Nút reset -->
+                        <div class="form-group col-md-2">
+                            <label>&nbsp;</label>
+                            <a href="/admin/san-pham/hien-thi" class="btn btn-default btn-block">Reset bộ lọc</a>
+                        </div>
+
                     </form>
 
 
@@ -189,6 +179,64 @@
                         </tbody></table>
                 </div>
                 <!-- /.box-body -->
+                <!-- PHÂN TRANG NÂNG CAO -->
+                <div class="box-footer clearfix" th:if="${totalPages > 1}">
+                    <ul class="pagination pagination-sm no-margin pull-right">
+
+                        <!-- Nút « Trang đầu -->
+                        <li th:classappend="${currentPage == 0} ? 'disabled'">
+                            <a th:href="@{/admin/san-pham/hien-thi(
+                page=0,
+                tenSanPham=${tenSanPham},
+                mauSac=${mauSac},
+                chatLieu=${chatLieu},
+                kichThuoc=${kichThuoc},
+                khoangGia=${khoangGia},
+                danhMuc=${danhMuc}
+            )}">&laquo;</a>
+                        </li>
+
+                        <!-- Dấu ... đầu -->
+                        <li th:if="${currentPage > 2}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <!-- Hiển thị các trang gần currentPage -->
+                        <li th:each="i : ${#numbers.sequence(
+            currentPage > 2 ? currentPage - 2 : 0,
+            currentPage + 2 >= totalPages ? totalPages - 1 : currentPage + 2)}"
+                            th:classappend="${i == currentPage} ? 'active'">
+                            <a th:href="@{/admin/san-pham/hien-thi(
+                page=${i},
+                tenSanPham=${tenSanPham},
+                mauSac=${mauSac},
+                chatLieu=${chatLieu},
+                kichThuoc=${kichThuoc},
+                khoangGia=${khoangGia},
+                danhMuc=${danhMuc}
+            )}" th:text="${i + 1}">1</a>
+                        </li>
+
+                        <!-- Dấu ... cuối -->
+                        <li th:if="${currentPage + 3 < totalPages}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <!-- Nút » Trang cuối -->
+                        <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                            <a th:href="@{/admin/san-pham/hien-thi(
+                page=${totalPages - 1},
+                tenSanPham=${tenSanPham},
+                mauSac=${mauSac},
+                chatLieu=${chatLieu},
+                kichThuoc=${kichThuoc},
+                khoangGia=${khoangGia},
+                danhMuc=${danhMuc}
+            )}">&raquo;</a>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
             <!-- /.box -->
         </div>

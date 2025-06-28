@@ -5,6 +5,8 @@ import com.example.Trendora.DuAn.model.SanPham;
 import com.example.Trendora.DuAn.repository.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,11 +56,74 @@ public class AdminSanPhamController {
     @Autowired
     DanhMucRepo danhMucRepo;
 
-    @GetMapping("hien-thi")
-    public String Hienthi(Model model) {
-        model.addAttribute("list", sanPhamRepo.findAll());
-        return "ViewSanpham/hien-thi";
+    @GetMapping("/hien-thi")
+    public String hienThiSanPham(
+            @RequestParam(required = false) String tenSanPham,
+            @RequestParam(required = false) Long mauSac,
+            @RequestParam(required = false) Long chatLieu,
+            @RequestParam(required = false) Long kichThuoc,
+            @RequestParam(required = false) String khoangGia,
+            @RequestParam(required = false) Long danhMuc,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model
+    ) {
+        // Xử lý khoảng giá nếu có
+        BigDecimal giaMin = null;
+        BigDecimal giaMax = null;
+
+        if (khoangGia != null && khoangGia.contains("-")) {
+            try {
+                String[] parts = khoangGia.split("-");
+                giaMin = new BigDecimal(parts[0]);
+                giaMax = new BigDecimal(parts[1]);
+            } catch (Exception e) {
+                // Nếu không parse được giá, cứ để null
+            }
+        }
+
+        // In log để kiểm tra
+        System.out.println("Tên SP: " + tenSanPham);
+        System.out.println("Màu sắc ID: " + mauSac);
+        System.out.println("Kích thước ID: " + kichThuoc);
+        System.out.println("Chất liệu ID: " + chatLieu);
+        System.out.println("Khoảng giá: " + giaMin + " - " + giaMax);
+        System.out.println("Danh mục ID: " + danhMuc);
+
+
+        // Sau khi gọi repository trả về Page<SanPham>
+        Page<SanPham> sanPhamPage = sanPhamRepo.locSanPhamPhanTrang(
+                tenSanPham,
+                mauSac,
+                chatLieu,
+                kichThuoc,
+                danhMuc,
+                giaMin,
+                giaMax,
+                PageRequest.of(page, size)
+        );
+
+        model.addAttribute("list", sanPhamPage.getContent()); // truyền danh sách
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", sanPhamPage.getTotalPages());
+
+        // Đổ dropdown
+        model.addAttribute("dsMauSac", mauSacRepo.findAll());
+        model.addAttribute("dsKichThuoc", kichThuocRepo.findAll());
+        model.addAttribute("dsChatLieu", chatLieuRepo.findAll());
+        model.addAttribute("dsDanhMuc", danhMucRepo.findAll());
+
+        // Giữ lại giá trị lọc
+        model.addAttribute("tenSanPham", tenSanPham);
+        model.addAttribute("mauSac", mauSac);
+        model.addAttribute("chatLieu", chatLieu);
+        model.addAttribute("kichThuoc", kichThuoc);
+        model.addAttribute("khoangGia", khoangGia);
+        model.addAttribute("danhMuc", danhMuc);
+
+        return "ViewSanPham/hien-thi";
     }
+
 
 
     @GetMapping("/view-add")
@@ -145,39 +210,6 @@ public class AdminSanPhamController {
         List<SanPham> danhSachSanPham = sanPhamRepo.findSanPhamsByTenSanPhamContains(ten);
         model.addAttribute("list", danhSachSanPham);
         model.addAttribute("ten", ten); // Giữ lại giá trị tìm kiếm trên giao diện
-        return "ViewSanPham/hien-thi";
-    }
-
-    @GetMapping("/loc")
-    public String locSanPham(
-            @RequestParam(required = false) String tenSanPham,
-            @RequestParam(required = false) Integer trangThai,
-            @RequestParam(required = false) Long mauSac,
-            @RequestParam(required = false) Long kichThuoc,
-            @RequestParam(required = false) Long danhMuc,
-            @RequestParam(required = false) BigDecimal giaTu,
-            @RequestParam(required = false) BigDecimal giaDen,
-            Model model) {
-
-        List<SanPham> all = sanPhamRepo.findAll();
-
-        List<SanPham> filtered = all.stream()
-                .filter(sp -> tenSanPham == null || sp.getTenSanPham().toLowerCase().contains(tenSanPham.toLowerCase()))
-                .filter(sp -> trangThai == null || sp.getTrangThai().equals(trangThai))
-                .filter(sp -> mauSac == null || (sp.getMauSac() != null && sp.getMauSac().getId().equals(mauSac)))
-                .filter(sp -> kichThuoc == null || (sp.getKichThuoc() != null && sp.getKichThuoc().getId().equals(kichThuoc)))
-                .filter(sp -> danhMuc == null || (sp.getDanhMuc() != null && sp.getDanhMuc().getId().equals(danhMuc)))
-                .filter(sp -> giaTu == null || (sp.getGia() != null && sp.getGia().compareTo(giaTu) >= 0))
-                .filter(sp -> giaDen == null || (sp.getGia() != null && sp.getGia().compareTo(giaDen) <= 0))
-                .collect(Collectors.toList());
-
-        model.addAttribute("dsSanPham", filtered);
-
-        // Gửi danh sách để hiển thị dropdown
-        model.addAttribute("dsMauSac", mauSacRepo.findAll());
-        model.addAttribute("dsKichThuoc", kichThuocRepo.findAll()); // sửa đúng tên repo
-        model.addAttribute("dsDanhMuc", danhMucRepo.findAll());
-
         return "ViewSanPham/hien-thi";
     }
 
