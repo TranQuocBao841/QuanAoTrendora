@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -32,7 +32,8 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
-        .left-panel, .right-panel {
+        .left-panel,
+        .right-panel {
             padding: 40px;
             flex: 1;
         }
@@ -84,31 +85,47 @@
             color: #4e54c8;
         }
 
-        .alert {
-            z-index: 1050;
+        .input-group-text {
+            background-color: white;
+            border-left: 0;
         }
+
+        .input-group .form-control {
+            border-right: 0;
+        }
+
+        #togglePasswordWrapper {
+            width: 38px; /* hoặc 32px hay 36px tùy kích thước mong muốn */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            height: 38px;
+        }
+
+
     </style>
 </head>
 
 <body>
-<!-- thong bao -->
+
+<!-- Success Alert -->
 <div th:if="${success}" class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert">
     <strong>✅ Thành công! </strong><span th:text="${success}"></span>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
-
+<!-- Error Alert -->
 <div th:if="${error}" class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert">
     <strong>❌ Lỗi! </strong><span th:text="${error}"></span>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
 <div class="container">
-    <!-- Left Panel: Sign In -->
+    <!-- Left Panel -->
     <div class="left-panel">
         <h2>Sign In to Trendora</h2>
 
-        <!-- Social Login Buttons -->
         <div class="social-buttons my-4">
             <button><i class="bi bi-google"></i></button>
             <button><i class="bi bi-facebook"></i></button>
@@ -118,16 +135,25 @@
 
         <p>or use your username and password:</p>
 
-        <!-- Sign In Form -->
+        <!-- Login Form -->
         <form th:action="@{/quan-ao/login}" method="post">
-            <input type="email" name="email" placeholder="email" class="form-control" required>
-            <input type="password" name="matKhau" placeholder="Password" class="form-control" required>
+            <input type="email" name="email" placeholder="Vui lòng nhập email" class="form-control" required>
+
+            <!-- Mật khẩu có con mắt -->
+            <div class="input-group mb-3">
+                <input type="password" name="matKhau" id="matKhau" placeholder="Vui lòng nhập password" class="form-control" required>
+                <span class="input-group-text" id="togglePasswordWrapper">
+        <i class="bi bi-eye-slash" id="togglePassword" style="cursor: pointer;"></i>
+    </span>
+            </div>
+
+
             <a href="#" class="text-muted mb-3 d-block">Forgot Your Password?</a>
             <button type="submit" class="btn btn-primary w-100">Sign In</button>
         </form>
     </div>
 
-    <!-- Right Panel: Sign Up -->
+    <!-- Right Panel -->
     <div class="right-panel">
         <h2>Hello, Friend!</h2>
         <p>Nếu bạn chưa có tài khoản, hãy đăng ký ở đây để sử dụng tất cả các chức năng của website!</p>
@@ -138,7 +164,7 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Auto-hide alerts after 5 seconds -->
+<!-- Auto-hide alerts -->
 <script>
     setTimeout(() => {
         const alerts = document.querySelectorAll('.alert');
@@ -146,6 +172,22 @@
     }, 5000);
 </script>
 
-</body>
+<!-- Toggle Password Visibility -->
+<script>
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        const input = document.getElementById("matKhau");
+        const icon = this;
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye");
+        } else {
+            input.type = "password";
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash");
+        }
+    });
+</script>
 
+</body>
 </html>

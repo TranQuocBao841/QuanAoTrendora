@@ -6,11 +6,15 @@ import com.example.Trendora.DuAn.model.TaiKhoan;
 import com.example.Trendora.DuAn.repository.KhachHangRepo;
 import com.example.Trendora.DuAn.repository.TaiKhoanRepo;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/quan-ao")
@@ -32,51 +36,51 @@ public class TaiKhoanController {
             @RequestParam String tenDangNhap,
             @RequestParam String matKhau,
             @RequestParam String email,
+            @RequestParam String ngaySinh,
+            @RequestParam String diaChi,
+            @RequestParam boolean gioiTinh,
+            @RequestParam String quocTich,
             RedirectAttributes redirectAttributes) {
 
-        // Kiểm tra tài khoản đã tồn tại chưa
+        // Kiểm tra tài khoản
         if (taiKhoanRepository.existsByTenDangNhap(tenDangNhap)) {
             redirectAttributes.addFlashAttribute("error", "Tên đăng nhập đã tồn tại!");
             return "redirect:/quan-ao/dangky";
         }
 
-        //kiem tra email tồn tai
         if (taiKhoanRepository.existsByEmail(email)) {
-            redirectAttributes.addFlashAttribute("error", "Email đã được sử dụng để đăng ký tài khoản khác!");
+            redirectAttributes.addFlashAttribute("error", "Email đã được sử dụng!");
             return "redirect:/quan-ao/dangky";
         }
 
+        // Tạo khách hàng
+        KhachHang khachHang = new KhachHang();
+        khachHang.setTenKh(tenDangNhap);
+        khachHang.setEmail(email);
+        khachHang.setNgaySinh(LocalDate.parse(ngaySinh));
+        khachHang.setDiaChi(diaChi);
+        khachHang.setGioiTinh(gioiTinh);
+        khachHang.setQuocTich(quocTich);
+        khachHang.setMaKh("KH00" + (khachHangRepository.count() + 1));
+        khachHang.setTrangThai(1);
+
+        khachHangRepository.save(khachHang);
+
+        // Tạo tài khoản
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setTenDangNhap(tenDangNhap);
         taiKhoan.setMatKhau(matKhau);
         taiKhoan.setEmail(email);
-        taiKhoan.setLoaiTaiKhoan(2); // Mặc định là khách hàng
-        taiKhoan.setTrangThai(true); //mặc định hoạt động
-
-        // Kiểm tra xem khách hàng đã tồn tại chưa
-        KhachHang khachHang = khachHangRepository.findByEmail(email);
-        if (khachHang == null) {
-            khachHang = new KhachHang();
-            khachHang.setTenKh(tenDangNhap);
-
-            // Tự động tạo mã khách hàng
-            String maKhachHangMoi = "KH00" + (khachHangRepository.count() + 1);
-            khachHang.setMaKh(maKhachHangMoi);
-
-            khachHang.setEmail(email != null && !email.isBlank() ? email : "");
-            khachHang.setTrangThai(1);
-
-            khachHangRepository.save(khachHang);
-        }
+        taiKhoan.setTrangThai(true);
+        taiKhoan.setLoaiTaiKhoan(2);
         taiKhoan.setKhachHang(khachHang);
 
-        // Lưu tài khoản vào cơ sở dữ liệu
         taiKhoanRepository.save(taiKhoan);
 
-        // Chuyển hướng về trang đăng nhập với thông báo thành công
         redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
         return "redirect:/quan-ao/login";
     }
+
 
     @GetMapping("/login")
     public String HienThiDangNhap() {
