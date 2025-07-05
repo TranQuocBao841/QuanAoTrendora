@@ -37,4 +37,6 @@ public interface HoaDonRepo extends JpaRepository<HoaDon,Integer> {
     void updateTrangThaiById(@Param("id") Integer id, @Param("trangThai") Integer trangThai);
     @Query("SELECT h.trangThai FROM HoaDon h WHERE h.id = :id")
     Integer findTrangThaiById(@Param("id") Integer id);
+
+    List<HoaDon> findByKhachHang_idKh(Integer idKhachHang);
 }

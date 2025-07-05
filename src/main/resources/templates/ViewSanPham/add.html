@@ -55,6 +55,10 @@
                             </div>
                             <form th:action="@{/admin/san-pham/add}" th:object="${sp}" method="post" enctype="multipart/form-data">
                                 <!-- THÔNG TIN CƠ BẢN -->
+                                <!-- THÔNG BÁO LỖI / THÀNH CÔNG -->
+                                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                                <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
                                 <div class="card-body">
                                     <h5 class="text-secondary">Thông tin cơ bản</h5>
                                     <div class="form-row">
@@ -72,9 +76,12 @@
 
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <label>URL Ảnh Sản Phẩm</label>
-                                            <input type="url" class="form-control" name="anhSanPham" th:value="${sp.anhSanPham}" placeholder="Nhập URL ảnh sản phẩm" id="imageURLInput">
-                                            <img id="imagePreview" src="" alt="Preview ảnh" style="margin-top:10px; max-width:100%; display:none;">
+<!--                                            <label>URL Ảnh Sản Phẩm</label>-->
+<!--                                            <input type="url" class="form-control" name="anhSanPham" th:value="${sp.anhSanPham}" placeholder="Nhập URL ảnh sản phẩm" id="imageURLInput">-->
+<!--                                            <img id="imagePreview" src="" alt="Preview ảnh" style="margin-top:10px; max-width:100%; display:none;">-->
+                                            <label>Ảnh Sản Phẩm</label>
+                                            <input type="file" class="form-control" name="fileAnh"  accept="image/*">
+
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label>Ngày Sản Phẩm</label>

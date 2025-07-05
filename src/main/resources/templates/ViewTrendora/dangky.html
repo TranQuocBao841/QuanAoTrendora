@@ -41,68 +41,82 @@
     <h2 class="form-title">Đăng Ký Tài Khoản</h2>
 
     <form th:action="@{/quan-ao/dangky}" method="post" onsubmit="return validateForm()">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label for="tenDangNhap" class="form-label">Họ và Tên:</label>
-                <input type="text" id="tenDangNhap" name="tenDangNhap" class="form-control" required />
-            </div>
+        <div class="container px-4 py-4">
+            <div class="row g-4">
 
-            <div class="col-md-6">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" required />
-            </div>
-
-            <div class="col-md-6">
-                <label for="matKhau" class="form-label">Mật khẩu:</label>
-                <div class="input-group">
-                    <input type="password" id="matKhau" name="matKhau" class="form-control" required />
-                    <span class="input-group-text" id="toggleMatKhau"><i class="bi bi-eye-slash"></i></span>
+                <!-- Họ và tên -->
+                <div class="col-md-6">
+                    <label for="tenDangNhap" class="form-label">Họ và Tên:</label>
+                    <input type="text" id="tenDangNhap" name="tenDangNhap" class="form-control" required />
                 </div>
-            </div>
 
-            <div class="col-md-6">
-                <label for="xacNhanMatKhau" class="form-label">Xác nhận mật khẩu:</label>
-                <div class="input-group">
-                    <input type="password" id="xacNhanMatKhau" class="form-control" required />
-                    <span class="input-group-text" id="toggleXacNhan"><i class="bi bi-eye-slash"></i></span>
+                <!-- Email -->
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required />
                 </div>
-            </div>
 
-            <div class="col-md-6">
-                <label for="ngaySinh" class="form-label">Ngày sinh:</label>
-                <input type="date" id="ngaySinh" name="ngaySinh" class="form-control" required />
-            </div>
-
-            <div class="col-md-6">
-                <label for="quocTich" class="form-label">Quốc tịch:</label>
-                <input type="text" id="quocTich" name="quocTich" class="form-control" required />
-            </div>
-
-            <div class="col-md-12">
-                <label for="diaChi" class="form-label">Địa chỉ:</label>
-                <input type="text" id="diaChi" name="diaChi" class="form-control" required />
-            </div>
-
-            <div class="col-md-12">
-                <label class="form-label d-block mb-2">Giới tính:</label>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="gioiTinh" id="nam" value="true" required>
-                    <label class="form-check-label" for="nam">Nam</label>
+                <!-- Mật khẩu -->
+                <div class="col-md-6">
+                    <label for="matKhau" class="form-label">Mật khẩu:</label>
+                    <div class="input-group">
+                        <input type="password" id="matKhau" name="matKhau" class="form-control" required />
+                        <span class="input-group-text" id="toggleMatKhau"><i class="bi bi-eye-slash"></i></span>
+                    </div>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="gioiTinh" id="nu" value="false">
-                    <label class="form-check-label" for="nu">Nữ</label>
+
+                <!-- Xác nhận mật khẩu -->
+                <div class="col-md-6">
+                    <label for="xacNhanMatKhau" class="form-label">Xác nhận mật khẩu:</label>
+                    <div class="input-group">
+                        <input type="password" id="xacNhanMatKhau" class="form-control" required />
+                        <span class="input-group-text" id="toggleXacNhan"><i class="bi bi-eye-slash"></i></span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-12 d-flex justify-content-between mt-4">
-                <a th:href="@{/quan-ao/login}" class="btn btn-outline-secondary">← Quay lại đăng nhập</a>
-                <button type="submit" class="btn btn-primary">Đăng Ký</button>
-            </div>
+                <!-- Ngày sinh -->
+                <div class="col-md-6">
+                    <label for="ngaySinh" class="form-label">Ngày sinh:</label>
+                    <input type="date" id="ngaySinh" name="ngaySinh" class="form-control" required />
+                </div>
 
-            <p th:if="${error}" th:text="${error}" class="text-danger text-center mt-3"></p>
+                <!-- Quốc tịch -->
+                <div class="col-md-6">
+                    <label for="quocTich" class="form-label">Quốc tịch:</label>
+                    <input type="text" id="quocTich" name="quocTich" class="form-control" required />
+                </div>
+
+                <!-- Địa chỉ -->
+                <div class="col-md-6">
+                    <label for="diaChi" class="form-label">Địa chỉ:</label>
+                    <input type="text" id="diaChi" name="diaChi" class="form-control" required />
+                </div>
+
+                <!-- Giới tính (Dropdown) -->
+                <div class="col-md-6">
+                    <label for="gioiTinh" class="form-label">Giới tính:</label>
+                    <select id="gioiTinh" name="gioiTinh" class="form-select" required>
+                        <option value="" disabled selected>-- Chọn giới tính --</option>
+                        <option value="true">Nam</option>
+                        <option value="false">Nữ</option>
+                    </select>
+                </div>
+
+
+                <!-- Nút và lỗi -->
+                <div class="col-md-12 d-flex justify-content-between align-items-center mt-4">
+                    <a th:href="@{/quan-ao/login}" class="btn btn-outline-secondary">← Quay lại đăng nhập</a>
+                    <button type="submit" class="btn btn-primary">Đăng Ký</button>
+                </div>
+
+                <div class="col-12">
+                    <p th:if="${error}" th:text="${error}" class="text-danger text-center mt-3"></p>
+                </div>
+
+            </div>
         </div>
     </form>
+
 </div>
 
 <!-- Hiện/ẩn mật khẩu -->

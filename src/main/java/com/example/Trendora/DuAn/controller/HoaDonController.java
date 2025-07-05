@@ -1,10 +1,7 @@
 package com.example.Trendora.DuAn.controller;
 
-import com.example.Trendora.DuAn.DTO.HoaDonChiTietDTO;
 import com.example.Trendora.DuAn.DTO.HoaDonDTO;
 import com.example.Trendora.DuAn.Service.HoaDonService;
-import com.example.Trendora.DuAn.model.HoaDon;
-import com.example.Trendora.DuAn.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/hoa-don")

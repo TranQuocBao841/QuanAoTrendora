@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
-import java.sql.Date; // <- cần import cái này để chuyển đổi đúng
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -44,9 +44,12 @@ public class ThongKeController {
         // Đưa dữ liệu từ query vào map để tiện lookup
         Map<LocalDate, BigDecimal> doanhThuMap = new HashMap<>();
         for (Object[] obj : doanhThuTheoNgay) {
-            // Sửa chỗ này để tránh lỗi ép kiểu
-            LocalDate ngay = ((Date) obj[0]).toLocalDate(); // ✅ Chuyển từ java.sql.Date sang LocalDate
-            BigDecimal doanhThu = (BigDecimal) obj[1];
+            LocalDate ngay = ((Date) obj[0]).toLocalDate();
+
+            // ✅ Sửa lỗi ép kiểu ở đây
+            Number doanhThuNumber = (Number) obj[1];
+            BigDecimal doanhThu = BigDecimal.valueOf(doanhThuNumber.doubleValue());
+
             doanhThuMap.put(ngay, doanhThu);
         }
 
@@ -56,8 +59,8 @@ public class ThongKeController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
 
         for (LocalDate date = fromDate; !date.isAfter(toDate); date = date.plusDays(1)) {
-            ngayList.add(date.format(formatter)); // hiển thị "01/06", "02/06", ...
-            doanhThuList.add(doanhThuMap.getOrDefault(date, BigDecimal.ZERO)); // nếu null thì = 0
+            ngayList.add(date.format(formatter));
+            doanhThuList.add(doanhThuMap.getOrDefault(date, BigDecimal.ZERO));
         }
 
         model.addAttribute("fromDate", fromDate);

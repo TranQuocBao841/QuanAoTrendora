@@ -1,8 +1,12 @@
 package com.example.Trendora.DuAn.controller;
 
 
+import com.example.Trendora.DuAn.model.HoaDon;
+import com.example.Trendora.DuAn.model.HoaDonChiTiet;
 import com.example.Trendora.DuAn.model.KhachHang;
 import com.example.Trendora.DuAn.model.TaiKhoan;
+import com.example.Trendora.DuAn.repository.HoaDonChiTietRepo;
+import com.example.Trendora.DuAn.repository.HoaDonRepo;
 import com.example.Trendora.DuAn.repository.KhachHangRepo;
 import com.example.Trendora.DuAn.repository.TaiKhoanRepo;
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/quan-ao")
@@ -26,6 +33,11 @@ public class TaiKhoanController {
     @Autowired
     private KhachHangRepo khachHangRepository;
 
+    @Autowired
+    private HoaDonRepo hoaDonRepo;
+
+    @Autowired
+    private HoaDonChiTietRepo hoaDonChiTietRepo;
     @GetMapping("/dangky")
     public String showRegisterForm() {
         return "/ViewTrendora/dangky";
@@ -108,7 +120,8 @@ public class TaiKhoanController {
         // ✅ Lưu thông tin đăng nhập vào session
         session.setAttribute("khachHangDangNhap", user); // 👈 dùng key này để kiểm tra ở giỏ hàng
 
-        if ("1".equalsIgnoreCase(String.valueOf(user.getLoaiTaiKhoan()))) {
+        if (user.getLoaiTaiKhoan() != null && user.getLoaiTaiKhoan() == 1) {
+            session.setAttribute("adminDangNhap", user); // ✅ thêm dòng này
             return "redirect:/admin/san-pham/hien-thi";
         } else {
             return "redirect:/san-pham/hien-thi";
@@ -119,6 +132,94 @@ public class TaiKhoanController {
     public String logout(HttpSession session) {
         session.invalidate(); // Xóa hết dữ liệu phiên
         return "redirect:/quan-ao/login";
+    }
+
+
+    @GetMapping("/thong-tin")
+    public String thongTinTaiKhoan(HttpSession session, Model model) {
+        Object user = session.getAttribute("khachHangDangNhap");
+
+        if (user == null) {
+            return "redirect:/quan-ao/login"; // chưa đăng nhập
+        }
+
+        // ✅ Ép kiểu user thành TaiKhoan
+        TaiKhoan taiKhoan = (TaiKhoan) user;
+
+        // ✅ Lấy danh sách hóa đơn theo ID khách hàng
+        Integer idKhachHang = taiKhoan.getKhachHang().getIdKh();
+        List<HoaDon> hoaDonList = hoaDonRepo.findByKhachHang_idKh(idKhachHang);
+
+        model.addAttribute("hoaDonList", hoaDonList);
+        model.addAttribute("taiKhoan", taiKhoan);
+
+        Map<Integer, List<HoaDonChiTiet>> chiTietMap = new HashMap<>();
+        for (HoaDon hd : hoaDonList) {
+            List<HoaDonChiTiet> chiTiets = hoaDonChiTietRepo.findByHoaDon_Id(hd.getId());
+            chiTietMap.put(hd.getId(), chiTiets);
+        }
+        model.addAttribute("chiTietMap", chiTietMap); // gửi qua view
+
+        return "ViewTaiKhoanUser/thong-tin";
+    }
+
+
+
+    @PostMapping("/cap-nhat-thong-tin")
+    public String capNhatThongTin(@RequestParam("sdt") String sdt,
+                                  @RequestParam("diaChi") String diaChi,
+                                  @RequestParam("tenDangNhap") String tenDangNhap,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        TaiKhoan taiKhoan = (TaiKhoan) session.getAttribute("khachHangDangNhap");
+
+        if (taiKhoan != null && taiKhoan.getKhachHang() != null) {
+            taiKhoan.getKhachHang().setSdt(sdt);
+            taiKhoan.getKhachHang().setDiaChi(diaChi);
+            taiKhoan.setTenDangNhap(tenDangNhap);
+            khachHangRepository.save(taiKhoan.getKhachHang()); // Lưu lại thông tin khách hàng
+            taiKhoanRepository.save(taiKhoan);
+            redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Không tìm thấy tài khoản.");
+        }
+
+        return "redirect:/quan-ao/thong-tin";
+    }
+
+    @PostMapping("/doi-mat-khau")
+    public String doiMatKhau(@RequestParam("oldPassword") String oldPassword,
+                             @RequestParam("newPassword") String newPassword,
+                             @RequestParam("confirmPassword") String confirmPassword,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        TaiKhoan taiKhoan = (TaiKhoan) session.getAttribute("khachHangDangNhap");
+
+        if (taiKhoan == null) {
+            redirectAttributes.addFlashAttribute("error", "Bạn chưa đăng nhập.");
+            return "redirect:/quan-ao/login";
+        }
+
+        // Kiểm tra mật khẩu cũ
+        if (!taiKhoan.getMatKhau().equals(oldPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Mật khẩu cũ không đúng.");
+            return "redirect:/quan-ao/thong-tin";
+        }
+
+        // Kiểm tra khớp mật khẩu mới
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Mật khẩu mới không khớp.");
+            return "redirect:/quan-ao/thong-tin";
+        }
+
+        // Cập nhật mật khẩu
+        taiKhoan.setMatKhau(newPassword);
+        taiKhoanRepository.save(taiKhoan);
+
+        redirectAttributes.addFlashAttribute("message", "Đổi mật khẩu thành công!");
+        return "redirect:/quan-ao/thong-tin";
     }
 
 }

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -92,7 +93,6 @@ public class SanPham {
     @Column(name = "ma_san_pham", unique = true)
     private String maSanPham;
 
-    @NotBlank(message = "Ảnh sản phẩm không được để trống")
     @Column(name = "anh_san_pham")
     private String anhSanPham;
 
@@ -114,6 +114,7 @@ public class SanPham {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Ngày không được để trống")
     @Column(name = "ngay")
     private LocalDate ngay;

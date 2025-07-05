@@ -148,10 +148,12 @@
                                 <td th:text="${sanpham.id}"></td>
                                 <td th:text="${sanpham.maSanPham}"></td>
                                 <td>
-                                    <img th:src="${#strings.startsWith(sanpham.anhSanPham, 'http') ? sanpham.anhSanPham : '/images/' + sanpham.anhSanPham}"
+                                    <img th:src="@{${sanpham.anhSanPham}}"
                                          class="img-thumbnail"
                                          style="width: 60px; height: 60px; object-fit: cover;">
                                 </td>
+
+
 
                                 <td th:text="${sanpham.tenSanPham}"></td>
                                 <td th:text="${sanpham.soLuong}"></td>

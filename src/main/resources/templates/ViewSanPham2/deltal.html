@@ -217,26 +217,26 @@
                             >Home <span><i class="bi bi-chevron-double-right"></i></span
                             ></a>
                             <ul class="sub_menu">
-                                <li><a href="/san-pham/trang-chu">Home </a></li>
+                                <li><a href="/san-pham/trang-chu">Home Trendora </a></li>
                             </ul>
                         </li>
-                        <li><a href="about.html">About</a></li>
+<!--                        <li><a href="about.html">About</a></li>-->
                         <li>
                             <a href="#"
                             >Page <span><i class="bi bi-chevron-double-right"></i></span
                             ></a>
                             <ul class="sub_menu">
-                                <li><a href="about.html">About Us</a></li>
-                                <li><a href="service.html">Our Service</a></li>
-                                <li><a href="service-details.html">Service Details</a></li>
-                                <li><a href="team.html">Our Team</a></li>
-                                <li><a href="portfolio.html">Portfolio</a></li>
-                                <li>
-                                    <a href="portfolio-details.html">Portfolio Details</a>
-                                </li>
-                                <li><a href="checkout.html">Checkout</a></li>
-                                <li><a href="cart.html">Cart</a></li>
-                                <li><a href="contact.html">Contact</a></li>
+<!--                                <li><a href="about.html">About Us</a></li>-->
+<!--                                <li><a href="service.html">Our Service</a></li>-->
+<!--                                <li><a href="service-details.html">Service Details</a></li>-->
+<!--                                <li><a href="team.html">Our Team</a></li>-->
+<!--                                <li><a href="portfolio.html">Portfolio</a></li>-->
+<!--                                <li>-->
+<!--                                    <a href="portfolio-details.html">Portfolio Details</a>-->
+<!--                                </li>-->
+<!--                                <li><a href="checkout.html">Checkout</a></li>-->
+                                <li><a href="/gio-hang/hien-thi">Cart</a></li>
+                                <li><a href="/quan-ao/thong-tin">Account</a></li>
                             </ul>
                         </li>
                         <li>
@@ -256,7 +256,7 @@
                                 <li><a href="blog-details.html">Blog Details</a></li>
                             </ul>
                         </li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="/quan-ao/thong-tin">Account</a></li>
                     </ul>
                 </div>
             </div>
@@ -316,34 +316,34 @@
             </div>
             <ul class="nav_scroll">
                 <li>
-                    <a href="#">Home</a>
+                    <a href="/san-pham/trang-chu">Home</a>
                     <ul class="sub_menu">
-                        <li><a href="index.html">Home Version 01</a></li>
-                        <li><a href="index-2.html">Home Version 02</a></li>
-                        <li><a href="index-3.html">Home Version 03</a></li>
+                        <li><a href="/san-pham/hien-thi">Home Trendora</a></li>
+<!--                        <li><a href="index-2.html">Home Version 02</a></li>-->
+<!--                        <li><a href="index-3.html">Home Version 03</a></li>-->
                     </ul>
                 </li>
-                <li><a href="about.html">About</a></li>
+<!--                <li><a href="about.html">About</a></li>-->
                 <li>
                     <a href="#">Page</a>
                     <ul class="sub_menu">
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="service.html">Our Service</a></li>
-                        <li><a href="service-details.html">Service Details</a></li>
-                        <li><a href="team.html">Our Team</a></li>
-                        <li><a href="portfolio.html">Portfolio</a></li>
-                        <li><a href="portfolio-details.html">Portfolio Details</a></li>
-                        <li><a href="checkout.html">Checkout</a></li>
-                        <li><a href="cart.html">Cart</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+<!--                        <li><a href="about.html">About Us</a></li>-->
+<!--                        <li><a href="service.html">Our Service</a></li>-->
+<!--                        <li><a href="service-details.html">Service Details</a></li>-->
+<!--                        <li><a href="team.html">Our Team</a></li>-->
+<!--                        <li><a href="portfolio.html">Portfolio</a></li>-->
+<!--                        <li><a href="portfolio-details.html">Portfolio Details</a></li>-->
+<!--                        <li><a href="checkout.html">Checkout</a></li>-->
+                        <li><a href="/gio-hang/hien-thi">Cart</a></li>
+                        <li><a href="/quan-ao/thong-tin">Account</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#">Shop</a>
                     <ul class="sub_menu">
-                        <li><a href="shop.html">Shop</a></li>
-                        <li><a href="shop-two.html">Shop Two</a></li>
-                        <li><a href="shop-details.html">Shop Details</a></li>
+                        <li><a href="/san-pham/hien-thi">Shop Trendora</a></li>
+<!--                        <li><a href="shop-two.html">Shop Two</a></li>-->
+<!--                        <li><a href="shop-details.html">Shop Details</a></li>-->
                     </ul>
                 </li>
                 <li>
@@ -353,7 +353,7 @@
                         <li><a href="blog-details.html">Blog Details</a></li>
                     </ul>
                 </li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="/quan-ao/thong-tin">Account</a></li>
             </ul>
         </nav>
     </div>
@@ -755,7 +755,10 @@
                     <h2 th:text="${sp.tenSanPham}">Tên sản phẩm</h2>
 
                     <!-- Giá -->
-                    <h1 class="text-success" th:text="'₫' + ${sp.gia}">₫0</h1>
+                    <h1 class="text-success" th:text="${#numbers.formatDecimal(sp.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'">₫0</h1>
+
+
+
 
                     <!-- Mô tả -->
                     <p class="mb-3" th:text="${sp.moTa}">Mô tả sản phẩm</p>

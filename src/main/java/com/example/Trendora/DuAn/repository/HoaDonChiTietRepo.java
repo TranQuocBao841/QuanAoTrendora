@@ -93,4 +93,7 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet,Integer> 
     @Transactional
     @Query("UPDATE HoaDonChiTiet c SET c.trangThai = :trangThai WHERE c.hoaDon.id = :hoaDonId")
     void updateTrangThaiByHoaDonId(@Param("hoaDonId") Integer hoaDonId, @Param("trangThai") Integer trangThai);
+
+
+    List<HoaDonChiTiet> findByHoaDon_Id(Integer idHoaDon);
 }

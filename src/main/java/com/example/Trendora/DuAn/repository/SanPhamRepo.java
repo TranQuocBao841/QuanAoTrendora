@@ -47,12 +47,13 @@ public interface SanPhamRepo extends JpaRepository<SanPham,Integer> {
 
 
     @Query("SELECT sp FROM SanPham sp WHERE "
-            + "(:categories IS NULL OR sp.danhMuc.tendanhMuc IN :categories) AND "
-            + "(:colors IS NULL OR sp.mauSac.tenmauSac IN :colors) AND "
-            + "(:sizes IS NULL OR sp.kichThuoc.tenkichThuoc IN :sizes)")
+            + "(:#{#categories == null || #categories.isEmpty()} = true OR sp.danhMuc.tendanhMuc IN :categories) AND "
+            + "(:#{#colors == null || #colors.isEmpty()} = true OR sp.mauSac.tenmauSac IN :colors) AND "
+            + "(:#{#sizes == null || #sizes.isEmpty()} = true OR sp.kichThuoc.tenkichThuoc IN :sizes)")
     List<SanPham> locTheoDanhMucMauSacVaSize(@Param("categories") List<String> categories,
                                              @Param("colors") List<String> colors,
                                              @Param("sizes") List<String> sizes);
+
 
     List<SanPham> findTop5ByOrderByGiaDesc();
 
