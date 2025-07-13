@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<style>
+    input[type="radio"][disabled] {
+        opacity: 1 !important;
+        pointer-events: none; /* Không cho tương tác */
+    }
+
+    input[type="radio"][disabled] + label {
+        opacity: 1 !important;
+        color: #000 !important;
+        cursor: default;
+        pointer-events: none;
+    }
+</style>
+<!-- Mirrored from adminlte.io/themes/AdminLTE/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 17:35:24 GMT -->
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Bootstrap 3.3.7 CDN (chuẩn cho AdminLTE 2) -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<div class="wrapper">
+
+    <head th:replace="~{ViewSanPham/layout/head :: head}"></head>
+
+    <header th:replace="~{ViewSanPham/layout/header :: header}" ></header>
+    <!-- Left side column. contains the logo and sidebar -->
+
+    <aside th:replace="~{ViewSanPham/layout/aside :: aside}" ></aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Trang Quản Trị Admin Bán Áo Phông
+                <small>Bán hàng Tại Quầy</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Tại Quầy</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+
+        <div class="container-fluid">
+            <h3 class="text-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Bán hàng tại quầy</h3>
+
+            <!-- Tìm kiếm và lọc -->
+            <div class="form-inline mb-3">
+                <input type="text" class="form-control mr-2" id="searchSanPham" placeholder="Tìm tên sản phẩm...">
+
+                <select id="filterDanhMuc" class="form-control mr-2">
+                    <option value="">-- Danh mục --</option>
+                    <option th:each="dm : ${danhMucs}" name="tendanhMuc" th:value="${dm.id}" th:text="${dm.tendanhMuc}"></option>
+                </select>
+
+                <select id="filterMauSac" class="form-control mr-2">
+                    <option value="">-- Màu sắc --</option>
+                    <option th:each="m : ${listMau}" name="tenmauSac" th:value="${m.id}" th:text="${m.tenmauSac}"></option>
+                </select>
+
+                <select id="filterKichThuoc" class="form-control mr-2">
+                    <option value="">-- Kích thước --</option>
+                    <option th:each="kt : ${listSize}"  name="tenkichThuoc"  th:value="${kt.id}" th:text="${kt.tenkichThuoc}"></option>
+                </select>
+            </div>
+
+            <form method="post" th:action="@{/ban-hang/thanh-toan}" oninput="tinhTongTien()" id="formThanhToan">
+                <div class="row">
+
+                    <!-- DANH SÁCH SẢN PHẨM -->
+                    <div class="col-md-8">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">Danh sách sản phẩm</h4>
+                            </div>
+                            <div class="box-body table-responsive no-padding" style=" overflow-y: auto;">
+                                <table class="table" id="productTable">
+                                    <thead>
+                                    <tr>
+                                        <th>Ảnh</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Giá</th>
+                                        <th>Số lượng</th>
+                                        <th>#</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="sp : ${danhSachSanPham}"
+                                        th:attr="data-ten=${sp.tenSanPham},
+                                         data-danhmuc=${sp.danhMuc.id},
+                                         data-mau=${sp.mauSac.id},
+                                         data-size=${sp.kichThuoc.id}">
+                                        <td><img th:src="@{${sp.anhSanPham}}" width="50px" /></td>
+                                        <td>
+                                            <span th:text="${sp.tenSanPham}"></span><br>
+                                            <button type="button" class="btn btn-xs btn-info"
+                                                    th:attr="onclick=|xemChiTietSanPham('${sp.id}', '${sp.tenSanPham}', '${sp.maSanPham}', '${sp.gia}', '${sp.moTa}', '${sp.coAo.tencoAo}' , '${sp.khuyAo.tenkhuyAo}', '${sp.kieuDang.tenkieuDang}', '${sp.duongMay.tenduongMay}', '${sp.hoaTiet.tenhoaTiet}', '${sp.phongCach.tenphongCach}' , '${sp.chatLieu.tencl}' , '${sp.mauSac.tenmauSac}', '${sp.kichThuoc.tenkichThuoc}', '${sp.danhMuc.tendanhMuc}' , '${sp.tayAo.tentayAo}', '${sp.anhSanPham}')|">
+                                                <i class="glyphicon glyphicon-eye-open"></i> Xem
+                                            </button>
+                                        </td>
+                                        <td><span th:text="${#numbers.formatDecimal(sp.gia, 0, 'COMMA', 0, 'POINT')}"></span> ₫</td>
+                                        <td>
+                                            <span th:text="${sp.soLuong}"></span>
+                                        </td>
+                                        <td>
+                                        <td>
+                                            <button type="button" class="btn btn-success btn-sm"
+                                                    th:attr="onclick=|themVaoGioHang('${sp.id}', '${sp.tenSanPham}', '${sp.kichThuoc.tenkichThuoc}', '${sp.gia}', '${sp.soLuong}')|">
+                                                <i class="glyphicon glyphicon-plus"></i> Thêm
+                                            </button>
+                                        </td>
+
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FORM THANH TOÁN BÊN PHẢI -->
+                    <div class="col-md-4">
+                        <div class="box box-success">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">Thông tin thanh toán</h4>
+                            </div>
+                            <div class="box-body">
+
+                                <!-- KHÁCH HÀNG -->
+                                <div class="form-group">
+                                    <label>Khách hàng:</label>
+                                    <div class="input-group">
+                                        <input type="text" id="tenKhachHang" readonly placeholder="Chưa chọn khách hàng" class="form-control">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-primary" onclick="openKhachHangModal()">
+                                                <i class="glyphicon glyphicon-user"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <input type="hidden" name="khachHang" id="idKhachHang">
+                                </div>
+
+                                <!-- GIỎ HÀNG BÊN PHẢI -->
+                                <div class="form-group" id="gioHangSection" style="display: none;">
+                                    <label><i class="glyphicon glyphicon-list-alt"></i> Sản phẩm đã chọn:</label>
+                                    <div class="table-responsive" style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd;">
+                                        <table class="table table-bordered table-condensed" style="margin-bottom: 0;">
+                                            <thead>
+                                            <tr class="bg-info">
+                                                <th>Tên</th>
+                                                <th>Size</th>
+                                                <th>Số lượng</th>
+                                                <th>Đơn giá</th>
+                                                <th>Thành tiền</th>
+                                                <th>Xóa</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="gioHangBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <hr>
+                                <!-- GIẢM GIÁ -->
+                                <div class="form-group">
+                                    <label>Chọn phiếu giảm giá:</label>
+                                    <select name="giamGiaId" class="form-control" id="giamGiaSelect" onchange="apDungGiamGia()">
+                                        <option value="">-- Không áp dụng --</option>
+                                        <option th:each="gg : ${phieuGiamGias}"
+                                                th:value="${gg.id}"
+                                                th:data-loai="${gg.loaiGiamGia}"
+                                                th:data-gia-tri="${gg.giaTriGiam}"
+                                                th:text="${gg.tenGiamGia + ' (' + gg.giaTriGiam + (gg.loaiGiamGia == 'PERCENT' ? '%' : '₫') + ')'}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <!-- HÌNH THỨC THANH TOÁN -->
+                                <div class="form-group">
+                                    <label>Hình thức thanh toán:</label>
+                                    <select name="hinhThuc" class="form-control" required onchange="xuLyHinhThucThanhToan(this.value)">
+                                        <option value="">-- Chọn hình thức --</option>
+                                        <option th:each="ht : ${hinhThucs}" th:value="${ht.id}" th:text="${ht.tenHinhThuc}"></option>
+                                    </select>
+                                </div>
+
+                                <!-- THÔNG TIN TIỀN -->
+                                <div class="form-group row">
+                                    <label class="col-xs-6">Tổng tiền hàng:</label>
+                                    <div class="col-xs-6 text-right text-primary">
+                                        <b><span id="tong-tien-goc">0</span> ₫</b>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="col-xs-6">Giảm giá:</label>
+                                    <div class="col-xs-6 text-right text-success">
+                                        <b><span id="muc-giam">0</span> ₫</b>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-xs-6"><strong>Tổng thanh toán:</strong></label>
+                                    <div class="col-xs-6 text-right text-danger">
+                                        <b><span id="tong-tien">0</span> ₫</b>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="tongTien" id="tongTienHidden" value="0">
+
+                                <!-- QR THANH TOÁN -->
+                                <div class="form-group" id="qrThanhToanContainer" style="display: none;">
+                                    <label>Mã QR chuyển khoản (MB Bank):</label>
+                                    <div class="text-center">
+                                        <img id="qrCodeImg" src="" alt="QR Code MB Bank" style="max-width: 300px; margin-top: 20px;">
+                                        <p><small>Người nhận: Nguyễn Thị Hà Lan (MB Bank – STK: 0912713606)</small></p>
+                                    </div>
+                                </div>
+
+                                <div id="tienMatFields" style="display: none;">
+                                    <!-- TIỀN KHÁCH ĐƯA -->
+                                    <div class="form-group">
+                                        <label>Tiền khách đưa:</label>
+                                        <input type="number" class="form-control" id="tienKhachDua" name="tienKhachDua" min="0" oninput="tinhTienThua()">
+                                    </div>
+
+                                    <!-- TIỀN TRẢ LẠI -->
+                                    <div class="form-group">
+                                        <label>Tiền trả lại khách:</label>
+                                        <input type="text" class="form-control" id="tienThua" readonly>
+                                    </div>
+                                </div>
+
+
+                                <!-- NÚT THANH TOÁN -->
+                                <button type="submit" class="btn btn-success btn-block">
+                                    <i class="glyphicon glyphicon-ok"></i> Thanh toán
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="modal fade" id="khachHangModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Danh sách khách hàng</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>Tên</th>
+                                <th>SĐT</th>
+                                <th>Địa chỉ</th>
+                                <th>Email</th>
+                                <th>Ngày sinh</th>
+                                <th>Chọn</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="kh : ${khachHangs}">
+                                <td th:text="${kh.tenKh}"></td>
+                                <td th:text="${kh.sdt}"></td>
+                                <td th:text="${kh.diaChi}"></td>
+                                <td th:text="${kh.email}"></td>
+                                <td th:text="${kh.ngaySinh}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm"
+                                            th:attr="onclick=|chonKhachHang('${kh.idKh}', '${kh.tenKh}')|">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Chi tiết sản phẩm -->
+        <div class="modal fade" id="modalChiTietSanPham" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content box box-primary">
+                    <div class="modal-header with-border">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><i class="fa fa-info-circle text-blue"></i> Chi tiết sản phẩm</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <!-- Ảnh bên trái -->
+                            <div class="col-sm-5 text-center">
+                                <img id="chiTietAnh" src="" class="img-responsive img-thumbnail" style="max-height:300px;" alt="Ảnh sản phẩm">
+                            </div>
+
+                            <!-- Thông tin bên phải -->
+                            <div class="col-sm-7">
+                                <h4 id="chiTietTen" class="text-primary text-bold"></h4>
+                                <p><strong>Mã sản phẩm:</strong> <span id="chiTietMa"></span></p>
+                                <p><strong>Giá:</strong> <span id="chiTietGia"></span> ₫</p>
+                                <p><strong>Mô tả:</strong> <span id="chiTietMoTa"></span></p>
+                                <hr style="margin: 10px 0;">
+
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <p><strong>Màu sắc:</strong> <span id="chiTietMauSac"></span></p>
+                                        <p><strong>Kích thước:</strong> <span id="chiTietKichThuoc"></span></p>
+                                        <p><strong>Chất liệu:</strong> <span id="chiTietChatLieu"></span></p>
+                                        <p><strong>Phong cách:</strong> <span id="chiTietPhongCach"></span></p>
+                                        <p><strong>Tay áo:</strong> <span id="chiTietTayAo"></span></p>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <p><strong>Cổ áo:</strong> <span id="chiTietCoAo"></span></p>
+                                        <p><strong>Khuy áo:</strong> <span id="chiTietKhuyAo"></span></p>
+                                        <p><strong>Kiểu dáng:</strong> <span id="chiTietKieuDang"></span></p>
+                                        <p><strong>Đường may:</strong> <span id="chiTietDuongMay"></span></p>
+                                        <p><strong>Họa tiết:</strong> <span id="chiTietHoaTiet"></span></p>
+                                        <p><strong>Danh mục:</strong> <span id="chiTietDanhMuc"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.4.13
+        </div>
+        <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io/">AdminLTE</a>.</strong> All rights
+        reserved.
+    </footer>
+</div>
+
+<script>
+    const input = document.getElementById('imageURLInput');
+    const preview = document.getElementById('imagePreview');
+
+    input.addEventListener('input', () => {
+        const url = input.value;
+        if (url) {
+            preview.src = url;
+            preview.style.display = 'block';
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectHinhThuc = document.querySelector('select[name="hinhThuc"]');
+        const qrContainer = document.getElementById('qrThanhToanContainer');
+        const qrImg = document.getElementById('qrCodeImg');
+        const tongTienInput = document.getElementById('tongTienHidden');
+        const tienMatFields = document.getElementById('tienMatFields');
+        const inputTienKhachDua = document.getElementById("tienKhachDua");
+
+        // Xử lý khi thay đổi hình thức thanh toán
+        selectHinhThuc.addEventListener('change', function () {
+            const selectedText = selectHinhThuc.options[selectHinhThuc.selectedIndex].text.toLowerCase();
+            const tongTien = tongTienInput.value;
+
+            // Hiển thị QR nếu là chuyển khoản hoặc ví điện tử
+            if (selectedText.includes('chuyển khoản') || selectedText.includes('ví điện tử')) {
+                qrContainer.style.display = 'block';
+                tienMatFields.style.display = 'none';
+
+                const qrUrl = `https://img.vietqr.io/image/MB-0912713606-compact.png?amount=${tongTien}&addInfo=Thanh%20toan%20tai%20quay&accountName=NGUYEN%20THI%20HA%20LAN`;
+                qrImg.src = qrUrl;
+
+            } else if (selectedText.includes('tiền mặt')) {
+                qrContainer.style.display = 'none';
+                qrImg.src = '';
+                tienMatFields.style.display = 'block';
+            } else {
+                // Trường hợp khác (chưa chọn hoặc không xác định)
+                qrContainer.style.display = 'none';
+                qrImg.src = '';
+                tienMatFields.style.display = 'none';
+            }
+        });
+
+        // Gõ Enter ở ô tiền khách đưa để tính tiền thừa
+        inputTienKhachDua.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                tinhTienThua();
+            }
+        });
+    });
+</script>
+
+<!-- JavaScript xử lý -->
+
+
+<script>
+    function tinhTongTien() {
+        let tong = 0;
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            const input = row.querySelector("input.so-luong");
+            if (!input) return;
+            const donGia = parseInt(input.getAttribute("data-gia")) || 0;
+            const soLuong = parseInt(input.value) || 0;
+            const thanhTien = donGia * soLuong;
+            const cell = row.querySelector(".thanh-tien");
+            if (cell) cell.innerText = thanhTien.toLocaleString();
+            tong += thanhTien;
+        });
+
+        // 👉 Chỉ gán tổng tiền gốc vào input để gửi lên server
+        document.getElementById("tongTienHidden").value = tong;
+
+        // 👉 Cập nhật hiển thị phía người dùng (không thay đổi input ẩn)
+        document.getElementById("tong-tien-goc").innerText = tong.toLocaleString();
+
+        // Cập nhật hiển thị giảm giá (nếu cần)
+        hienThiGiamGia(tong);
+    }
+
+    function hienThiGiamGia(tongGoc) {
+        const select = document.getElementById("giamGiaSelect");
+        const selected = select.options[select.selectedIndex];
+        let giamGia = 0;
+
+        if (selected && selected.value !== "") {
+            const loai = selected.getAttribute("data-loai");
+            const giaTri = parseInt(selected.getAttribute("data-gia-tri")) || 0;
+
+            if (loai === "PERCENT") {
+                giamGia = Math.floor(tongGoc * giaTri / 100);
+            } else {
+                giamGia = giaTri;
+            }
+
+            if (giamGia > tongGoc) giamGia = tongGoc;
+        }
+
+        // 👉 Chỉ hiển thị mức giảm, KHÔNG gán lại tongTienHidden
+        document.getElementById("muc-giam").innerText = giamGia.toLocaleString();
+        document.getElementById("tong-tien").innerText = (tongGoc - giamGia).toLocaleString();
+
+        // Có thể thêm nếu bạn muốn hiện QR:
+        capNhatQR(tongGoc - giamGia);
+    }
+
+    function capNhatQR(tongTienSauGiam) {
+        const selectHinhThuc = document.querySelector('select[name="hinhThuc"]');
+        const qrContainer = document.getElementById('qrThanhToanContainer');
+        const qrImg = document.getElementById('qrCodeImg');
+        const selectedOption = selectHinhThuc.options[selectHinhThuc.selectedIndex].text.toLowerCase();
+
+        if (selectedOption.includes('chuyển khoản') || selectedOption.includes('ví điện tử')) {
+            qrContainer.style.display = 'block';
+            const qrUrl = `https://img.vietqr.io/image/MB-0912713606-compact.png?amount=${tongTienSauGiam}&addInfo=Thanh%20toan%20tai%20quay&accountName=NGUYEN%20THI%20HA%20LAN`;
+            qrImg.src = qrUrl;
+        } else {
+            qrContainer.style.display = 'none';
+            qrImg.src = '';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        tinhTongTien(); // Tính lại khi trang load
+    });
+
+</script>
+
+<script>
+    function tinhTienThua() {
+        var tienKhach = parseFloat(document.getElementById("tienKhachDua").value) || 0;
+        var tongThanhToanText = document.getElementById("tong-tien").innerText.replace(/[^\d]/g, '') || "0";
+        var tongThanhToan = parseFloat(tongThanhToanText);
+
+        if (!isNaN(tienKhach) && !isNaN(tongThanhToan)) {
+            var tienThua = tienKhach - tongThanhToan;
+            document.getElementById("tienThua").value = tienThua >= 0
+                ? tienThua.toLocaleString() + " đ"
+                : "Thiếu " + Math.abs(tienThua).toLocaleString() + " đ";
+        } else {
+            document.getElementById("tienThua").value = "";
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        taiKhachHangDaChon();
+        ganSuKienLoc();
+    });
+
+    function ganSuKienLoc() {
+        ['#searchSanPham', '#filterDanhMuc', '#filterMauSac', '#filterKichThuoc'].forEach(selector => {
+            const input = document.querySelector(selector);
+            if (input) {
+                input.addEventListener('input', () => {
+                    locSanPham();
+                    taiKhachHangDaChon(); // Đảm bảo gán lại thông tin khách sau lọc
+                });
+            }
+        });
+    }
+
+    function locSanPham() {
+        const keyword = document.getElementById('searchSanPham').value.toLowerCase();
+        const danhMuc = document.getElementById('filterDanhMuc').value;
+        const mau = document.getElementById('filterMauSac').value;
+        const size = document.getElementById('filterKichThuoc').value;
+
+        document.querySelectorAll('#productTable tbody tr').forEach(row => {
+            const ten = row.getAttribute('data-ten')?.toLowerCase() || '';
+            const dm = row.getAttribute('data-danhmuc') || '';
+            const ms = row.getAttribute('data-mau') || '';
+            const kt = row.getAttribute('data-size') || '';
+
+            const match =
+                (!keyword || ten.includes(keyword)) &&
+                (!danhMuc || dm === danhMuc) &&
+                (!mau || ms === mau) &&
+                (!size || kt === size);
+
+            row.style.display = match ? '' : 'none';
+        });
+    }
+
+    function chonKhachHang(id, ten) {
+        document.getElementById("tenKhachHang").value = ten;
+        document.getElementById("idKhachHang").value = id;
+        localStorage.setItem("khachHangDaChon", JSON.stringify({ id, ten }));
+        $('#khachHangModal').modal('hide');
+    }
+
+    function taiKhachHangDaChon() {
+        const kh = JSON.parse(localStorage.getItem("khachHangDaChon"));
+        if (kh) {
+            document.getElementById("tenKhachHang").value = kh.ten;
+            document.getElementById("idKhachHang").value = kh.id;
+        }
+    }
+
+    function openKhachHangModal() {
+        $('#khachHangModal').modal('show');
+    }
+</script>
+
+
+
+
+
+
+<script>
+    function xemChiTietSanPham(id, ten, ma, gia, moTa, coAo, khuyAo, kieuDang, duongMay, hoaTiet, phongCach, chatLieu, mauSac, kichThuoc, danhMuc, tayAo, anh) {
+        document.getElementById("chiTietTen").innerText = ten;
+        document.getElementById("chiTietMa").innerText = ma;
+        document.getElementById("chiTietGia").innerText = parseInt(gia).toLocaleString();
+        document.getElementById("chiTietMoTa").innerText = moTa;
+
+        document.getElementById("chiTietCoAo").innerText = coAo;
+        document.getElementById("chiTietKhuyAo").innerText = khuyAo;
+        document.getElementById("chiTietKieuDang").innerText = kieuDang;
+        document.getElementById("chiTietDuongMay").innerText = duongMay;
+        document.getElementById("chiTietHoaTiet").innerText = hoaTiet;
+        document.getElementById("chiTietPhongCach").innerText = phongCach;
+        document.getElementById("chiTietChatLieu").innerText = chatLieu;
+        document.getElementById("chiTietMauSac").innerText = mauSac;
+        document.getElementById("chiTietKichThuoc").innerText = kichThuoc;
+        document.getElementById("chiTietDanhMuc").innerText = danhMuc;
+        document.getElementById("chiTietTayAo").innerText = tayAo;
+
+        // ✅ Gán đường dẫn ảnh (anh đã là /uploads/abc.jpg hoặc URL đầy đủ)
+        document.getElementById("chiTietAnh").src = anh;
+
+        // ✅ Hiển thị modal theo kiểu Bootstrap 3
+        $('#modalChiTietSanPham').modal('show');
+    }
+</script>
+<script>
+    let gioHang = [];
+
+    function themVaoGioHang(id, ten, size, gia, tonKho) {
+        gia = parseFloat(gia);
+        tonKho = parseInt(tonKho);
+
+        const itemIndex = gioHang.findIndex(sp => sp.id === id && sp.size === size);
+
+        if (itemIndex !== -1) {
+            if (gioHang[itemIndex].soLuong < tonKho) {
+                gioHang[itemIndex].soLuong++;
+                alert("✅ Đã tăng số lượng sản phẩm trong giỏ hàng.");
+            } else {
+                alert("⚠️ Số lượng vượt quá tồn kho!");
+            }
+        } else {
+            gioHang.push({ id, ten, size, gia, soLuong: 1, tonKho });
+            alert("✅ Thêm sản phẩm vào giỏ hàng thành công!");
+        }
+
+        capNhatBangGioHang();
+        tinhTongTien();
+    }
+    function capNhatBangGioHang() {
+        const tbody = document.getElementById("gioHangBody");
+        const section = document.getElementById("gioHangSection");
+        const form = document.getElementById("formThanhToan");
+
+        // Xóa toàn bộ input cũ của giỏ hàng trong form
+        document.querySelectorAll(".input-gio-hang").forEach(e => e.remove());
+
+        tbody.innerHTML = "";
+
+        if (gioHang.length === 0) {
+            section.style.display = "none";
+            return;
+        } else {
+            section.style.display = "block";
+        }
+
+        gioHang.forEach((sp, index) => {
+            const thanhTien = sp.gia * sp.soLuong;
+
+            const row = `
+            <tr>
+                <td>${sp.ten}</td>
+                <td>${sp.size}</td>
+                <td>
+                    <input type="number" class="form-control input-sm so-luong"
+                        value="${sp.soLuong}" min="1" max="${sp.tonKho}"
+                        data-gia="${sp.gia}" onchange="capNhatSoLuong(${index}, this)">
+                </td>
+                <td>${sp.gia.toLocaleString()} ₫</td>
+                <td class="thanh-tien">${thanhTien.toLocaleString()} ₫</td>
+                <td>
+                    <button class="btn btn-danger btn-xs" onclick="xoaKhoiGioHang(${index})">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+            tbody.insertAdjacentHTML("beforeend", row);
+
+            // ✅ Thêm input ẩn vào form để gửi về Controller
+            const inputHidden = document.createElement("input");
+            inputHidden.type = "hidden";
+            inputHidden.name = `sp_${sp.id}`;
+            inputHidden.value = sp.soLuong;
+            inputHidden.classList.add("input-gio-hang");
+            form.appendChild(inputHidden);
+        });
+    }
+
+    function capNhatSoLuong(index, input) {
+        const newQty = parseInt(input.value);
+        const max = parseInt(input.max);
+        if (newQty > max) {
+            alert("⚠️ Vượt quá số lượng tồn kho!");
+            input.value = gioHang[index].soLuong;
+            return;
+        }
+        gioHang[index].soLuong = newQty;
+        capNhatBangGioHang();
+        tinhTongTien();
+    }
+
+    function xoaKhoiGioHang(index) {
+        if (confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")) {
+            gioHang.splice(index, 1);
+            capNhatBangGioHang();
+            tinhTongTien();
+        }
+    }
+
+</script>
+<script>
+    function openGioHangModal() {
+        $('#gioHangModal').modal('show');
+    }
+</script>
+
+<!-- Trong JS, thêm check disable sau submit -->
+<script>
+    document.querySelector("form").addEventListener("submit", function () {
+        this.querySelector("button[type=submit]").disabled = true;
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const idKhachHang = document.getElementById("idKhachHang");
+        const tenKhachHang = document.getElementById("tenKhachHang");
+
+        // Nếu chưa có khách hàng nào được chọn, gán mặc định là "Khách lẻ"
+        if (!idKhachHang.value || idKhachHang.value.trim() === "") {
+            idKhachHang.value = 9; // ID khách lẻ
+            tenKhachHang.value = "Khách lẻ"; // Tên hiển thị
+        }
+    });
+</script>
+
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+<!-- jQuery 3 -->
+<script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/bower_components/jquery-ui/jquery-ui.min.js}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script th:src="@{/assets/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- Morris.js charts -->
+<script th:src="@{/assets/bower_components/raphael/raphael.min.js}"></script>
+<script th:src="@{/assets/bower_components/morris.js/morris.min.js}"></script>
+<!-- Sparkline -->
+<script src="bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+<!-- jvectormap -->
+<script th:src="@{/assets/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+<script th:src="@{/assets/plugins/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+<!-- jQuery Knob Chart -->
+<script th:src="@{/assets/bower_components/jquery-knob/dist/jquery.knob.min.js}"></script>
+<!-- daterangepicker -->
+<script th:src="@{/assets/bower_components/moment/min/moment.min.js}"></script>
+<script th:src="@{/assets/bower_components/bootstrap-daterangepicker/daterangepicker.js}"></script>
+<!-- datepicker -->
+<script th:src="@{/assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script th:src="@{/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js}"></script>
+<!-- Slimscroll -->
+<script th:src="@{/assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+<!-- FastClick -->
+<script th:src="@{/assets/bower_components/fastclick/lib/fastclick.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/assets/dist/js/adminlte.min.js}"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script th:src="@{/assets/dist/js/pages/dashboard.js}"></script>
+<!-- AdminLTE for demo purposes -->
+<script th:src="@{/assets/dist/js/demo.js}"></script>
+<script th:src="@{/assets/ad.js}"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"941d2071ef3dfd9f","version":"2025.4.0-1-g37f21b1","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"2437d112162f4ec4b63c3ca0eb38fb20","b":1}' crossorigin="anonymous"></script>
+</body>
+
+<!-- Mirrored from adminlte.io/themes/AdminLTE/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 17:35:27 GMT -->
+</html>

@@ -121,7 +121,7 @@ public class TaiKhoanController {
         session.setAttribute("khachHangDangNhap", user); // 👈 dùng key này để kiểm tra ở giỏ hàng
 
         if (user.getLoaiTaiKhoan() != null && user.getLoaiTaiKhoan() == 1) {
-            session.setAttribute("adminDangNhap", user); // ✅ thêm dòng này
+            session.setAttribute("adminDangNhap", user);
             return "redirect:/admin/san-pham/hien-thi";
         } else {
             return "redirect:/san-pham/hien-thi";
@@ -140,13 +140,18 @@ public class TaiKhoanController {
         Object user = session.getAttribute("khachHangDangNhap");
 
         if (user == null) {
-            return "redirect:/quan-ao/login"; // chưa đăng nhập
+            return "redirect:/quan-ao/login"; // Chưa đăng nhập
         }
 
-        // ✅ Ép kiểu user thành TaiKhoan
         TaiKhoan taiKhoan = (TaiKhoan) user;
 
-        // ✅ Lấy danh sách hóa đơn theo ID khách hàng
+        // Kiểm tra xem tài khoản có liên kết với khách hàng không
+        if (taiKhoan.getKhachHang() == null) {
+            model.addAttribute("error", "Tài khoản chưa được liên kết với thông tin khách hàng.");
+            return "redirect:/quan-ao/login";
+        }
+
+        // Lấy danh sách hóa đơn
         Integer idKhachHang = taiKhoan.getKhachHang().getIdKh();
         List<HoaDon> hoaDonList = hoaDonRepo.findByKhachHang_idKh(idKhachHang);
 
@@ -158,7 +163,8 @@ public class TaiKhoanController {
             List<HoaDonChiTiet> chiTiets = hoaDonChiTietRepo.findByHoaDon_Id(hd.getId());
             chiTietMap.put(hd.getId(), chiTiets);
         }
-        model.addAttribute("chiTietMap", chiTietMap); // gửi qua view
+
+        model.addAttribute("chiTietMap", chiTietMap);
 
         return "ViewTaiKhoanUser/thong-tin";
     }

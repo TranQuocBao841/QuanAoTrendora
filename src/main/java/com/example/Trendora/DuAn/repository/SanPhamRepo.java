@@ -76,4 +76,18 @@ public interface SanPhamRepo extends JpaRepository<SanPham,Integer> {
             @Param("giaMax") BigDecimal giaMax,
             Pageable pageable
     );
+
+
+
+    @Query("SELECT s FROM SanPham s WHERE " +
+            "(:keyword IS NULL OR s.tenSanPham LIKE %:keyword%) AND " +
+            "(:danhMucId IS NULL OR s.danhMuc.id = :danhMucId) AND " +
+            "(:mauSac IS NULL OR s.mauSac.id = :mauSac) AND " +
+            "(:kichThuoc IS NULL OR s.kichThuoc.id = :kichThuoc)")
+    List<SanPham> timKiemSanPhamNangCao(@Param("keyword") String keyword,
+                                        @Param("danhMucId") Integer danhMucId,
+                                        @Param("mauSac") Integer mauSac,
+                                        @Param("kichThuoc") Integer kichThuoc);
+
+
 }

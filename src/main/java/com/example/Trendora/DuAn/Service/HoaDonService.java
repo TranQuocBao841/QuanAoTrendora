@@ -27,9 +27,10 @@ public class HoaDonService {
     }
 
 
-    public Optional<HoaDonChiTietDTO> getChiTiet(Integer hoaDonId) {
+    public List<HoaDonChiTietDTO> getChiTiet(Integer hoaDonId) {
         return hoaDonChiTietRepo.findDTOByHoaDonId(hoaDonId);
     }
+
 
     @Transactional
     public void toggleTrangThai(Integer hoaDonId) {

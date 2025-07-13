@@ -1,5 +1,6 @@
 package com.example.Trendora.DuAn.controller;
 
+import com.example.Trendora.DuAn.DTO.HoaDonChiTietDTO;
 import com.example.Trendora.DuAn.DTO.HoaDonDTO;
 import com.example.Trendora.DuAn.Service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,9 @@ public class HoaDonController {
 
     @GetMapping("/detail")
     public String detail(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("ct", service.getChiTiet(id).orElse(null));
+        List<HoaDonChiTietDTO> chiTietList = service.getChiTiet(id);
+        model.addAttribute("ct", chiTietList);
         return "ViewHoaDon/detail";
     }
+
 }

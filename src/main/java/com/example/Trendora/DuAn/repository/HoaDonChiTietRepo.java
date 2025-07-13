@@ -82,12 +82,11 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet,Integer> 
 
 
 
-    @Query("SELECT new com.example.Trendora.DuAn.DTO.HoaDonChiTietDTO(" +
-            "ct.id, ct.hoaDon.id, ct.maHdct, sp.tenSanPham, ct.donGia, ct.soLuong, ct.thanhTien, ct.trangThai) " +
-            "FROM HoaDonChiTiet ct " +
-            "JOIN ct.sanPham sp " +
-            "WHERE ct.hoaDon.id = :hoaDonId")
-    Optional<HoaDonChiTietDTO> findDTOByHoaDonId(@Param("hoaDonId") Integer hoaDonId);
+    @Query("SELECT new com.example.Trendora.DuAn.DTO.HoaDonChiTietDTO(ct.id, ct.hoaDon.id, ct.maHdct, sp.tenSanPham, ct.donGia, ct.soLuong, ct.thanhTien, ct.trangThai) " +
+            "FROM HoaDonChiTiet ct JOIN ct.sanPham sp WHERE ct.hoaDon.id = :hoaDonId")
+    List<HoaDonChiTietDTO> findDTOByHoaDonId(@Param("hoaDonId") Integer hoaDonId);
+
+
 
     @Modifying
     @Transactional

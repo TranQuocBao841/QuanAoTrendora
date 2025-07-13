@@ -16,9 +16,9 @@ public class HoaDonChiTietDTO {
     private Integer idHoaDon;
     private String maHdct;
     private String tenSanPham;
-    private Integer donGia;
+    private BigDecimal donGia;
     private Integer soLuong;
-    private Integer thanhTien;
+    private BigDecimal thanhTien;
     private Integer trangThai;
 }
 
