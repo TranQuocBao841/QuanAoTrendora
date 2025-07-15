@@ -43,6 +43,20 @@ public class HoaDonService {
         hoaDonChiTietRepo.updateTrangThaiByHoaDonId(hoaDonId, newStatus);
     }
 
+    public Optional<HoaDonDTO> timHoaDonDTOTheoId(Integer id) {
+        return hoaDonRepo.findById(id)
+                .map(hd -> {
+                    HoaDonDTO dto = new HoaDonDTO();
+                    dto.setId(hd.getId());
+                    dto.setMaHd(hd.getMaHd());
+                    dto.setNgayTao(hd.getNgayTao());
+                    dto.setTenKhachHang(hd.getKhachHang().getTenKh());
+                    dto.setTrangThai(hd.getTrangThai());
+                    dto.setTongTien(hd.getTongTien());
+                    dto.setTenHinhThucThanhToan(hd.getHinhThucThanhToan().getTenHinhThuc()); // nếu cần
+                    return dto;
+                });
+    }
 }
 
 

@@ -124,7 +124,7 @@ public class TaiKhoanController {
             session.setAttribute("adminDangNhap", user);
             return "redirect:/admin/san-pham/hien-thi";
         } else {
-            return "redirect:/san-pham/hien-thi";
+            return "redirect:/san-pham/trang-chu";
         }
     }
 

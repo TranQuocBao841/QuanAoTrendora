@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class HoaDonDTO {
     private String tenNhanVien;
     private String tenKhachHang;
     private String tenHinhThucThanhToan;
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     private String tenGiamGia;
     private LocalDateTime ngayTao;
     private Integer tongTien;

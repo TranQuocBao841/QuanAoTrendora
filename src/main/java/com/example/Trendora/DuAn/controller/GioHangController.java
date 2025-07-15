@@ -1,17 +1,15 @@
 package com.example.Trendora.DuAn.controller;
 
 
-import com.example.Trendora.DuAn.model.Cart;
-import com.example.Trendora.DuAn.model.CartItem;
-import com.example.Trendora.DuAn.model.GiamGia;
-import com.example.Trendora.DuAn.model.SanPham;
-import com.example.Trendora.DuAn.repository.GiamGiaRepo;
-import com.example.Trendora.DuAn.repository.SanPhamRepo;
+import com.example.Trendora.DuAn.model.*;
+import com.example.Trendora.DuAn.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
@@ -31,11 +29,18 @@ public class GioHangController {
     @Autowired
     GiamGiaRepo giamGiaRepo;
 
+    @Autowired
+    ObjectMapper objectmapper;
+    @Autowired
+    private HoaDonRepo hdr;
+    @Autowired
+    private HoaDonChiTietRepo hdcr;
+    @Autowired
+    private NhanVienRepo nhanVienRepo;
     @GetMapping("/gio-hang")
     public String show (){
         return "gio_hang/view1";
     }
-
 
 
     @GetMapping("/add")
@@ -49,7 +54,8 @@ public class GioHangController {
         if (user == null) {
             // ✅ Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
             redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập trước khi thêm sản phẩm vào giỏ hàng.");
-            return "redirect:/quan-ao/login";  // 🔁 Đường dẫn trang đăng nhập của bạn
+            return "redirect:/quan-ao/login";
+
         }
 
         // ✅ Nếu đã đăng nhập thì tiếp tục thêm vào giỏ hàng
@@ -231,7 +237,119 @@ public class GioHangController {
         redirect.addFlashAttribute("thongBaoThanhCong", "Áp dụng mã giảm giá thành công!");
         return "redirect:/gio-hang/hien-thi";
     }
+    @GetMapping("/thanh-toan")
+    public String hienThiThanhToan(
+            @RequestParam(value = "tongTien", required = false) BigDecimal tongTien,
+            Model model,
+            HttpSession session) {
 
+        if (tongTien == null) {
+            return "redirect:/gio-hang/hien-thi";
+        }
+
+        Cart cart = (Cart) session.getAttribute("gioHang");
+        GiamGia giamGia = (GiamGia) session.getAttribute("maGiamGiaDaApDung");
+
+        BigDecimal tongTienTruocGiam = cart != null ? cart.getTongTien() : BigDecimal.ZERO;
+
+        // Thêm vào model
+        model.addAttribute("tongTien", tongTien);
+        model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);
+        model.addAttribute("giamGiaDangApDung", giamGia);
+        model.addAttribute("gioHang", cart);
+
+        TaiKhoan taiKhoan = (TaiKhoan) session.getAttribute("khachHangDangNhap");
+        if (taiKhoan != null && taiKhoan.getKhachHang() != null) {
+            model.addAttribute("khachHang", taiKhoan.getKhachHang());
+        }
+
+        return "ViewThanhToan/viewtt";
+    }
+
+
+    @Autowired
+    HinhThucThanhToanRepo htr;
+    @PostMapping("/thanh-toan")
+    public String xuLyThanhToan(
+            @RequestParam("idHinhThuc") Integer idHinhThuc,
+
+            @RequestParam("tongTien") Double tongTien,
+            HttpSession session,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        Cart cart = (Cart) session.getAttribute("gioHang");
+        TaiKhoan taiKhoan = (TaiKhoan) session.getAttribute("khachHangDangNhap");
+        GiamGia giamGia = (GiamGia) session.getAttribute("maGiamGiaDaApDung");
+
+        if (taiKhoan == null || cart == null || cart.getAllItems().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Không thể thanh toán. Vui lòng đăng nhập và thêm sản phẩm.");
+            return "redirect:/gio-hang/hien-thi";
+        }
+
+        HinhThucThanhToan hinhThuc = htr.findById(idHinhThuc).orElse(null);
+
+        // Tạo hóa đơn
+        HoaDon hoaDon = new HoaDon();
+        hoaDon.setMaHd("HD" + System.currentTimeMillis());
+        hoaDon.setKhachHang(taiKhoan.getKhachHang());
+        hoaDon.setNgayTao(LocalDateTime.now());
+        hoaDon.setHinhThucThanhToan(hinhThuc);
+        hoaDon.setTongTien(tongTien.intValue());
+        hoaDon.setTrangThai(idHinhThuc == 2 ? 1 : 0);
+        NhanVien nvMacDinh = nhanVienRepo.findById(1).orElse(null); // ID = 1 là nhân viên mặc định
+        hoaDon.setNhanVien(nvMacDinh);
+
+        if (giamGia != null) {
+            hoaDon.setGiamGia(giamGia);
+
+            if (giamGia.getSoLuong() != null && giamGia.getSoLuong() > 0) {
+                giamGia.setSoLuong(giamGia.getSoLuong() - 1);
+                giamGiaRepo.save(giamGia); // lưu lại
+            }
+        }
+
+        hdr.save(hoaDon);
+
+        try {
+            for (CartItem item : cart.getAllItems()) {
+                // Trừ tồn kho
+                SanPham sanPham = sanPhamRepo.findById(item.getId()).orElse(null);
+                if (sanPham != null) {
+                    sanPham.setSoLuong(sanPham.getSoLuong() - item.getSoLuong());
+                    sanPhamRepo.save(sanPham);
+                }
+
+                // Lưu chi tiết hóa đơn
+                HoaDonChiTiet chiTiet = new HoaDonChiTiet();
+                chiTiet.setMaHdct("HDCT" + System.currentTimeMillis() + "_" + item.getId());
+                chiTiet.setHoaDon(hoaDon);
+                chiTiet.setSanPham(sanPham);
+                chiTiet.setSoLuong(item.getSoLuong());
+                chiTiet.setDonGia(item.getDonGia());
+                chiTiet.setThanhTien(item.getDonGia().multiply(BigDecimal.valueOf(item.getSoLuong())));
+                chiTiet.setTrangThai(hoaDon.getTrangThai());
+                hdcr.save(chiTiet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi lưu hóa đơn chi tiết.");
+            return "redirect:/gio-hang/hien-thi";
+        }
+
+        // Xóa session giỏ hàng và mã giảm giá
+        session.removeAttribute("gioHang");
+        session.removeAttribute("maGiamGiaDaApDung");
+
+        redirectAttributes.addFlashAttribute("success", "Thanh toán thành công!");
+        return "redirect:/gio-hang/cam-on";
+    }
+
+
+    @GetMapping("/cam-on")
+    public String hienThiCamOn() {
+        return "ViewThanhToan/camon"; // Gọi đến file camon.html
+    }
 
 }
 

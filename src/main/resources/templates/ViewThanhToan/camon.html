@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
 <html xmlns:th="http://www.thymeleaf.org">
-<!-- Mirrored from html.tf.dreamitsolution.net/printmax/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 12:11:24 GMT -->
 <head>
+    <meta charset="UTF-8">
+    <title>Title</title>
     <meta charset="UTF-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Wellcome to Trendora</title>
+    <title>Welcome to Trendora</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -13,7 +14,14 @@
         .cart-thumb { width: 80px; height: 80px; object-fit: cover; }
         .remove-btn { border: none; background: transparent; color: red; font-size: 1.2rem; }
         .product-quantity-count input { width: 60px; text-align: center; }
+        label {
+            display: inline-block !important;
+            font-size: 1rem !important;
+            color: #111 !important;
+            font-weight: 500;
+        }
     </style>
+
     <!-- Favicon -->
     <link
             rel="icon"
@@ -133,14 +141,12 @@
             type="text/css"
             media="all"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <!-- modernizr js -->
-    <script th:src="@{/fe/js/vendor/modernizr-3.5.0.min.js}"></script>
+    <script th:src="@{/fe/js/vendor/modernizr-3.5.0.min.js}">
+    </script>
 </head>
-
 <body>
-<!--========= End Prealoader ============== -->
-
-<!-- ======= Start Topber Area  -->
 <section class="topber_area">
     <div class="container-fluid">
         <div class="row align-items-center">
@@ -182,11 +188,6 @@
         </div>
     </div>
 </section>
-<!-- ======= End Topber Area  -->
-
-<!--==================================================-->
-<!-- Start printmax Header Area-->
-<!--==================================================-->
 <div class="printmax-header-area style_two" id="sticky-header">
     <div class="container-fluid">
         <div class="row align-items-center">
@@ -201,23 +202,23 @@
                                 <li><a href="/san-pham/trang-chu">Home Trendora</a></li>
                             </ul>
                         </li>
-<!--                        <li><a href="about.html">About</a></li>-->
+                        <li><a href="about.html">About</a></li>
                         <li>
                             <a href="#"
                             >Page <span><i class="bi bi-chevron-double-right"></i></span
                             ></a>
                             <ul class="sub_menu">
-<!--                                <li><a href="about.html">About Us</a></li>-->
-<!--                                <li><a href="service.html">Our Service</a></li>-->
-<!--                                <li><a href="service-details.html">Service Details</a></li>-->
-<!--                                <li><a href="team.html">Our Team</a></li>-->
-<!--                                <li><a href="portfolio.html">Portfolio</a></li>-->
-<!--                                <li>-->
-<!--                                    <a href="portfolio-details.html">Portfolio Details</a>-->
-<!--                                </li>-->
-<!--                                <li><a href="checkout.html">Checkout</a></li>-->
-                                <li><a href="/gio-hang/hien-thi">Cart</a></li>
-                                <li><a href="/quan-ao/thong-tin">Acoount</a></li>
+                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="service.html">Our Service</a></li>
+                                <li><a href="service-details.html">Service Details</a></li>
+                                <li><a href="team.html">Our Team</a></li>
+                                <li><a href="portfolio.html">Portfolio</a></li>
+                                <li>
+                                    <a href="portfolio-details.html">Portfolio Details</a>
+                                </li>
+                                <li><a href="checkout.html">Checkout</a></li>
+                                <li><a href="cart.html">Cart</a></li>
+                                <li><a href="contact.html">Contact</a></li>
                             </ul>
                         </li>
                         <li>
@@ -225,7 +226,7 @@
                             >Shop <span><i class="bi bi-chevron-double-right"></i></span
                             ></a>
                             <ul class="sub_menu">
-                                <li><a href="/san-pham/hien-thi">Shop Trendora</a></li>
+                                <li><a href="/san-pham/hien-thi">Shop</a></li>
 
                             </ul>
                         </li>
@@ -238,7 +239,7 @@
                                 <li><a href="blog-details.html">Blog Details</a></li>
                             </ul>
                         </li>
-                        <li><a href="/quan-ao/thong-tin">Acoount</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
             </div>
@@ -280,12 +281,6 @@
         </div>
     </div>
 </div>
-<!--==================================================-->
-<!-- End printmax Header Area -->
-<!--==================================================-->
-
-<!--========= Start Mobile Memu========== -->
-
 <div class="mobile-menu-area sticky d-sm-block d-md-block d-lg-none">
     <div class="mobile-menu">
         <nav class="header-menu">
@@ -335,9 +330,6 @@
         </nav>
     </div>
 </div>
-<!--========= End Mobile Memu========== -->
-
-<!-- Sidebar Cart Item -->
 <div class="xs-sidebar-group info-group">
     <div class="xs-overlay xs-bg-black"></div>
     <div class="xs-sidebar-widget">
@@ -429,289 +421,40 @@
         </div>
     </div>
 </div>
-
-<!--==================================================-->
-<!-- End Buddy Sidebar Section Here -->
-<!--==================================================-->
-<div class="sidebar-menu-wrapper">
-    <div class="cart_sidebar">
-        <button type="button" class="close_btn">
-            <i class="fas fa-times"></i>
-        </button>
-        <h2 class="heading_title text-uppercase">
-            Cart Items - <span>4</span>
-        </h2>
-
-        <div class="cart_items_list">
-            <div class="cart_item">
-                <div class="item_image">
-                    <img th:src="@{/fe/images/home_one/collection1.jpg}" alt="" />
-                </div>
-                <div class="item_content">
-                    <h4 class="item_title">
-                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
-                    </h4>
-                    <span class="item_price">$19.00</span>
-                    <button type="button" class="remove_btn">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="cart_item">
-                <div class="item_image">
-                    <img th:src="@{/fe/images/home_one/collection2.jpg}" alt="" />
-                </div>
-                <div class="item_content">
-                    <h4 class="item_title">
-                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
-                    </h4>
-                    <span class="item_price">$19.00</span>
-                    <button type="button" class="remove_btn">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="cart_item">
-                <div class="item_image">
-                    <img th:src="@{/fe/images/home_one/collection3.jpg}" alt="" />
-                </div>
-                <div class="item_content">
-                    <h4 class="item_title">
-                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
-                    </h4>
-                    <span class="item_price">$19.00</span>
-                    <button type="button" class="remove_btn">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="cart_item">
-                <div class="item_image">
-                    <img th:src="@{/fe/images/home_one/collection4.jpg}" alt="" />
-                </div>
-                <div class="item_content">
-                    <h4 class="item_title">
-                        Rorem ipsum dolor sit amet, sectetur adipisi cingey.
-                    </h4>
-                    <span class="item_price">$19.00</span>
-                    <button type="button" class="remove_btn">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="total_price text-uppercase">
-            <span>Sub Total:</span>
-            <span>$76.00</span>
-        </div>
-        <ul class="btns_group ul_li">
-            <li>
-                <a href="cart.html" class="btn btn_primary text-uppercase"
-                >View Cart</a
-                >
-            </li>
-            <li>
-                <a
-                        href="checkout.html"
-                        class="btn btn_border border_black text-uppercase"
-                >Checkout</a
-                >
-            </li>
-        </ul>
-    </div>
-    <div class="cart_sidebar_overlay"></div>
-</div>
-<!--==================================================-->
-<!-- End Buddy Sidebar Section Here -->
-<!--==================================================-->
-
-<!--==================================================-->
-<!-- Start printmax Breadcumb Area -->
-<!--==================================================-->
 <div class="breadcumb-area d-flex style_two">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <div class="breadcumb-content">
                     <div class="breadcumb-title">
-                        <h4>Cart</h4>
+                        <h4>Payment</h4>
                     </div>
                     <ul>
                         <li><a href="index.html">Home</a></li>
-                        <li>Cart</li>
+                        <li>Cart /</li>
+                        <li>Payment</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!--==================================================-->
-<!-- End printmax Breadcumb Area -->
-<!--==================================================-->
-
-<!--==================================================-->
-<!-- Start printmax Cart Area-->
-<!--==================================================-->
-<section class="cart-section py-5">
-    <div class="container">
-        <div class="row mb-4">
-            <h2 class="cart-title mb-4">Giỏ Hàng Của Bạn</h2>
-
-            <!-- Thông báo -->
-            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-
-            <!-- Nếu giỏ hàng trống -->
-            <div th:if="${#lists.isEmpty(cart.allItems)}">
-                <p>Giỏ hàng đang trống. <a th:href="@{/san-pham/hien-thi}">Tiếp tục mua sắm</a></p>
-            </div>
-
-            <!-- Nếu giỏ hàng có sản phẩm -->
-            <div class="col-12 mb-4" th:if="${!#lists.isEmpty(cart.allItems)}">
-                <form th:action="@{/gio-hang/update-all}" method="post" id="updateForm">
-                    <div class="table-responsive">
-                        <table class="cart-table table table-bordered text-center align-middle mb-4">
-                            <thead>
-                            <tr>
-                                <th>Ảnh</th>
-                                <th>Sản phẩm</th>
-                                <th>Đơn giá</th>
-                                <th>Số lượng</th>
-                                <th>Thành tiền</th>
-                                <th>Xóa</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="item : ${cart.allItems}">
-                                <td><img class="cart-thumb" th:src="${item.anh}" alt="Ảnh sản phẩm" /></td>
-                                <td th:text="${item.tenSanPham}">Tên SP</td>
-                                <td th:utext="${#numbers.formatDecimal(item.donGia, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
-                                <td>
-                                    <input type="number" name="quantities" min="1" th:value="${item.soLuong}" />
-                                    <input type="hidden" name="ids" th:value="${item.id}" />
-                                </td>
-                                <td th:utext="${#numbers.formatDecimal(item.thanhTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
-                                <td>
-                                    <a th:href="@{'/gio-hang/remove/' + ${item.id}}" class="remove-btn"
-                                       onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này không?')">
-                                        <i class="fas fa-times"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Nút hành động -->
-                    <div class="row justify-content-between">
-                        <div class="col-auto">
-                            <a th:href="@{/san-pham/hien-thi}" class="btn btn-secondary">Tiếp tục mua hàng</a>
-                        </div>
-                        <div class="col-auto d-flex gap-2">
 
 
-                            <form th:action="@{/gio-hang/update-all}" method="post" id="updateForm">
-                                <button type="submit" class="btn btn-outline-primary">Cập nhật giỏ hàng</button>
-                            </form>
-                            <form th:action="@{/gio-hang/xoa-tat-ca}" method="post" style="display:inline;" onsubmit="return confirm('Xóa toàn bộ giỏ hàng?')">
-                                <button type="submit" class="btn btn-outline-danger">Xóa toàn bộ</button>
-                            </form>
+<section class="text-center my-5">
+    <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXYyc3R0dnc0aHRtaTEzbWtrczc1aW05NjVsdWkzdW9hNDd4cmY2bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iMdKTpGpkwAklGzVxP/giphy.gif"
+         alt="Thank you"
+         style="width: 100px; margin-bottom: 20px;" />
+    <h1 style="color: #28a745;" class="animate__animated animate__fadeInDown">Cảm ơn bạn đã đặt hàng!</h1>
+    <p class="lead animated fadeInUp">Chúng tôi đã nhận được đơn hàng và sẽ xử lý sớm nhất có thể.</p>
 
-
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <form th:action="@{/gio-hang/ap-ma-giam}" method="post" class="d-flex gap-2">
-                                    <select name="tenGiamGia" class="form-select">
-                                        <option value="">-- Chọn mã giảm giá đang có --</option>
-                                        <option th:each="g : ${danhSachGiamGia}"
-                                                th:value="${g.maGiamGia}"
-                                                th:text="${g.tenGiamGia}"
-                                                th:selected="${giamGiaDangApDung != null and g.maGiamGia == giamGiaDangApDung.maGiamGia}">
-                                        </option>
-                                    </select>
-
-                                    <div th:if="${#lists.isEmpty(danhSachGiamGia)}" class="text-danger">
-                                        Không có mã giảm giá nào đang hoạt động!
-                                    </div>
-                                    <button type="submit" class="btn btn-success">Áp dụng</button>
-                                </form>
-
-                                <div class="mt-2 text-danger" th:if="${loiMaGiam}" th:text="${loiMaGiam}"></div>
-                                <div class="mt-2 text-success" th:if="${thongBaoThanhCong}" th:text="${thongBaoThanhCong}"></div>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                </form>
-
-
-
-            </div>
-
-            <!-- Tổng tiền -->
-            <div class="col-12 col-md-6 mt-4" th:if="${!#lists.isEmpty(cart.allItems)}">
-                <div class="border p-4 rounded">
-                    <h4 class="mb-3">Tổng cộng</h4>
-                    <table class="table table-borderless mb-0">
-                        <!-- Tổng tiền -->
-                        <tr>
-                            <th>Tổng tiền:</th>
-                            <td>
-                                <strong th:utext="${#numbers.formatDecimal(tongTienTruocGiam, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</strong>
-                            </td>
-                        </tr>
-
-                        <!-- Nếu có mã giảm giá -->
-                        <tr th:if="${giamGiaDangApDung != null}">
-                            <th>Tên Vocher:</th>
-
-                            <td>
-                                <span th:text="${giamGiaDangApDung.tenGiamGia}">Tên mã</span>
-                                <span class="text-success ms-2" th:if="${giamGiaDangApDung.loaiGiamGia == 'Phần trăm'}">
-                        (-<span th:text="${giamGiaDangApDung.giaTriGiam}">0</span>%)
-                    </span>
-                                <span class="text-success ms-2" th:if="${giamGiaDangApDung.loaiGiamGia == 'Tiền mặt'}">
-                        (-<span th:utext="${#numbers.formatDecimal(giamGiaDangApDung.giaTriGiam, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>)
-                    </span>
-                            </td>
-                        </tr>
-
-                        <!-- Thành tiền sau giảm -->
-                        <tr th:if="${giamGiaDangApDung != null}">
-                            <th>Thành tiền:</th>
-                            <td>
-                                <strong class="text-danger fs-5"
-                                        th:utext="${#numbers.formatDecimal(tongTienSauGiam, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</strong>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <a th:href="@{/gio-hang/thanh-toan(tongTien=${tongTienSauGiam})}" class="btn btn-success w-100">
-                        Thanh toán
-                    </a>
-
-                </div>
-            </div>
-
-
-
-        </div>
+    <div class="mt-4">
+        <a href="/san-pham/hien-thi" class="btn btn-primary animated fadeInUp">Tiếp tục mua sắm</a>
     </div>
 </section>
 
-<!--==================================================-->
-<!-- End printmax Cart Area-->
-<!--==================================================-->
 
-<!--==================================================-->
-<!-- Start printmax Footer Area -->
-<!--==================================================-->
+
 <section class="footer_area boxed">
     <div class="container">
         <div class="row">
@@ -814,13 +557,6 @@
         </div>
     </div>
 </section>
-<!--==================================================-->
-<!-- End printmax Footer Area-->
-<!--==================================================-->
-
-<!--==================================================-->
-<!-- Start printmax Scroll Up-->
-<!--==================================================-->
 <div class="prgoress_indicator active-progress">
     <svg
             class="progress-circle svg-content"
@@ -874,7 +610,6 @@
 <script th:src="@{/fe/js/jquery.barfiller.js}"></script>
 <!-- theme js -->
 <script th:src="@{/fe/js/theme.js}"></script>
-</body>
 
-<!-- Mirrored from html.tf.dreamitsolution.net/printmax/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 12:11:24 GMT -->
+</body>
 </html>

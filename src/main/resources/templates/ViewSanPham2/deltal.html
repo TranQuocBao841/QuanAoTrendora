@@ -1102,7 +1102,7 @@
                                 <img th:src="${sp.anhSanPham}" alt="" />
                                 <div class="product-sale"><span> SALE </span></div>
                                 <div class="product-thumb-icon">
-                                    <a href="#"> <i class="bi bi-cart3"></i> </a>
+                                    <a th:href="@{'/gio-hang/add?id=' +${sp.id}}"> <i class="bi bi-cart3"></i> </a>
                                     <a th:href="@{'/san-pham/deltal?id=' + ${sp.id}}"><i class="bi bi-suit-heart"></i></a>
                                 </div>
                             </div>

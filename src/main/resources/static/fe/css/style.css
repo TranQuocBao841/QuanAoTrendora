@@ -7594,3 +7594,40 @@ button.close-search i {
 .product-thumb2 .owl-next:hover i {
   color: #fff;
 }
+.form_box {
+  background-color: #fdfdfd;
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+.form_box .form-text {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.form_box select.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 15px;
+  color: #444;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.form_box select.form-control:focus {
+  outline: none;
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+}
+
