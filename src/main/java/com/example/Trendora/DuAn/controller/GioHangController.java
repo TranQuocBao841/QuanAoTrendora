@@ -1,6 +1,7 @@
 package com.example.Trendora.DuAn.controller;
 
 
+import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
 import com.example.Trendora.DuAn.model.*;
 import com.example.Trendora.DuAn.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -274,6 +275,9 @@ public class GioHangController {
             @RequestParam("idHinhThuc") Integer idHinhThuc,
 
             @RequestParam("tongTien") Double tongTien,
+            @RequestParam(value = "ghiChu", required = false) String ghiChu,
+            @RequestParam("diaChi") String diaChi,
+
             HttpSession session,
             Model model,
             RedirectAttributes redirectAttributes) {
@@ -298,6 +302,9 @@ public class GioHangController {
         hoaDon.setTongTien(tongTien.intValue());
         hoaDon.setTrangThai(idHinhThuc == 2 ? 1 : 0);
         NhanVien nvMacDinh = nhanVienRepo.findById(1).orElse(null); // ID = 1 là nhân viên mặc định
+        hoaDon.setGhiChu(ghiChu);
+        hoaDon.setDiaChiGiaoHang(diaChi);
+        hoaDon.setTrangThaiDonHang(TrangThaiDonHang.CHO_XAC_NHAN);
         hoaDon.setNhanVien(nvMacDinh);
 
         if (giamGia != null) {

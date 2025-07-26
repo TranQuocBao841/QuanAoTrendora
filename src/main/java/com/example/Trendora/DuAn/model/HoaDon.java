@@ -1,5 +1,6 @@
 package com.example.Trendora.DuAn.model;
 
+import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +50,17 @@ public class HoaDon {
 
     @Column(name = "trang_thai")
     private Integer trangThai;
+
+    @Column(name = "ghi_chu")
+    private String ghiChu;
+
+    @Column(name = "diaChiGiaoHang")
+    private String diaChiGiaoHang;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "trang_thai_don_hang")
+    private TrangThaiDonHang trangThaiDonHang;
 }
 
 

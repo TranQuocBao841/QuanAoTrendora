@@ -1,6 +1,7 @@
 package com.example.Trendora.DuAn.controller;
 
 
+import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
 import com.example.Trendora.DuAn.model.HoaDon;
 import com.example.Trendora.DuAn.model.HoaDonChiTiet;
 import com.example.Trendora.DuAn.model.KhachHang;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/quan-ao")
@@ -227,5 +229,26 @@ public class TaiKhoanController {
         redirectAttributes.addFlashAttribute("message", "Đổi mật khẩu thành công!");
         return "redirect:/quan-ao/thong-tin";
     }
+
+    @GetMapping("/hoa-don/huy/{id}")
+    public String huyHoaDon(@PathVariable("id") Integer id, RedirectAttributes redirect) {
+        Optional<HoaDon> optional = hoaDonRepo.findById(id);
+        if (optional.isPresent()) {
+            HoaDon hd = optional.get();
+            // Giả sử: 0 = Chưa thanh toán, 1 = Đã thanh toán, 2 = Đã hủy
+            if (hd.getTrangThai() == 0) {
+                hd.setTrangThai(2); // Cập nhật thành Đã hủy
+                hoaDonRepo.save(hd);
+                redirect.addFlashAttribute("success", "Đơn hàng đã được hủy.");
+            } else {
+                redirect.addFlashAttribute("error", "Không thể hủy đơn hàng đã thanh toán.");
+            }
+        } else {
+            redirect.addFlashAttribute("error", "Không tìm thấy hóa đơn.");
+        }
+        return "redirect:/quan-ao/thong-tin"; // đổi thành trang hiển thị đơn hàng của người dùng
+    }
+
+
 
 }

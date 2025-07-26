@@ -1,5 +1,6 @@
 package com.example.Trendora.DuAn.controller;
 
+import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
 import com.example.Trendora.DuAn.model.*;
 import com.example.Trendora.DuAn.repository.*;
 import jakarta.servlet.http.HttpSession;
@@ -172,6 +173,7 @@ public class BanHangTaiQuayController {
         hoaDon.setKhachHang(khachHang);
         hoaDon.setHinhThucThanhToan(hinhThuc);
         hoaDon.setGiamGia(giamGia);
+        hoaDon.setTrangThaiDonHang(TrangThaiDonHang.DA_HOAN_THANH);
         hoaDonRepo.save(hoaDon);
 
         // 6. Lưu chi tiết hóa đơn + trừ hàng tồn

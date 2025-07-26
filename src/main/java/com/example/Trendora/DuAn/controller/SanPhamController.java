@@ -1,7 +1,9 @@
 package com.example.Trendora.DuAn.controller;
 
+import com.example.Trendora.DuAn.DTO.DanhGiaDTO;
 import com.example.Trendora.DuAn.model.*;
 import com.example.Trendora.DuAn.repository.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,12 +11,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -90,7 +96,8 @@ public class SanPhamController {
 
 
 
-
+   @Autowired
+   DanhGiaRepository dr;
 
    @GetMapping("/deltal")
    public String showChiTietSanPham(@RequestParam("id") Integer id, Model model) {
@@ -119,6 +126,15 @@ public class SanPhamController {
               .toList();
 
       // Gửi dữ liệu sang view
+      List<DanhGia> danhGiaList = dr.findBySanPham_Id(id);
+      double trungBinhSao = 0;
+      if (!danhGiaList.isEmpty()) {
+         double tongSao = danhGiaList.stream().mapToInt(DanhGia::getSoSao).sum();
+         trungBinhSao = tongSao / danhGiaList.size();
+      }
+      model.addAttribute("trungBinhSao", trungBinhSao);
+      model.addAttribute("idsp", id);
+      model.addAttribute("danhGiaList", danhGiaList);
       model.addAttribute("sp", sp);
       model.addAttribute("bienTheList", bienTheList);
       model.addAttribute("listMauSac", listMauSac);
@@ -127,6 +143,44 @@ public class SanPhamController {
       model.addAttribute("list", sanPhamRepo.findAll());
       return "/ViewSanPham2/deltal";
    }
+
+   @PostMapping("/them")
+   public String themDanhGia(@ModelAttribute DanhGiaDTO danhGiaDTO,
+                             @RequestParam("idSanPham") Integer sanPhamId,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+      TaiKhoan taiKhoan = (TaiKhoan) session.getAttribute("khachHangDangNhap");
+      if (taiKhoan == null || taiKhoan.getKhachHang() == null) {
+         redirectAttributes.addFlashAttribute("error", "Bạn cần đăng nhập để đánh giá.");
+         return "redirect:/quan-ao/login";
+      }
+
+      Optional<SanPham> optionalSanPham = sanPhamRepo.findById(sanPhamId);
+      if (optionalSanPham.isEmpty()) {
+         redirectAttributes.addFlashAttribute("error", "Sản phẩm không tồn tại.");
+         return "redirect:/";
+      }
+
+      DanhGia dg = new DanhGia();
+      dg.setSanPham(optionalSanPham.get());
+      dg.setKhachHang(taiKhoan.getKhachHang());
+      dg.setSoSao(danhGiaDTO.getSoSao());
+      dg.setBinhLuan(danhGiaDTO.getBinhLuan());
+      dg.setThoiGian(LocalDateTime.now());
+
+      dr.save(dg);
+
+      redirectAttributes.addFlashAttribute("success", "Đánh giá đã được gửi.");
+      return "redirect:/san-pham/deltal?id=" + sanPhamId;
+   }
+
+
+
+
+
+
+
 
    @GetMapping("/loc-theo-danh-muc")
    public String locTheoDanhMuc(

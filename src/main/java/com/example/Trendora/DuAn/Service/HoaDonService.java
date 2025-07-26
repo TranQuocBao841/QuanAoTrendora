@@ -53,7 +53,8 @@ public class HoaDonService {
                     dto.setTenKhachHang(hd.getKhachHang().getTenKh());
                     dto.setTrangThai(hd.getTrangThai());
                     dto.setTongTien(hd.getTongTien());
-                    dto.setTenHinhThucThanhToan(hd.getHinhThucThanhToan().getTenHinhThuc()); // nếu cần
+                    dto.setTenHinhThucThanhToan(hd.getHinhThucThanhToan().getTenHinhThuc());
+                    dto.setTrangThaiDonHang(hd.getTrangThaiDonHang());
                     return dto;
                 });
     }

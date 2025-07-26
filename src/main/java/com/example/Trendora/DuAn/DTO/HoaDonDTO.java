@@ -1,5 +1,6 @@
 package com.example.Trendora.DuAn.DTO;
 
+import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,4 +30,6 @@ public class HoaDonDTO {
     private LocalDateTime ngayTao;
     private Integer tongTien;
     private Integer trangThai;
+    private TrangThaiDonHang trangThaiDonHang;
+
 }

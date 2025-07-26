@@ -3,7 +3,7 @@
 <style>
     input[type="radio"][disabled] {
         opacity: 1 !important;
-        pointer-events: none; /* Không cho tương tác */
+        pointer-events: none;
     }
 
     input[type="radio"][disabled] + label {
@@ -12,11 +12,119 @@
         cursor: default;
         pointer-events: none;
     }
+
+    .progress-tracker-horizontal {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0;
+    }
+
+    .progress-tracker-horizontal::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background-color: #ccc;
+        z-index: 0;
+        border-radius: 2px;
+    }
+
+    .progress-line {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        height: 4px;
+        background-color: #28a745;
+        z-index: 1;
+        border-radius: 2px;
+        transition: width 0.4s ease;
+    }
+
+    .step-item {
+        position: relative;
+        text-align: center;
+        flex: 1;
+        z-index: 2;
+        padding: 0 4px;
+    }
+
+    .step-circle {
+        width: 40px;
+        height: 40px;
+        background-color: #ccc;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .step-circle i {
+        font-size: 18px;
+        color: white;
+    }
+
+    .step-label {
+        margin-top: 8px;
+        font-size: 13px;
+        color: #333;
+    }
+
+    .step-item.completed .step-circle {
+        background-color: #28a745;
+    }
+
+    .step-item.active .step-circle {
+        background-color: #007bff;
+        transform: scale(1.2);
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+    }
+
+    .step-item.cancelled .step-circle {
+        background-color: red;
+    }
+
+    .step-item.greyed .step-circle {
+        background-color: #aaa;
+    }
+
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    .wrapper {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .content-wrapper {
+        flex: 1;
+    }
+
+    .main-footer {
+        width: 100%;
+    }
 </style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 <!-- Mirrored from adminlte.io/themes/AdminLTE/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 17:35:24 GMT -->
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Bootstrap 3.3.7 CDN (chuẩn cho AdminLTE 2) -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-NhP3VK08X1Z0lEV9CqM8czUfa8sC5qjGkUY+IWoqZsGEZCRQ2LjOBgWhHPuVLDxN+mMS0mH4oqeX0vc+Gd3gxA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
 
 <div class="wrapper">
 
@@ -44,9 +152,73 @@
 
         <div class="col-xs-12">
             <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title"> Chi tiết hóa đơn </h3>
+
+                <!-- Nền thanh tiến trình -->
+                <div class="container mt-4">
+                    <h4>Trạng thái đơn hàng</h4>
+
+                    <div class="progress-tracker-horizontal">
+
+                        <!-- Đường kẻ xanh chạy tới trạng thái hiện tại, trừ khi đã bị hủy -->
+                        <div th:if="${hoaDon.trangThaiDonHang.name() != 'DA_HUY'}"
+                             th:with="widthPercent=(${hoaDon.trangThaiDonHang.ordinal()} * 100.0) / (${#lists.size(steps) - 2})"
+                             th:style="'width:' + widthPercent + '%'"
+                             class="progress-line">
+                        </div>
+
+
+
+                        <!-- Các bước -->
+                        <div class="step-item"
+                             th:each="step, iterStat : ${steps}"
+                             th:with="
+                isCancelled=${hoaDon.trangThaiDonHang.name() == 'DA_HUY'},
+                iconClass=
+                    ${step.name() == 'CHO_XAC_NHAN'     ? 'fas fa-hourglass-start' :
+                      step.name() == 'DA_XAC_NHAN'      ? 'fas fa-check' :
+                      step.name() == 'DANG_DONG_GOI'    ? 'fas fa-box' :
+                      step.name() == 'DANG_VAN_CHUYEN'  ? 'fas fa-truck' :
+                      step.name() == 'DA_GIAO'          ? 'fas fa-house' :
+                      step.name() == 'DA_HOAN_THANH'    ? 'fas fa-circle-check' :
+                      step.name() == 'DA_HUY'           ? 'fas fa-circle-xmark' : ''}"
+                             th:classappend="
+                ${isCancelled} ?
+                    ${step.name() == 'DA_HUY' ? 'cancelled' : 'greyed'} :
+                    ${iterStat.index < hoaDon.trangThaiDonHang.ordinal() ? 'completed' :
+                      step.name() == hoaDon.trangThaiDonHang.name() ? 'active' : ''}">
+
+                            <div class="step-circle">
+                                <i th:class="${iconClass}"></i>
+                            </div>
+                            <div class="step-label" th:text="${step.moTa}"></div>
+                        </div>
+                    </div>
                 </div>
+
+
+
+
+
+
+                <div class="container mt-4">
+                    <form th:action="@{'/hoa-don/cap-nhat-trang-thai/' + ${hoaDon.id}}" method="post" class="form-inline">
+                        <div class="form-group">
+                            <label for="trangThaiMoi" class="me-2">Cập nhật trạng thái:</label>
+                            <select name="trangThaiMoi" id="trangThaiMoi" class="form-control">
+                                <option th:each="step : ${steps}"
+                                        th:value="${step.name()}"
+                                        th:text="${step.moTa}"
+                                        th:selected="${step.name() == hoaDon.trangThaiDonHang}">
+                                </option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary ms-2">Lưu</button>
+                    </form>
+                </div>
+
+
+
+
 
                 <div class="container mt-4">
                     <div class="card shadow">

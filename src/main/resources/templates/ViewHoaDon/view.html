@@ -25,6 +25,7 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Danh sách hóa đơn</h3>
+
                     <div class="box-tools">
                         <form action="/hoa-don/hien-thi" method="get">
                             <div class="input-group input-group-sm hidden-xs" style="width: 250px;">
@@ -42,6 +43,22 @@
                     </div>
                 </div>
                 <div class="box-body table-responsive no-padding">
+
+                    <!-- Thông báo thành công -->
+                    <div th:if="${success}"
+                         class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 z-3"
+                         role="alert">
+                        <strong>✅ Thành công! </strong><span th:text="${success}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Thông báo lỗi -->
+                    <div th:if="${error}"
+                         class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 z-3"
+                         role="alert">
+                        <strong>❌ Lỗi! </strong><span th:text="${error}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     <table class="table table-hover">
                         <tbody>
                         <tr>
@@ -53,6 +70,7 @@
                             <th>Mã hóa đơn</th>
                             <th>Ngày tạo</th>
                             <th>Tổng tiền</th>
+                            <th>Trạng thái đơn hàng</th>
                             <th>Trạng thái</th>
                         </tr>
                         <th:block th:each="hd : ${list}">
@@ -65,14 +83,21 @@
                                 <td th:text="${hd.maHd}"></td>
                                 <td th:text="${hd.ngayTao}"></td>
                                 <td th:text="${hd.tongTien}"></td>
-                                <td th:text="${hd.trangThai == 1 ? 'Đã thanh toán' : 'Chưa thanh toán'}"></td>
+                                <td th:text="${hd.trangThaiDonHang}"></td>
+                                <td th:text="${hd.trangThai == 1 ? 'Đã thanh toán' : (hd.trangThai == 2 ? 'Đã hủy' : 'Chưa thanh toán')}"></td>
                                 <td>
                                     <a th:href="@{'/hoa-don/update?id=' + ${hd.id}}"
                                        th:text="${hd.trangThai == 0 ? 'Đã thanh toán' : 'Chưa thanh toán'}"
                                        class="btn btn-warning btn-sm"
                                        onclick="return confirm('Cập nhật trạng thái thanh toán?');">Cập nhật</a>
-                                    <a th:href="@{'/hoa-don/delete?id=' + ${hd.id}}" class="btn btn-danger btn-sm"
-                                       onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">Xóa</a>
+                                    <th:block th:if="${hd.trangThaiDonHang.name() == 'CHO_XAC_NHAN'}">
+                                        <a th:href="@{'/hoa-don/huy?id=' + ${hd.id}}" class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
+                                            Hủy đơn
+                                        </a>
+                                    </th:block>
+
+
                                     <a th:href="@{'/hoa-don/detail?id=' + ${hd.id}}" class="btn btn-primary btn-sm">Chi tiết</a>
                                 </td>
                             </tr>

@@ -2,6 +2,7 @@ package com.example.Trendora.DuAn.repository;
 
 
 import com.example.Trendora.DuAn.DTO.HoaDonChiTietDTO;
+import com.example.Trendora.DuAn.model.HoaDon;
 import com.example.Trendora.DuAn.model.HoaDonChiTiet;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -95,4 +96,7 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet,Integer> 
 
 
     List<HoaDonChiTiet> findByHoaDon_Id(Integer idHoaDon);
+
+    List<HoaDonChiTiet> findByHoaDon(HoaDon hoaDon);
+
 }

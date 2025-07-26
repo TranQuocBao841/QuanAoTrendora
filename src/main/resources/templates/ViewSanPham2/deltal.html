@@ -134,6 +134,38 @@
             type="text/css"
             media="all"
     />
+
+    <style>
+        .rating {
+            direction: rtl;
+            display: inline-flex;
+            font-size: 2rem;
+        }
+        .rating-stars span {
+            font-size: 20px;
+            margin-right: 2px;
+        }
+        .rating input {
+            display: none;
+        }
+        .rating label {
+            color: lightgray;
+            cursor: pointer;
+        }
+        .rating input:checked ~ label,
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: gold;
+        }
+        .tabs li.active a {
+            color: #ff6600;
+            font-weight: bold;
+        }
+        .tabs_item {
+            display: none;
+        }
+
+    </style>
     <!-- modernizr js -->
     <script th:src="@{/fe/js/vendor/modernizr-3.5.0.min.js}"></script>
 </head>
@@ -220,21 +252,21 @@
                                 <li><a href="/san-pham/trang-chu">Home Trendora </a></li>
                             </ul>
                         </li>
-<!--                        <li><a href="about.html">About</a></li>-->
+                        <!--                        <li><a href="about.html">About</a></li>-->
                         <li>
                             <a href="#"
                             >Page <span><i class="bi bi-chevron-double-right"></i></span
                             ></a>
                             <ul class="sub_menu">
-<!--                                <li><a href="about.html">About Us</a></li>-->
-<!--                                <li><a href="service.html">Our Service</a></li>-->
-<!--                                <li><a href="service-details.html">Service Details</a></li>-->
-<!--                                <li><a href="team.html">Our Team</a></li>-->
-<!--                                <li><a href="portfolio.html">Portfolio</a></li>-->
-<!--                                <li>-->
-<!--                                    <a href="portfolio-details.html">Portfolio Details</a>-->
-<!--                                </li>-->
-<!--                                <li><a href="checkout.html">Checkout</a></li>-->
+                                <!--                                <li><a href="about.html">About Us</a></li>-->
+                                <!--                                <li><a href="service.html">Our Service</a></li>-->
+                                <!--                                <li><a href="service-details.html">Service Details</a></li>-->
+                                <!--                                <li><a href="team.html">Our Team</a></li>-->
+                                <!--                                <li><a href="portfolio.html">Portfolio</a></li>-->
+                                <!--                                <li>-->
+                                <!--                                    <a href="portfolio-details.html">Portfolio Details</a>-->
+                                <!--                                </li>-->
+                                <!--                                <li><a href="checkout.html">Checkout</a></li>-->
                                 <li><a href="/gio-hang/hien-thi">Cart</a></li>
                                 <li><a href="/quan-ao/thong-tin">Account</a></li>
                             </ul>
@@ -319,21 +351,21 @@
                     <a href="/san-pham/trang-chu">Home</a>
                     <ul class="sub_menu">
                         <li><a href="/san-pham/hien-thi">Home Trendora</a></li>
-<!--                        <li><a href="index-2.html">Home Version 02</a></li>-->
-<!--                        <li><a href="index-3.html">Home Version 03</a></li>-->
+                        <!--                        <li><a href="index-2.html">Home Version 02</a></li>-->
+                        <!--                        <li><a href="index-3.html">Home Version 03</a></li>-->
                     </ul>
                 </li>
-<!--                <li><a href="about.html">About</a></li>-->
+                <!--                <li><a href="about.html">About</a></li>-->
                 <li>
                     <a href="#">Page</a>
                     <ul class="sub_menu">
-<!--                        <li><a href="about.html">About Us</a></li>-->
-<!--                        <li><a href="service.html">Our Service</a></li>-->
-<!--                        <li><a href="service-details.html">Service Details</a></li>-->
-<!--                        <li><a href="team.html">Our Team</a></li>-->
-<!--                        <li><a href="portfolio.html">Portfolio</a></li>-->
-<!--                        <li><a href="portfolio-details.html">Portfolio Details</a></li>-->
-<!--                        <li><a href="checkout.html">Checkout</a></li>-->
+                        <!--                        <li><a href="about.html">About Us</a></li>-->
+                        <!--                        <li><a href="service.html">Our Service</a></li>-->
+                        <!--                        <li><a href="service-details.html">Service Details</a></li>-->
+                        <!--                        <li><a href="team.html">Our Team</a></li>-->
+                        <!--                        <li><a href="portfolio.html">Portfolio</a></li>-->
+                        <!--                        <li><a href="portfolio-details.html">Portfolio Details</a></li>-->
+                        <!--                        <li><a href="checkout.html">Checkout</a></li>-->
                         <li><a href="/gio-hang/hien-thi">Cart</a></li>
                         <li><a href="/quan-ao/thong-tin">Account</a></li>
                     </ul>
@@ -342,8 +374,8 @@
                     <a href="#">Shop</a>
                     <ul class="sub_menu">
                         <li><a href="/san-pham/hien-thi">Shop Trendora</a></li>
-<!--                        <li><a href="shop-two.html">Shop Two</a></li>-->
-<!--                        <li><a href="shop-details.html">Shop Details</a></li>-->
+                        <!--                        <li><a href="shop-two.html">Shop Two</a></li>-->
+                        <!--                        <li><a href="shop-details.html">Shop Details</a></li>-->
                     </ul>
                 </li>
                 <li>
@@ -758,6 +790,10 @@
                     <h1 class="text-success" th:text="${#numbers.formatDecimal(sp.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'">₫0</h1>
 
 
+                    <div class="rating-stars">
+    <span th:each="i : ${#numbers.sequence(1,5)}"
+          th:classappend="${i <= trungBinhSao} ? 'text-warning' : 'text-secondary'">★</span>
+                    </div>
 
 
                     <!-- Mô tả -->
@@ -877,268 +913,169 @@
 
 </div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="appoinment-tab">
-                    <!-- / tab -->
-                    <div class="tab">
-                        <!-- / tabs -->
-                        <ul class="tabs">
-                            <li><a href="#">Description</a></li>
-                            <li><a href="#">Additional Info </a></li>
-                            <li><a href="#">Review (2)</a></li>
-                        </ul>
-                        <div class="tab_content">
-                            <!-- / tabs_item -->
-                            <div class="tabs_item">
-                                <!-- post comment -->
-                                <div class="post-comment-description">
-                                    <p>
-                                        Chúng tôi tận dụng các nền tảng thương mại điện tử hàng đầu để cung cấp trải nghiệm mua sắm áo phông hiện đại, tiện lợi và đáng tin cậy.
-                                        Chúng tôi luôn đổi mới nhằm mang đến những thiết kế thời trang độc đáo, phù hợp với xu hướng, nhưng vẫn đảm bảo mức giá hợp lý.
+<div class="row">
+    <div class="col-lg-12">
+        <div class="appoinment-tab">
+            <!-- / tab -->
+            <div class="tab">
+                <!-- / tabs -->
+                <ul class="tabs">
+                    <li><a href="#">Description</a></li>
+                    <li><a href="#">Additional Info </a></li>
+                    <li><a href="#">Review (2)</a></li>
+                </ul>
+                <div class="tab_content">
+                    <!-- / tabs_item -->
+                    <div class="tabs_item">
+                        <!-- post comment -->
+                        <div class="post-comment-description">
+                            <p>
+                                Chúng tôi tận dụng các nền tảng thương mại điện tử hàng đầu để cung cấp trải nghiệm mua sắm áo phông hiện đại, tiện lợi và đáng tin cậy.
+                                Chúng tôi luôn đổi mới nhằm mang đến những thiết kế thời trang độc đáo, phù hợp với xu hướng, nhưng vẫn đảm bảo mức giá hợp lý.
 
-                                        Chúng tôi đầu tư vào hạ tầng kỹ thuật số mạnh mẽ, giúp bạn dễ dàng lựa chọn, thanh toán và nhận hàng nhanh chóng.
-                                        Với nền tảng linh hoạt, chúng tôi cung cấp trải nghiệm mua sắm cá nhân hóa – từ người yêu phong cách basic, thể thao đến cá tính.
+                                Chúng tôi đầu tư vào hạ tầng kỹ thuật số mạnh mẽ, giúp bạn dễ dàng lựa chọn, thanh toán và nhận hàng nhanh chóng.
+                                Với nền tảng linh hoạt, chúng tôi cung cấp trải nghiệm mua sắm cá nhân hóa – từ người yêu phong cách basic, thể thao đến cá tính.
 
-                                        Cam kết của chúng tôi là:
+                                Cam kết của chúng tôi là:
 
-                                        Chất lượng vải tốt, bền và thoải mái
+                                Chất lượng vải tốt, bền và thoải mái
 
-                                        Mẫu mã cập nhật liên tục
+                                Mẫu mã cập nhật liên tục
 
-                                        Giao hàng nhanh trên toàn quốc
+                                Giao hàng nhanh trên toàn quốc
 
-                                        Hỗ trợ đổi trả dễ dàng
-                                    </p>
-                                    <p class="pt-2">
-                                        Chúng tôi xây dựng một hệ thống bán hàng thông minh, thân thiện và dễ sử dụng, giúp bạn dễ dàng tìm thấy những mẫu áo phông phù hợp với phong cách riêng.
+                                Hỗ trợ đổi trả dễ dàng
+                            </p>
+                            <p class="pt-2">
+                                Chúng tôi xây dựng một hệ thống bán hàng thông minh, thân thiện và dễ sử dụng, giúp bạn dễ dàng tìm thấy những mẫu áo phông phù hợp với phong cách riêng.
 
-                                        Với nền tảng linh hoạt và kết nối mạnh mẽ, chúng tôi mang đến:
+                                Với nền tảng linh hoạt và kết nối mạnh mẽ, chúng tôi mang đến:
 
-                                        Trải nghiệm mua sắm thế hệ mới: giao diện mượt mà, dễ dùng trên mọi thiết bị.
+                                Trải nghiệm mua sắm thế hệ mới: giao diện mượt mà, dễ dùng trên mọi thiết bị.
 
-                                        Sự lựa chọn đa dạng: từ áo phông basic, local brand đến thiết kế cá tính.
+                                Sự lựa chọn đa dạng: từ áo phông basic, local brand đến thiết kế cá tính.
 
-                                        Mua sắm không lo rủi ro: hỗ trợ đổi trả, chăm sóc tận tình.
+                                Mua sắm không lo rủi ro: hỗ trợ đổi trả, chăm sóc tận tình.
 
-                                        Lợi ích cộng hưởng: kết nối người dùng với ưu đãi hấp dẫn, chương trình thành viên, và nhiều tiện ích giá trị <khác class=""></khác>
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- / tabs_item -->
-                            <div class="tabs_item">
-                                <!-- post comment -->
-                                <table class="tab-items-table">
-                                    <tr>
-                                        <!-- table data -->
-                                        <td class="table-title">Stand Up</td>
-                                        <td class="table-text">: KKAL</td>
-                                    </tr>
-                                    <tr class="tabs-bg">
-                                        <!-- table data -->
-                                        <td class="table-title">Colors</td>
-                                        <td class="table-text">: Black, Blue, Purple</td>
-                                    </tr>
-                                    <tr>
-                                        <!-- table data -->
-                                        <td class="table-title">Weight</td>
-                                        <td class="table-text">: 35 KG</td>
-                                    </tr>
-                                    <tr class="tabs-bg">
-                                        <!-- table data -->
-                                        <td class="table-title">Wheels</td>
-                                        <td class="table-text">
-                                            : 12” air/ Wide Truck Sleek Trade
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <!-- table data -->
-                                        <td class="table-title">Back Height</td>
-                                        <td class="table-text">: 21.5”</td>
-                                    </tr>
-                                    <tr class="tabs-bg">
-                                        <!-- table data -->
-                                        <td class="table-title">Address</td>
-                                        <td class="table-text">
-                                            : 18F Keangnam Landmark 72, PhamHung Str Hanoi, FL
-                                            100000
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <!-- table data -->
-                                        <td class="table-title">Rating</td>
-                                        <td class="table-text">
-                                            : 4.40 rating from 5 reviews <i class="bi bi-star"></i
-                                        ><i class="bi bi-star"></i><i class="bi bi-star"></i
-                                        ><i class="bi bi-star"></i><i class="bi bi-star"></i>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <!-- widget table End -->
-                            </div>
-                            <!-- / tabs_item -->
-                            <div class="tabs_item">
-                                <!-- post comment -->
-                                <div class="post-comment">
-                                    <div class="post-comment-thumb">
-                                        <a href="blog-details.html"
-                                        ><img
-                                                th:src="@{/fe/images/inner-img/aouthor.png}"
-                                                alt=""
-                                        /></a>
-                                    </div>
-                                    <div class="post-content">
-                                        <!-- comment icon -->
-                                        <ul class="comment-icon-list">
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star"></i></li>
-                                        </ul>
-                                        <h4 class="post-title">
-                                            David Alexon
-                                            <span class="left-date">October 01, 2022</span>
-                                        </h4>
-                                        <p class="posts-reply">
-                                            Dramatically reinvent adaptive bandwidth vis reliable
-                                            infrastructures to the progressively iterate
-                                            distributed interfaces.
-                                        </p>
-                                        <span class="rights-reply">
-                          <i class="bi bi-reply-fill"></i>Reply</span
-                                        >
-                                    </div>
-                                </div>
-                                <div class="product-details-respond">
-                                    <div class="contact-form-box2">
-                                        <!-- sidebar title -->
-                                        <div class="sidebar-title">
-                                            <h2>Add a Review</h2>
-                                        </div>
-                                        <!-- sidebar description -->
-                                        <div class="sidebar-description">
-                                            <p>
-                                                Your email address will not be published. Required
-                                                fields are marked *
-                                            </p>
-                                        </div>
-                                        <div class="sidebar-rating-list">
-                                            <p class="sidebar-text">Your Ratings</p>
-                                            <ul>
-                                                <li><i class="bi bi-star"></i></li>
-                                                <li><i class="bi bi-star"></i></li>
-                                                <li><i class="bi bi-star"></i></li>
-                                                <li><i class="bi bi-star"></i></li>
-                                                <li><i class="bi bi-star"></i></li>
-                                            </ul>
-                                        </div>
-                                        <!-- contact form box -->
-                                        <div class="contact-form-box2">
-                                            <form
-                                                    action="https://formspree.io/f/myyleorq"
-                                                    method="POST"
-                                                    id="dreamit-form"
-                                            >
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-md-6">
-                                                        <h6 class="form-title">Name*</h6>
-                                                        <div class="form-box">
-                                                            <input type="text" placeholder="Your Name" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6">
-                                                        <h6 class="form-title">Your E-Mail*</h6>
-                                                        <div class="form-box">
-                                                            <input
-                                                                    type="email"
-                                                                    name="Enter Email"
-                                                                    placeholder="Enter E-Mail"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="form-box">
-                                                            <h6 class="form-title">Comment*</h6>
-                                                            <textarea
-                                                                    name="massage"
-                                                                    id="massage"
-                                                                    cols="30"
-                                                                    rows="10"
-                                                                    placeholder="Write Comment"
-                                                            ></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="contact-form style-Two">
-                                                            <button type="submit">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <div id="status"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- / tab_content -->
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12">
-                <div class="product-item-title">
-                    <h2>Related Products</h2>
-                </div>
-            </div>
-            <!-- Wrapper Swiper -->
-            <div class="swiper mySwiper">
-                <div class="swiper-wrapper">
-                    <!-- Mỗi sản phẩm là 1 slide -->
-                    <div class="swiper-slide" th:each="sp : ${list}">
-                        <div class="single-products-box">
-                            <!-- products thumb -->
-                            <div class="products-thumb">
-                                <img th:src="${sp.anhSanPham}" alt="" />
-                                <div class="product-sale"><span> SALE </span></div>
-                                <div class="product-thumb-icon">
-                                    <a th:href="@{'/gio-hang/add?id=' +${sp.id}}"> <i class="bi bi-cart3"></i> </a>
-                                    <a th:href="@{'/san-pham/deltal?id=' + ${sp.id}}"><i class="bi bi-suit-heart"></i></a>
-                                </div>
-                            </div>
-                            <!-- product content -->
-                            <div class="product-content">
-                                <ul class="product-rating">
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-half"></i></li>
-                                </ul>
-                                <div class="product-title">
-                                    <h2 th:text="${sp.tenSanPham}">Tên sản phẩm</h2>
-                                </div>
-                                <div class="product-price">
-                                    <p th:text="${#numbers.formatDecimal(sp.gia, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0 ₫</p>
-                                </div>
-                            </div>
+                                Lợi ích cộng hưởng: kết nối người dùng với ưu đãi hấp dẫn, chương trình thành viên, và nhiều tiện ích giá trị <khác class=""></khác>
+                            </p>
                         </div>
                     </div>
+                    <!-- / tabs_item -->
+                    <div class="tabs_item">
+                        <!-- post comment -->
+                        <table class="tab-items-table">
+                            <tr>
+                                <!-- table data -->
+                                <td class="table-title">Stand Up</td>
+                                <td class="table-text">: KKAL</td>
+                            </tr>
+                            <tr class="tabs-bg">
+                                <!-- table data -->
+                                <td class="table-title">Colors</td>
+                                <td class="table-text">: Black, Blue, Purple</td>
+                            </tr>
+                            <tr>
+                                <!-- table data -->
+                                <td class="table-title">Weight</td>
+                                <td class="table-text">: 35 KG</td>
+                            </tr>
+                            <tr class="tabs-bg">
+                                <!-- table data -->
+                                <td class="table-title">Wheels</td>
+                                <td class="table-text">
+                                    : 12” air/ Wide Truck Sleek Trade
+                                </td>
+                            </tr>
+                            <tr>
+                                <!-- table data -->
+                                <td class="table-title">Back Height</td>
+                                <td class="table-text">: 21.5”</td>
+                            </tr>
+                            <tr class="tabs-bg">
+                                <!-- table data -->
+                                <td class="table-title">Address</td>
+                                <td class="table-text">
+                                    : 18F Keangnam Landmark 72, PhamHung Str Hanoi, FL
+                                    100000
+                                </td>
+                            </tr>
+                            <tr>
+                                <!-- table data -->
+                                <td class="table-title">Rating</td>
+                                <td class="table-text">
+                                    : 4.40 rating from 5 reviews <i class="bi bi-star"></i
+                                ><i class="bi bi-star"></i><i class="bi bi-star"></i
+                                ><i class="bi bi-star"></i><i class="bi bi-star"></i>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- widget table End -->
+                    </div>
+                    <!-- / tabs_item -->
+                    <div class="tabs_item">
+                        <div th:replace="~{fragments/danhgia :: danhgia(sanPham=${sp}, danhGiaList=${danhGiaList})}"></div>
+                    </div>
                 </div>
-                <!-- Navigation (tuỳ chọn) -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
+                <!-- / tab_content -->
             </div>
-
-
-
-
-
-
-
         </div>
     </div>
+    <div class="col-lg-12">
+        <div class="product-item-title">
+            <h2>Related Products</h2>
+        </div>
+    </div>
+    <!-- Wrapper Swiper -->
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <!-- Mỗi sản phẩm là 1 slide -->
+            <div class="swiper-slide" th:each="sp : ${list}">
+                <div class="single-products-box">
+                    <!-- products thumb -->
+                    <div class="products-thumb">
+                        <img th:src="${sp.anhSanPham}" alt="" />
+                        <div class="product-sale"><span> SALE </span></div>
+                        <div class="product-thumb-icon">
+                            <a th:href="@{'/gio-hang/add?id=' +${sp.id}}"> <i class="bi bi-cart3"></i> </a>
+                            <a th:href="@{'/san-pham/deltal?id=' + ${sp.id}}"><i class="bi bi-suit-heart"></i></a>
+                        </div>
+                    </div>
+                    <!-- product content -->
+                    <div class="product-content">
+                        <ul class="product-rating">
+                            <li><i class="bi bi-star-fill"></i></li>
+                            <li><i class="bi bi-star-fill"></i></li>
+                            <li><i class="bi bi-star-fill"></i></li>
+                            <li><i class="bi bi-star-fill"></i></li>
+                            <li><i class="bi bi-star-half"></i></li>
+                        </ul>
+                        <div class="product-title">
+                            <h2 th:text="${sp.tenSanPham}">Tên sản phẩm</h2>
+                        </div>
+                        <div class="product-price">
+                            <p th:text="${#numbers.formatDecimal(sp.gia, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0 ₫</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Navigation (tuỳ chọn) -->
+
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+
+
+
+
+
+
 </div>
+</div>
+</div>
+
 <!--==================================================-->
 <!-- Strt printmax Shop Details -->
 <!--==================================================-->
@@ -1338,6 +1275,32 @@
             1024: { slidesPerView: 4 },
             768: { slidesPerView: 2 },
             480: { slidesPerView: 1 }
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll(".tabs li a");
+        const tabItems = document.querySelectorAll(".tab_content .tabs_item");
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener("click", function (e) {
+                e.preventDefault(); // Ngăn nhảy về đầu trang
+
+                // Bỏ class active khỏi tất cả tab
+                tabs.forEach(t => t.parentElement.classList.remove("active"));
+                tabItems.forEach(item => item.style.display = "none");
+
+                // Thêm class active vào tab được click
+                tab.parentElement.classList.add("active");
+                tabItems[index].style.display = "block";
+            });
+        });
+
+        // Hiển thị tab đầu tiên mặc định
+        if (tabs.length > 0) {
+            tabs[0].parentElement.classList.add("active");
+            tabItems[0].style.display = "block";
         }
     });
 </script>
