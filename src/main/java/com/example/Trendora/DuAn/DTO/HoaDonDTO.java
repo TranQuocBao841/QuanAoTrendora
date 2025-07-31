@@ -28,6 +28,7 @@ public class HoaDonDTO {
     @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     private String tenGiamGia;
     private LocalDateTime ngayTao;
+    private String diaChiGiaoHang;
     private Integer tongTien;
     private Integer trangThai;
     private TrangThaiDonHang trangThaiDonHang;

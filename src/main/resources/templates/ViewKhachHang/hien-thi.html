@@ -69,7 +69,7 @@
                             <tr th:each="kh : ${list}">
                                 <td th:text="${kh.maKh}"></td>
                                 <td th:text="${kh.tenKh}"></td>
-                                <td th:text="${kh.gioiTinh ? 'Nam' : 'Nữ'}"></td>
+                                <td th:text="${#bools.isTrue(kh.gioiTinh)} ? 'Nam' : 'Nữ'"></td>
                                 <td th:text="${kh.ngaySinh}"></td>
                                 <td th:text="${kh.diaChi}"></td>
                                 <td th:text="${kh.sdt}"></td>

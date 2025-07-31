@@ -11,9 +11,7 @@ import com.example.Trendora.DuAn.repository.HoaDonRepo;
 import com.example.Trendora.DuAn.repository.KhachHangRepo;
 import com.example.Trendora.DuAn.repository.TaiKhoanRepo;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -156,8 +154,12 @@ public class TaiKhoanController {
         // Lấy danh sách hóa đơn
         Integer idKhachHang = taiKhoan.getKhachHang().getIdKh();
         List<HoaDon> hoaDonList = hoaDonRepo.findByKhachHang_idKh(idKhachHang);
+        List<HoaDon> hoaDonHoanThanhList = hoaDonList.stream()
+                .filter(hd -> hd.getTrangThaiDonHang() == TrangThaiDonHang.DA_HOAN_THANH)
+                .toList();
 
         model.addAttribute("hoaDonList", hoaDonList);
+        model.addAttribute("hoaDonDaHoanThanh", hoaDonHoanThanhList);
         model.addAttribute("taiKhoan", taiKhoan);
 
         Map<Integer, List<HoaDonChiTiet>> chiTietMap = new HashMap<>();

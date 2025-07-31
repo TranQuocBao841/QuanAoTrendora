@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>In Hóa Đơn</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+        h2, h3 { text-align: center; margin-bottom: 0; }
+        .store-info { text-align: center; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid black; }
+        th, td { padding: 8px; text-align: center; }
+        .qr-container { text-align: center; margin-top: 30px; }
+        .total, .discount, .final-total {
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
+        }
+        .actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .actions button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .actions .btn-back {
+            background-color: #6c757d;
+        }
+
+        /* ✅ Ẩn khi in */
+        @media print {
+            .actions {
+                display: none !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+<div class="store-info">
+    <h2>CỬA HÀNG THỜI TRANG TRENDORA</h2>
+    <p>Địa chỉ: 123 Trần Phú, Hà Đông, Hà Nội</p>
+    <p>SĐT: 0912 713 606</p>
+</div>
+
+<h3>HÓA ĐƠN BÁN HÀNG</h3>
+
+<p><strong>Ngày tạo:</strong> <span th:text="${#temporals.format(hoaDon.ngayTao, 'dd/MM/yyyy HH:mm')}"></span></p>
+<p><strong>Mã hóa đơn:</strong> <span th:text="${hoaDon.maHd}"></span></p>
+<p><strong>Khách hàng:</strong> <span th:text="${hoaDon.khachHang.tenKh}"></span></p>
+<p><strong>Nhân viên:</strong> <span th:text="${hoaDon.nhanVien.tenNv}"></span></p>
+<p><strong>Hình thức thanh toán:</strong> <span th:text="${hoaDon.hinhThucThanhToan.tenHinhThuc}"></span></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>Tên sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Đơn giá</th>
+        <th>Thành tiền</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ct : ${chiTietList}">
+        <td th:text="${ct.sanPham.tenSanPham}"></td>
+        <td th:text="${ct.soLuong}"></td>
+        <td th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></td>
+        <td th:text="${#numbers.formatDecimal(ct.thanhTien, 0, 'COMMA', 0, 'POINT')} + ' VND'"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="total">
+    Tổng tiền hàng:
+    <span th:text="${#numbers.formatDecimal(tongTienHang, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
+</div>
+
+<div class="discount">
+    Mã giảm giá:
+    <span th:if="${hoaDon.giamGia != null}"
+          th:text="'-' + ${#numbers.formatDecimal(giamGia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
+    <span th:if="${hoaDon.giamGia == null}">0 VND</span>
+</div>
+<!-- Tiền khách đưa và tiền trả lại nếu là tiền mặt -->
+<div th:if="${hoaDon.hinhThucThanhToan.tenHinhThuc.equalsIgnoreCase('Tiền mặt')}">
+    <div class="total">
+        Tiền khách đưa:
+        <span th:text="${#numbers.formatDecimal(tienKhachDua, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
+    </div>
+
+    <div class="total">
+        Tiền trả lại:
+        <span th:text="${#numbers.formatDecimal(tienTraLai, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
+    </div>
+</div>
+
+
+<div class="final-total">
+    Tổng thanh toán:
+    <span th:text="${#numbers.formatDecimal(tongThanhToan, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
+</div>
+
+<div class="qr-container"
+     th:if="${hoaDon.hinhThucThanhToan.tenHinhThuc.equalsIgnoreCase('Chuyển khoản')
+              or hoaDon.hinhThucThanhToan.tenHinhThuc.equalsIgnoreCase('Ví điện tử')}">
+
+    <p>Vui lòng chuyển khoản theo thông tin sau:</p>
+    <p><strong>Nguyễn Thị Hà Lan - MB Bank - 0912713606</strong></p>
+    <p th:text="'Số tiền: ' + ${#numbers.formatDecimal(tongThanhToan, 0, 'COMMA', 0, 'POINT')} + ' VND'"></p>
+
+    <img th:src="'https://img.vietqr.io/image/MB-0912713606-compact.png?amount='
+            + ${tongThanhToan} + '&addInfo=Thanh%20toan%20tai%20quay&accountName=NGUYEN%20THI%20HA%20LAN'"
+         alt="QR Code" width="200" height="200"/>
+
+</div>
+<p style="text-align: center;"><em>Quý khách vui lòng kiểm tra lại hóa đơn trước khi thanh toán. Xin cảm ơn!</em></p>
+
+<!-- ✅ Nút in + quay lại có hỗ trợ redirectBack -->
+<div class="actions">
+    <button onclick="window.print()">
+        <i class="fa fa-print"></i> In hóa đơn
+    </button>
+
+    <button th:if="${redirectBack != null}"
+            th:attr="onclick=|location.href='/${redirectBack}'|"
+            class="btn-back">
+        <i class="fa fa-arrow-left"></i> Quay lại
+    </button>
+
+
+</div>
+
+</body>
+</html>

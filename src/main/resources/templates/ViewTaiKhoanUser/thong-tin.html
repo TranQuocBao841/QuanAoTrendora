@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en-US" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <!-- Mirrored from html.tf.dreamitsolution.net/printmax/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 May 2025 12:11:24 GMT -->
 <head>
@@ -41,6 +41,11 @@
         .tab-pane p i {
             color: #0d6efd;
             margin-right: 8px;
+        }
+
+        label.form-label {
+            color: black !important;
+            display: inline-block !important;
         }
     </style>
 
@@ -248,21 +253,21 @@
                                 <li><a href="/san-pham/trang-chu">Home Trendora</a></li>
                             </ul>
                         </li>
-<!--                        <li><a href="about.html">About</a></li>-->
+                        <!--                        <li><a href="about.html">About</a></li>-->
                         <li>
                             <a href="#"
                             >Page <span><i class="bi bi-chevron-double-right"></i></span
                             ></a>
                             <ul class="sub_menu">
-<!--                                <li><a href="about.html">About Us</a></li>-->
-<!--                                <li><a href="service.html">Our Service</a></li>-->
-<!--                                <li><a href="service-details.html">Service Details</a></li>-->
-<!--                                <li><a href="team.html">Our Team</a></li>-->
-<!--                                <li><a href="portfolio.html">Portfolio</a></li>-->
-<!--                                <li>-->
-<!--                                    <a href="portfolio-details.html">Portfolio Details</a>-->
-<!--                                </li>-->
-<!--                                <li><a href="checkout.html">Checkout</a></li>-->
+                                <!--                                <li><a href="about.html">About Us</a></li>-->
+                                <!--                                <li><a href="service.html">Our Service</a></li>-->
+                                <!--                                <li><a href="service-details.html">Service Details</a></li>-->
+                                <!--                                <li><a href="team.html">Our Team</a></li>-->
+                                <!--                                <li><a href="portfolio.html">Portfolio</a></li>-->
+                                <!--                                <li>-->
+                                <!--                                    <a href="portfolio-details.html">Portfolio Details</a>-->
+                                <!--                                </li>-->
+                                <!--                                <li><a href="checkout.html">Checkout</a></li>-->
                                 <li><a href="/gio-hang/hien-thi">Cart</a></li>
                                 <li><a href="/quan-ao/thong-tin">Acoount</a></li>
                             </ul>
@@ -273,8 +278,8 @@
                             ></a>
                             <ul class="sub_menu">
                                 <li><a href="/san-pham/hien-thi">Shop</a></li>
-<!--                                <li><a href="shop-two.html">Shop Two</a></li>-->
-<!--                                <li><a href="shop-details.html">Shop Details</a></li>-->
+                                <!--                                <li><a href="shop-two.html">Shop Two</a></li>-->
+                                <!--                                <li><a href="shop-details.html">Shop Details</a></li>-->
                             </ul>
                         </li>
                         <li>
@@ -538,7 +543,10 @@
             <button class="nav-link" id="doimatkhau-tab" data-bs-toggle="tab" data-bs-target="#doimatkhau" type="button" role="tab">Đổi mật khẩu</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="lichsu-tab" data-bs-toggle="tab" data-bs-target="#lichsu" type="button" role="tab">Lịch sử hóa đơn</button>
+            <button class="nav-link" id="lichsu-tab" data-bs-toggle="tab" data-bs-target="#lichsu" type="button" role="tab">Hóa đơn của tôi</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="hoanthanh-tab" data-bs-toggle="tab" data-bs-target="#hoanthanh" type="button" role="tab">Đơn hàng đã hoàn thành</button>
         </li>
     </ul>
 
@@ -560,8 +568,8 @@
         </div>
 
         <!-- Cập nhật -->
-        <div class="tab-pane fade" id="capnhat" role="tabpanel">
-            <h4 class="mb-3">Cập nhật thông tin</h4>
+        <div class="tab-pane fade " id="capnhat" role="tabpanel">
+            <h4 class="mb-3 st">Cập nhật thông tin</h4>
             <form th:action="@{/quan-ao/cap-nhat-thong-tin}" method="post">
                 <div class="mb-3">
                     <label for="tenDangNhap" class="form-label">Họ và Tên</label>
@@ -620,7 +628,7 @@
                 <strong>❌ Lỗi!</strong> <span th:text="${error}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <h4 class="mb-3">Lịch sử mua hàng</h4>
+            <h4 class="mb-3">Hóa đơn của tôi</h4>
 
             <!-- Trường hợp không có hóa đơn -->
             <div th:if="${hoaDonList == null or hoaDonList.isEmpty()}">
@@ -707,6 +715,37 @@
                 </table>
             </div>
         </div>
+        <div class="tab-pane fade" id="hoanthanh" role="tabpanel">
+            <h4 class="mb-3">Đơn hàng đã hoàn thành</h4>
+            <h5 class="mb-3">Hãy chia sẻ trải nghiệm của bạn để chúng tôi có thể cải thiện cho lần mua hàng tiếp theo!</h5>
+            <div th:if="${hoaDonDaHoanThanh == null or hoaDonDaHoanThanh.isEmpty()}">
+                <p>Chưa có đơn hàng nào hoàn thành.</p>
+            </div>
+
+            <div th:if="${hoaDonDaHoanThanh != null and !hoaDonDaHoanThanh.isEmpty()}">
+                <div th:each="hd : ${hoaDonDaHoanThanh}" class="card mb-4">
+                    <div class="card-header">
+                        Mã hóa đơn: <span th:text="${hd.maHd}"></span> |
+                        Ngày tạo: <span th:text="${#temporals.format(hd.ngayTao, 'dd/MM/yyyy HH:mm')}"></span>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <tbody>
+                            <tr th:each="ct : ${chiTietMap[hd.id]}">
+                                <td th:text="${ct.sanPham.tenSanPham}"></td>
+                                <td th:text="${ct.soLuong}"></td>
+                                <td th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></td>
+                                <td>
+                                    <a th:href="@{/san-pham/deltal(id=${ct.sanPham.id})}" class="btn btn-sm btn-outline-success">Đánh giá</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
     </div>

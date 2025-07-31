@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/tai-khoan")
@@ -43,5 +44,16 @@ public class QLTaiKhoanController {
         model.addAttribute("ten", ten); // Giữ lại giá trị tìm kiếm trên giao diện
         return "ViewQLTaiKhoan/hien-thi";
     }
+    @PostMapping("/doi-trang-thai")
+    public String doiTrangThai(@RequestParam("idTaiKhoan") Integer id) {
+        Optional<TaiKhoan> optional = taiKhoanRepo.findById(id);
+        if (optional.isPresent()) {
+            TaiKhoan tk = optional.get();
+            tk.setTrangThai(!tk.getTrangThai()); // Đảo trạng thái
+            taiKhoanRepo.save(tk);
+        }
+        return "redirect:/tai-khoan/hien-thi";
+    }
+
 
 }

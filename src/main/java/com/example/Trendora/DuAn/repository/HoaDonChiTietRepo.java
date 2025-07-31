@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet,Integer> {
@@ -95,8 +94,13 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet,Integer> 
     void updateTrangThaiByHoaDonId(@Param("hoaDonId") Integer hoaDonId, @Param("trangThai") Integer trangThai);
 
 
-    List<HoaDonChiTiet> findByHoaDon_Id(Integer idHoaDon);
+    List<HoaDonChiTiet> findByHoaDon_Id(HoaDon idHoaDon);
 
     List<HoaDonChiTiet> findByHoaDon(HoaDon hoaDon);
+    List<HoaDonChiTiet> findByHoaDon_Id(Integer idHoaDon);
+
+    @Query("SELECT h FROM HoaDonChiTiet h WHERE h.hoaDon.id = :idHoaDon")
+    List<HoaDonChiTiet> findByHoaDonId(@Param("idHoaDon") Integer idHoaDon);
+
 
 }

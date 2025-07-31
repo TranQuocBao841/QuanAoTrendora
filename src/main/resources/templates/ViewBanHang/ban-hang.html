@@ -235,11 +235,16 @@
                                 </div>
 
 
-                                <!-- NÚT THANH TOÁN -->
-                                <button type="submit" class="btn btn-success btn-block">
-                                    <i class="glyphicon glyphicon-ok"></i> Thanh toán
-                                </button>
-
+                                <!-- Nút Thanh Toán + In Hóa Đơn -->
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button type="submit" class="btn btn-success">Thanh toán</button>
+                                </div>
+                                <div th:if="${hoaDonId != null}">
+                                    <a class="btn btn-primary mt-3"
+                                       th:href="@{'/ban-hang/in-hoa-don/' + ${hoaDonId} + '?redirect=ban-hang/hien-thi'}">
+                                        Xem & In hóa đơn
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -342,10 +347,6 @@
             </div>
         </div>
 
-
-
-
-
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -359,18 +360,21 @@
 </div>
 
 <script>
-    const input = document.getElementById('imageURLInput');
-    const preview = document.getElementById('imagePreview');
+    document.addEventListener("DOMContentLoaded", function () {
+        const input = document.getElementById('imageURLInput');
+        const preview = document.getElementById('imagePreview');
+        if (!input || !preview) return;
 
-    input.addEventListener('input', () => {
-        const url = input.value;
-        if (url) {
-            preview.src = url;
-            preview.style.display = 'block';
-        } else {
-            preview.src = '';
-            preview.style.display = 'none';
-        }
+        input.addEventListener('input', () => {
+            const url = input.value;
+            if (url) {
+                preview.src = url;
+                preview.style.display = 'block';
+            } else {
+                preview.src = '';
+                preview.style.display = 'none';
+            }
+        });
     });
 </script>
 <script>
@@ -416,14 +420,152 @@
         });
     });
 </script>
-
 <!-- JavaScript xử lý -->
-
-
 <script>
+    let gioHang = [];
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Khôi phục giỏ hàng
+        const data = localStorage.getItem("gioHang");
+        if (data) {
+            gioHang = JSON.parse(data);
+            capNhatBangGioHang();
+            setTimeout(tinhTongTien, 50); // đợi DOM render xong rồi mới tính tiền
+        }
+
+        // Mặc định chọn khách lẻ nếu chưa có
+        const idKhachHang = document.getElementById("idKhachHang");
+        const tenKhachHang = document.getElementById("tenKhachHang");
+        if (!idKhachHang.value || idKhachHang.value.trim() === "") {
+            idKhachHang.value = 9;
+            tenKhachHang.value = "Khách lẻ";
+        }
+
+        // Gõ Enter để tính tiền thừa
+        const inputTienKhachDua = document.getElementById("tienKhachDua");
+        if (inputTienKhachDua) {
+            inputTienKhachDua.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    tinhTienThua();
+                }
+            });
+        }
+
+        // Sau khi chọn hình thức thanh toán
+        const selectHinhThuc = document.querySelector('select[name="hinhThuc"]');
+        if (selectHinhThuc) {
+            selectHinhThuc.addEventListener('change', function () {
+                tinhTongTien(); // Cập nhật lại QR và tổng tiền
+            });
+        }
+
+        // Sự kiện lọc sản phẩm
+        ['#searchSanPham', '#filterDanhMuc', '#filterMauSac', '#filterKichThuoc'].forEach(selector => {
+            const input = document.querySelector(selector);
+            if (input) {
+                input.addEventListener('input', () => {
+                    locSanPham();
+                });
+            }
+        });
+    });
+
+    function themVaoGioHang(id, ten, size, gia, tonKho) {
+        gia = parseFloat(gia);
+        tonKho = parseInt(tonKho);
+        const itemIndex = gioHang.findIndex(sp => sp.id === id && sp.size === size);
+
+        if (itemIndex !== -1) {
+            if (gioHang[itemIndex].soLuong < tonKho) {
+                gioHang[itemIndex].soLuong++;
+                alert("✅ Đã tăng số lượng sản phẩm trong giỏ hàng.");
+            } else {
+                alert("⚠️ Số lượng vượt quá tồn kho!");
+            }
+        } else {
+            gioHang.push({ id, ten, size, gia, soLuong: 1, tonKho });
+            alert("✅ Thêm sản phẩm vào giỏ hàng thành công!");
+        }
+
+        capNhatBangGioHang();
+        tinhTongTien();
+        localStorage.setItem("gioHang", JSON.stringify(gioHang));
+    }
+
+    function capNhatBangGioHang() {
+        const tbody = document.getElementById("gioHangBody");
+        const section = document.getElementById("gioHangSection");
+        const form = document.getElementById("formThanhToan");
+
+        document.querySelectorAll(".input-gio-hang").forEach(e => e.remove());
+        tbody.innerHTML = "";
+
+        if (gioHang.length === 0) {
+            section.style.display = "none";
+            return;
+        }
+
+        section.style.display = "block";
+
+        gioHang.forEach((sp, index) => {
+            const thanhTien = sp.gia * sp.soLuong;
+            const row = `
+            <tr>
+                <td>${sp.ten}</td>
+                <td>${sp.size}</td>
+                <td>
+                    <input type="number" class="form-control input-sm so-luong"
+                        value="${sp.soLuong}" min="1" max="${sp.tonKho}"
+                        data-gia="${sp.gia}" onchange="capNhatSoLuong(${index}, this)">
+                </td>
+                <td>${sp.gia.toLocaleString()} ₫</td>
+                <td class="thanh-tien">${thanhTien.toLocaleString()} ₫</td>
+                <td>
+                    <button class="btn btn-danger btn-xs" onclick="xoaKhoiGioHang(${index})">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+            tbody.insertAdjacentHTML("beforeend", row);
+
+            const inputHidden = document.createElement("input");
+            inputHidden.type = "hidden";
+            inputHidden.name = `sp_${sp.id}`;
+            inputHidden.value = sp.soLuong;
+            inputHidden.classList.add("input-gio-hang");
+            form.appendChild(inputHidden);
+        });
+
+        localStorage.setItem("gioHang", JSON.stringify(gioHang));
+    }
+
+    function capNhatSoLuong(index, input) {
+        const newQty = parseInt(input.value);
+        const max = parseInt(input.max);
+        if (newQty > max) {
+            alert("⚠️ Vượt quá số lượng tồn kho!");
+            input.value = gioHang[index].soLuong;
+            return;
+        }
+        gioHang[index].soLuong = newQty;
+        capNhatBangGioHang();
+        tinhTongTien();
+        localStorage.setItem("gioHang", JSON.stringify(gioHang));
+    }
+
+    function xoaKhoiGioHang(index) {
+        if (confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")) {
+            gioHang.splice(index, 1);
+            capNhatBangGioHang();
+            tinhTongTien();
+            localStorage.setItem("gioHang", JSON.stringify(gioHang));
+        }
+    }
+
     function tinhTongTien() {
         let tong = 0;
-        const rows = document.querySelectorAll("tbody tr");
+        const rows = document.querySelectorAll("#gioHangBody tr");
 
         rows.forEach(row => {
             const input = row.querySelector("input.so-luong");
@@ -436,13 +578,8 @@
             tong += thanhTien;
         });
 
-        // 👉 Chỉ gán tổng tiền gốc vào input để gửi lên server
         document.getElementById("tongTienHidden").value = tong;
-
-        // 👉 Cập nhật hiển thị phía người dùng (không thay đổi input ẩn)
         document.getElementById("tong-tien-goc").innerText = tong.toLocaleString();
-
-        // Cập nhật hiển thị giảm giá (nếu cần)
         hienThiGiamGia(tong);
     }
 
@@ -464,11 +601,8 @@
             if (giamGia > tongGoc) giamGia = tongGoc;
         }
 
-        // 👉 Chỉ hiển thị mức giảm, KHÔNG gán lại tongTienHidden
         document.getElementById("muc-giam").innerText = giamGia.toLocaleString();
         document.getElementById("tong-tien").innerText = (tongGoc - giamGia).toLocaleString();
-
-        // Có thể thêm nếu bạn muốn hiện QR:
         capNhatQR(tongGoc - giamGia);
     }
 
@@ -488,10 +622,52 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        tinhTongTien(); // Tính lại khi trang load
+    function tinhTienThua() {
+        const tienKhach = parseFloat(document.getElementById("tienKhachDua").value) || 0;
+        const tongThanhToanText = document.getElementById("tong-tien").innerText.replace(/[^\d]/g, '') || "0";
+        const tongThanhToan = parseFloat(tongThanhToanText);
+
+        if (!isNaN(tienKhach) && !isNaN(tongThanhToan)) {
+            const tienThua = tienKhach - tongThanhToan;
+            document.getElementById("tienThua").value = tienThua >= 0
+                ? tienThua.toLocaleString() + " đ"
+                : "Thiếu " + Math.abs(tienThua).toLocaleString() + " đ";
+        } else {
+            document.getElementById("tienThua").value = "";
+        }
+    }
+
+    function locSanPham() {
+        const keyword = document.getElementById('searchSanPham').value.toLowerCase();
+        const danhMuc = document.getElementById('filterDanhMuc').value;
+        const mau = document.getElementById('filterMauSac').value;
+        const size = document.getElementById('filterKichThuoc').value;
+
+        document.querySelectorAll('#productTable tbody tr').forEach(row => {
+            const ten = row.getAttribute('data-ten')?.toLowerCase() || '';
+            const dm = row.getAttribute('data-danhmuc') || '';
+            const ms = row.getAttribute('data-mau') || '';
+            const kt = row.getAttribute('data-size') || '';
+
+            const match =
+                (!keyword || ten.includes(keyword)) &&
+                (!danhMuc || dm === danhMuc) &&
+                (!mau || ms === mau) &&
+                (!size || kt === size);
+
+            row.style.display = match ? '' : 'none';
+        });
+    }
+
+    // Xoá localStorage sau khi thanh toán
+    document.getElementById("formThanhToan").addEventListener("submit", function () {
+        localStorage.removeItem("gioHang");
     });
 
+    // Disable nút sau khi submit
+    document.querySelector("form").addEventListener("submit", function () {
+        this.querySelector("button[type=submit]").disabled = true;
+    });
 </script>
 
 <script>
@@ -570,12 +746,6 @@
         $('#khachHangModal').modal('show');
     }
 </script>
-
-
-
-
-
-
 <script>
     function xemChiTietSanPham(id, ten, ma, gia, moTa, coAo, khuyAo, kieuDang, duongMay, hoaTiet, phongCach, chatLieu, mauSac, kichThuoc, danhMuc, tayAo, anh) {
         document.getElementById("chiTietTen").innerText = ten;
@@ -603,102 +773,6 @@
     }
 </script>
 <script>
-    let gioHang = [];
-
-    function themVaoGioHang(id, ten, size, gia, tonKho) {
-        gia = parseFloat(gia);
-        tonKho = parseInt(tonKho);
-
-        const itemIndex = gioHang.findIndex(sp => sp.id === id && sp.size === size);
-
-        if (itemIndex !== -1) {
-            if (gioHang[itemIndex].soLuong < tonKho) {
-                gioHang[itemIndex].soLuong++;
-                alert("✅ Đã tăng số lượng sản phẩm trong giỏ hàng.");
-            } else {
-                alert("⚠️ Số lượng vượt quá tồn kho!");
-            }
-        } else {
-            gioHang.push({ id, ten, size, gia, soLuong: 1, tonKho });
-            alert("✅ Thêm sản phẩm vào giỏ hàng thành công!");
-        }
-
-        capNhatBangGioHang();
-        tinhTongTien();
-    }
-    function capNhatBangGioHang() {
-        const tbody = document.getElementById("gioHangBody");
-        const section = document.getElementById("gioHangSection");
-        const form = document.getElementById("formThanhToan");
-
-        // Xóa toàn bộ input cũ của giỏ hàng trong form
-        document.querySelectorAll(".input-gio-hang").forEach(e => e.remove());
-
-        tbody.innerHTML = "";
-
-        if (gioHang.length === 0) {
-            section.style.display = "none";
-            return;
-        } else {
-            section.style.display = "block";
-        }
-
-        gioHang.forEach((sp, index) => {
-            const thanhTien = sp.gia * sp.soLuong;
-
-            const row = `
-            <tr>
-                <td>${sp.ten}</td>
-                <td>${sp.size}</td>
-                <td>
-                    <input type="number" class="form-control input-sm so-luong"
-                        value="${sp.soLuong}" min="1" max="${sp.tonKho}"
-                        data-gia="${sp.gia}" onchange="capNhatSoLuong(${index}, this)">
-                </td>
-                <td>${sp.gia.toLocaleString()} ₫</td>
-                <td class="thanh-tien">${thanhTien.toLocaleString()} ₫</td>
-                <td>
-                    <button class="btn btn-danger btn-xs" onclick="xoaKhoiGioHang(${index})">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-            tbody.insertAdjacentHTML("beforeend", row);
-
-            // ✅ Thêm input ẩn vào form để gửi về Controller
-            const inputHidden = document.createElement("input");
-            inputHidden.type = "hidden";
-            inputHidden.name = `sp_${sp.id}`;
-            inputHidden.value = sp.soLuong;
-            inputHidden.classList.add("input-gio-hang");
-            form.appendChild(inputHidden);
-        });
-    }
-
-    function capNhatSoLuong(index, input) {
-        const newQty = parseInt(input.value);
-        const max = parseInt(input.max);
-        if (newQty > max) {
-            alert("⚠️ Vượt quá số lượng tồn kho!");
-            input.value = gioHang[index].soLuong;
-            return;
-        }
-        gioHang[index].soLuong = newQty;
-        capNhatBangGioHang();
-        tinhTongTien();
-    }
-
-    function xoaKhoiGioHang(index) {
-        if (confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")) {
-            gioHang.splice(index, 1);
-            capNhatBangGioHang();
-            tinhTongTien();
-        }
-    }
-
-</script>
-<script>
     function openGioHangModal() {
         $('#gioHangModal').modal('show');
     }
@@ -723,10 +797,10 @@
         }
     });
 </script>
-
-
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="/assets/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
 
 
 
@@ -739,6 +813,7 @@
 <script>
     $.widget.bridge('uibutton', $.ui.button);
 </script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script th:src="@{/assets/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
 <!-- Morris.js charts -->

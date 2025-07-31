@@ -3,19 +3,41 @@ package com.example.Trendora.DuAn.controller;
 import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
 import com.example.Trendora.DuAn.model.*;
 import com.example.Trendora.DuAn.repository.*;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfWriter;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
+
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.List;
 
 @Controller
 @RequestMapping("/ban-hang")
@@ -51,9 +73,15 @@ public class BanHangTaiQuayController {
                                  @RequestParam(value = "danhMuc", required = false) Integer danhMucId,
                                  @RequestParam(value = "mauSac", required = false) Integer mauSac,
                                  @RequestParam(value = "kichThuoc", required = false) Integer kichThuoc,
-                                 Model model) {
+                                 Model model,HttpSession session) {
 
         List<SanPham> danhSachSanPham;
+// ✅ Nếu quay lại sau khi thanh toán thì không có giỏ hàng nữa
+        Map<Integer, Integer> gioHang = (Map<Integer, Integer>) session.getAttribute("gioHang");
+        if (gioHang == null || gioHang.isEmpty()) {
+            model.addAttribute("thongBao", "🛒 Giỏ hàng đang trống. Vui lòng chọn sản phẩm mới để bán.");
+        }
+
         boolean coLoc = (keyword != null && !keyword.isEmpty())
                 || danhMucId != null
                 || mauSac != null
@@ -94,9 +122,9 @@ public class BanHangTaiQuayController {
 
         // 1. Kiểm tra đăng nhập
         TaiKhoan taiKhoan = (TaiKhoan) session.getAttribute("adminDangNhap");
-        if (taiKhoan == null || taiKhoan.getNhanVien() == null) {
-            redirect.addFlashAttribute("error", "Vui lòng đăng nhập để thanh toán.");
+        if (taiKhoan == null || taiKhoan.getLoaiTaiKhoan() != 1) {
             return "redirect:/quan-ao/login";
+
         }
 
         NhanVien nhanVien = taiKhoan.getNhanVien();
@@ -134,7 +162,15 @@ public class BanHangTaiQuayController {
                 giamGiaRepo.save(giamGia);
             }
         }
+        String tienKhachStr = params.get("tienKhachDua");
+        BigDecimal tienKhachDua = BigDecimal.ZERO;
+        BigDecimal tienTraLai = BigDecimal.ZERO;
 
+        if (tienKhachStr != null && !tienKhachStr.isEmpty()) {
+            tienKhachDua = new BigDecimal(tienKhachStr);
+            tienTraLai = tienKhachDua.subtract(BigDecimal.valueOf(tongTienSauGiam));
+            if (tienTraLai.compareTo(BigDecimal.ZERO) < 0) tienTraLai = BigDecimal.ZERO;
+        }
         // 4. Kiểm tra tồn kho các sản phẩm
         List<String> loiSanPham = new ArrayList<>();
         Map<Integer, Integer> gioHang = new HashMap<>();
@@ -220,9 +256,21 @@ public class BanHangTaiQuayController {
         model.addAttribute("giamGia", giamGia);
         model.addAttribute("tenKhach", khachHang.getTenKh());
         model.addAttribute("hinhThuc", hinhThuc.getTenHinhThuc());
+        redirect.addFlashAttribute("hoaDonId", hoaDon.getId());
+        redirect.addFlashAttribute("tienKhachDua", tienKhachDua);
+        redirect.addFlashAttribute("tienTraLai", tienTraLai);
+        // ✅ Sau khi lưu hóa đơn xong thì xóa sạch session để không bị quay lại nhập lại nữa
+        session.removeAttribute("gioHang");
+        session.removeAttribute("tongTien");
+        session.removeAttribute("khachHang");
+        session.removeAttribute("giamGia");
+        session.removeAttribute("tienKhachDua");
+
 
         redirect.addFlashAttribute("success", "🎉 Thanh toán thành công!");
-        return "redirect:/ban-hang/hien-thi";
+//        return "redirect:/ban-hang/in-hoa-don/" + hoaDon.getId();
+        return "redirect:/ban-hang/in-hoa-don/" + hoaDon.getId() + "?redirect=ban-hang/hien-thi";
+
     }
 
     @GetMapping("/qr-thanh-toan")
@@ -242,4 +290,117 @@ public class BanHangTaiQuayController {
         model.addAttribute("hoaDon", hoaDon);
         return "ViewBanHang/qr-thanh-toan";
     }
+    // Trang hiển thị hóa đơn
+    @GetMapping("/in-hoa-don/{id}")
+    public String inHoaDon(@PathVariable("id") Integer id, Model model,
+                           @RequestParam(value = "redirect", required = false) String redirect) {
+        HoaDon hoaDon = hoaDonRepo.findById(id).orElse(null);
+        if (hoaDon == null) {
+            return "redirect:/error";
+        }
+
+        List<HoaDonChiTiet> chiTietList = hoaDonCTRepo.findByHoaDon_Id(id);
+
+        BigDecimal tongTienHang = chiTietList.stream()
+                .map(HoaDonChiTiet::getThanhTien)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal giamGia = (hoaDon.getGiamGia() != null) ? BigDecimal.valueOf(hoaDon.getGiamGia().getGiaTriGiam()) : BigDecimal.ZERO;
+
+        BigDecimal tongThanhToan = tongTienHang.subtract(giamGia);
+
+        model.addAttribute("hoaDon", hoaDon);
+        model.addAttribute("chiTietList", chiTietList);
+        model.addAttribute("tongTienHang", tongTienHang);
+        model.addAttribute("giamGia", giamGia);
+        model.addAttribute("tongThanhToan", tongThanhToan);
+        model.addAttribute("redirectBack", redirect);
+
+        model.addAttribute("tienKhachDua", model.asMap().getOrDefault("tienKhachDua", BigDecimal.ZERO));
+        model.addAttribute("tienTraLai", model.asMap().getOrDefault("tienTraLai", BigDecimal.ZERO));
+
+        return "ViewBanHang/in-hoa-don"; // HTML file
+    }
+
+    // Tải xuống PDF
+    @GetMapping("/pdf/{id}")
+    public void exportPdf(@PathVariable("id") Integer id,
+                          HttpServletResponse response) throws IOException, DocumentException, WriterException {
+
+        HoaDon hoaDon = hoaDonRepo.findById(id).orElse(null);
+        List<HoaDonChiTiet> chiTietList = hoaDonCTRepo.findByHoaDonId(id);
+
+        if (hoaDon == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy hóa đơn");
+            return;
+        }
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=hoa_don_" + URLEncoder.encode(hoaDon.getMaHd(), "UTF-8") + ".pdf");
+
+        Document document = new Document(PageSize.A4);
+        PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+
+        Font fontTitle = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+        Font font = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
+
+        document.add(new Paragraph("HÓA ĐƠN BÁN HÀNG", fontTitle));
+        document.add(new Paragraph("Mã hóa đơn: " + hoaDon.getMaHd(), font));
+        document.add(new Paragraph("Ngày tạo: " + hoaDon.getNgayTao(), font));
+        document.add(new Paragraph("Khách hàng: " + hoaDon.getKhachHang().getTenKh(), font));
+        document.add(new Paragraph(" "));
+
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10f);
+        table.setSpacingAfter(10f);
+
+        table.addCell("Tên sản phẩm");
+        table.addCell("Số lượng");
+        table.addCell("Đơn giá");
+        table.addCell("Thành tiền");
+        table.addCell("Trạng thái");
+
+        BigDecimal tongTien = BigDecimal.ZERO;
+
+        for (HoaDonChiTiet ct : chiTietList) {
+            table.addCell(ct.getSanPham().getTenSanPham());
+            table.addCell(ct.getSoLuong().toString());
+            table.addCell(ct.getDonGia().toString());
+            table.addCell(ct.getThanhTien().toString());
+            table.addCell(ct.getTrangThai() == 1 ? "Đã thanh toán" : "Chưa thanh toán");
+            tongTien = tongTien.add(ct.getThanhTien());
+        }
+
+        document.add(table);
+        document.add(new Paragraph("Tổng tiền: " + tongTien.toPlainString() + " VND", font));
+
+        if ("Chuyển khoản".equalsIgnoreCase(hoaDon.getHinhThucThanhToan().getTenHinhThuc()) ||
+                "Ví điện tử".equalsIgnoreCase(hoaDon.getHinhThucThanhToan().getTenHinhThuc())) {
+
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph("Vui lòng chuyển khoản đến:"));
+            document.add(new Paragraph("Nguyễn Thị Hà Lan - MB Bank - 0912713606"));
+            document.add(new Paragraph("Số tiền: " + tongTien.toPlainString() + " VND"));
+
+            String noiDung = "2|99|0912713606|Nguyen Thi Ha Lan|" + tongTien.toPlainString() + "|Thanh toan hoa don " + hoaDon.getMaHd();
+            BufferedImage qrImage = generateQRImage(noiDung, 200, 200);
+
+            ByteArrayOutputStream baosImg = new ByteArrayOutputStream();
+            ImageIO.write(qrImage, "png", baosImg);
+            Image qr = Image.getInstance(baosImg.toByteArray());
+            qr.scaleToFit(150, 150);
+            document.add(qr);
+        }
+
+        document.close();
+    }
+    public BufferedImage generateQRImage(String text, int width, int height) throws WriterException {
+        BitMatrix matrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, width, height);
+        return MatrixToImageWriter.toBufferedImage(matrix);
+    }
+
+
 }
+

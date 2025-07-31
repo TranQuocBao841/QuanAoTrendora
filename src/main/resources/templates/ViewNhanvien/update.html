@@ -43,14 +43,19 @@
                     </div>
                 </div>
                 <div class="box box-primary">
-                    <form role="form" th:action="@{/nhan-vien/add}" method="post" th:object="${nhanVien}" enctype="multipart/form-data">
+                    <form role="form" th:action="@{/nhan-vien/update}" method="post" th:object="${nhanVien}" enctype="multipart/form-data">
                         <div class="box box-primary">
                             <div class="box-header with-border">
-                                <h3 class="box-title">Thêm nhân viên</h3>
+                                <h3 class="box-title">update nhân viên</h3>
                             </div>
                             <div class="box-body">
 
                                 <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label>ID nhân viên</label>
+                                        <input type="text" class="form-control" th:field="*{idNv}" placeholder="id nhân viên"/>
+                                    </div>
+
                                     <div class="form-group col-md-6">
                                         <label>Mã nhân viên</label>
                                         <input type="text" class="form-control" th:field="*{maNv}" placeholder="Mã nhân viên"/>
@@ -90,39 +95,42 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label>Ngày sinh</label>
-                                        <input type="date" class="form-control" th:field="*{ngaySinh}"/>
-                                        <p class="text-danger" th:if="${#fields.hasErrors('ngaySinh')}" th:errors="*{ngaySinh}"></p>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Địa chỉ</label>
-                                        <input type="text" class="form-control" th:field="*{diaChi}" placeholder="Địa chỉ"/>
-                                        <p class="text-danger" th:if="${#fields.hasErrors('diaChi')}" th:errors="*{diaChi}"></p>
-                                    </div>
+                                <div class="form-group col-md-6">
+                                    <label>Ngày sinh</label>
+                                    <input type="date" class="form-control" th:field="*{ngaySinh}" />
+                                    <p class="text-danger" th:if="${#fields.hasErrors('ngaySinh')}" th:errors="*{ngaySinh}"></p>
                                 </div>
 
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label>Trạng thái</label><br/>
-                                        <input type="radio" th:field="*{trangThai}" value="1"/> <label>Hoạt động</label>
-                                        <input type="radio" th:field="*{trangThai}" value="0"/> <label>Không hoạt động</label>
-                                        <p class="text-danger" th:if="${#fields.hasErrors('trangThai')}" th:errors="*{trangThai}"></p>
-                                    </div>
-                                </div>
 
+
+
+                                <div class="form-group col-md-6">
+                                    <label>Địa chỉ</label>
+                                    <input type="text" class="form-control" th:field="*{diaChi}" placeholder="Địa chỉ"/>
+                                    <p class="text-danger" th:if="${#fields.hasErrors('diaChi')}" th:errors="*{diaChi}"></p>
+                                </div>
                             </div>
-                            <div class="box-footer">
-                                <button type="submit" class="btn btn-primary">Thêm nhân viên</button>
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Trạng thái</label><br/>
+                                    <input type="radio" th:field="*{trangThai}" value="1"/> <label>Hoạt động</label>
+                                    <input type="radio" th:field="*{trangThai}" value="0"/> <label>Không hoạt động</label>
+                                    <p class="text-danger" th:if="${#fields.hasErrors('trangThai')}" th:errors="*{trangThai}"></p>
+                                </div>
                             </div>
+
                         </div>
-                    </form>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">update nhân viên</button>
+                        </div>
                 </div>
-
+                </form>
             </div>
+
         </div>
     </div>
+</div>
 
 </div>
 <script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>

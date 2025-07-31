@@ -23,7 +23,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon,Integer> {
 
 
     @Query("SELECT new com.example.Trendora.DuAn.DTO.HoaDonDTO(" +
-            "hd.id, hd.maHd, nv.tenNv, kh.tenKh, hinhThuc.tenHinhThuc, gg.tenGiamGia, hd.ngayTao, hd.tongTien, hd.trangThai, hd.trangThaiDonHang) " +
+            "hd.id, hd.maHd, nv.tenNv, kh.tenKh, hinhThuc.tenHinhThuc, gg.tenGiamGia, hd.ngayTao,hd.diaChiGiaoHang, hd.tongTien, hd.trangThai, hd.trangThaiDonHang) " +
             "FROM HoaDon hd " +
             "LEFT JOIN hd.nhanVien nv " +
             "LEFT JOIN hd.khachHang kh " +

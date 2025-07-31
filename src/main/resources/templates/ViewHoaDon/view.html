@@ -69,6 +69,7 @@
                             <th>Hình thức thanh toán</th>
                             <th>Mã hóa đơn</th>
                             <th>Ngày tạo</th>
+                            <th>Địa Chỉ giao hàng</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái đơn hàng</th>
                             <th>Trạng thái</th>
@@ -82,6 +83,7 @@
                                 <td th:text="${hd.tenHinhThucThanhToan}"></td>
                                 <td th:text="${hd.maHd}"></td>
                                 <td th:text="${hd.ngayTao}"></td>
+                                <td th:text="${hd.diaChiGiaoHang}"></td>
                                 <td th:text="${hd.tongTien}"></td>
                                 <td th:text="${hd.trangThaiDonHang}"></td>
                                 <td th:text="${hd.trangThai == 1 ? 'Đã thanh toán' : (hd.trangThai == 2 ? 'Đã hủy' : 'Chưa thanh toán')}"></td>
@@ -96,9 +98,20 @@
                                             Hủy đơn
                                         </a>
                                     </th:block>
-
-
                                     <a th:href="@{'/hoa-don/detail?id=' + ${hd.id}}" class="btn btn-primary btn-sm">Chi tiết</a>
+                                    <a th:href="@{'/hoa-don/in?id=' + ${hd.id} + '&redirect=hoa-don/hien-thi'}"
+                                       class="btn btn-success btn-sm"
+                                       >
+                                        In lại hóa đơn
+                                    </a>
+
+
+                                    <!--                                    <a th:href="@{'/hoa-don/in?id=' + ${hd.id}}"-->
+                                    <!--                                       class="btn btn-success btn-sm"-->
+                                    <!--                                       target="_blank">-->
+                                    <!--                                        In lại hóa đơn-->
+                                    <!--                                    </a>-->
+
                                 </td>
                             </tr>
                         </th:block>

@@ -39,7 +39,7 @@ public class QLNhanvienController {
     public String viewupdate(
             @RequestParam("id") Integer id, Model model
     ){
-        model.addAttribute("nv", nvr.findById(id).get());
+        model.addAttribute("nhanVien", nvr.findById(id).get());
         return ("ViewNhanvien/update");
     }
 

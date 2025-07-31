@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -47,6 +48,7 @@ public class NhanVien {
     @Column(name = "gioi_tinh")
     private Boolean gioiTinh;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Ngày sinh không được để trống")
     @Column(name = "ngay_sinh")
     private LocalDate ngaySinh;

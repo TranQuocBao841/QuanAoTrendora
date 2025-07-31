@@ -9,8 +9,74 @@
     <head th:replace="~{ViewSanPham/layout/head :: head}">
     </head>
 
-    <header th:replace="~{ViewSanPham/layout/header :: header}" ></header>
+    <header th:replace="~{ViewSanPham/layout/header :: header}" >
+
+
+    </header>
     <!-- Left side column. contains the logo and sidebar -->
+    <style>
+        .actions-column {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .actions-column form {
+            margin: 0;
+        }
+
+        .actions-column .btn-sm {
+            padding: 4px 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .switch-modern {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+            vertical-align: middle;
+        }
+
+        .slider-modern {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider-modern:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        .switch-modern input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .switch-modern input:checked + .slider-modern {
+            background-color: #2ee59d;
+        }
+
+        .switch-modern input:checked + .slider-modern:before {
+            transform: translateX(22px);
+        }
+    </style>
 
     <aside th:replace="~{ViewSanPham/layout/aside :: aside}" ></aside>
     <!-- Content Wrapper. Contains page content -->
@@ -32,12 +98,6 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Danh Sách Tài Khoản</h3>
-
-                    <!--                    <div>-->
-                    <!--                        <a class="btn btn-success" href="/admin/san-pham/view-add">-->
-                    <!--                            <i class="fas fa-plus"></i>Thêm mới-->
-                    <!--                        </a>-->
-                    <!--                    </div>-->
                     <div class="box-tools">
                         <form action="/tai-khoan/timkiem" method="get">
                             <div class="input-group input-group-sm hidden-xs" style="width: 150px;">
@@ -66,25 +126,29 @@
                             <tr>
                                 <td th:text="${taiKhoan.idTaiKhoan}"></td>
                                 <td th:text="${taiKhoan.tenDangNhap}"></td>
-                                <!--                                <td>-->
-                                <!--                                    <img th:src="${#strings.startsWith(sanpham.anhSanPham, 'http') ? sanpham.anhSanPham : '/images/' + sanpham.anhSanPham}"-->
-                                <!--                                         class="img-thumbnail"-->
-                                <!--                                         style="width: 60px; height: 60px; object-fit: cover;">-->
-                                <!--                                </td>-->
-
                                 <td th:text="${taiKhoan.email}"></td>
                                 <td th:text="${taiKhoan.matKhau}"></td>
                                 <td th:text="${taiKhoan.loaiTaiKhoan ==1 ?'Nhân viên':'Khách hàng'}"></td>
                                 <td th:text="${taiKhoan.trangThai ?'Đang hoạt động':'Ngừng hoạt động'}"></td>
                                 <td>
-                                    <a th:href="@{'/tai-khoan/update?id=' + ${taiKhoan.idTaiKhoan}}" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <!--                                    <a th:href="@{'/admin/san-pham/delete?id=' + ${sanpham.id}}" class="btn btn-danger btn-sm"-->
-                                    <!--                                       onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">-->
-                                    <!--                                        <i class="fas fa-trash"></i>-->
-                                    <!--                                    </a>-->
+                                    <div class="actions-column">
+                                        <form th:action="@{/tai-khoan/doi-trang-thai}" method="post">
+                                            <input type="hidden" name="idTaiKhoan" th:value="${taiKhoan.idTaiKhoan}" />
+                                            <label class="switch-modern">
+                                                <input type="checkbox"
+                                                       onchange="this.form.submit()"
+                                                       th:checked="${taiKhoan.trangThai}" />
+                                                <span class="slider-modern"></span>
+                                            </label>
+                                        </form>
+
+                                        <a th:href="@{'/tai-khoan/update?id=' + ${taiKhoan.idTaiKhoan}}"
+                                           class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
                                 </td>
+
                             </tr>
                         </th:block>
                         </tbody></table>
@@ -112,7 +176,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
-<script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script th:src="@{/bower_components/jquery-ui/jquery-ui.min.js}"></script>
@@ -150,6 +214,7 @@
 <!-- AdminLTE for demo purposes -->
 <script th:src="@{/assets/dist/js/demo.js}"></script>
 <script th:src="@{/assets/ad.js}"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"941d2071ef3dfd9f","version":"2025.4.0-1-g37f21b1","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"2437d112162f4ec4b63c3ca0eb38fb20","b":1}' crossorigin="anonymous"></script>
 </body>
 
