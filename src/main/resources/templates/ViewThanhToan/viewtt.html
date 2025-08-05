@@ -303,11 +303,11 @@
                 <li>
                     <a href="/san-pham/trang-chu">Home</a>
                     <ul class="sub_menu">
-                        <li><a href="/san-pham/trang-chu">Home Version 01</a></li>
+                        <li><a href="/san-pham/trang-chu">Home </a></li>
 
                     </ul>
                 </li>
-                <li><a href="about.html">About</a></li>
+<!--                <li><a href="about.html">About</a></li>-->
                 <li>
                     <a href="#">Page</a>
                     <ul class="sub_menu">
@@ -557,10 +557,24 @@
                 </div>
 
                 <!-- QR nếu chuyển khoản -->
-                <div id="qrWrapper" class="mb-3" style="display: none;">
-                    <label class="form-label">Mã QR chuyển khoản:</label><br>
-                    <img src="/fe/images/qr.jpg" class="img-thumbnail" style="max-width: 200px;" alt="QR chuyển khoản">
+                <div id="qrWrapper" class="text-center mb-4">
+                    <label class="form-label fw-bold fs-5 d-block mb-3">Mã QR chuyển khoản</label>
+                    <div class="card shadow-sm d-inline-block p-3" style="border-radius: 16px; background-color: #f9f9f9;">
+                        <img th:src="@{https://img.vietqr.io/image/MB-0912713606-compact2.png(amount=${tongTien},addInfo='Thanh%20toan%20don%20hang',accountName='Nguyen%20Thi%20Ha%20Lan')}"
+                             class="img-thumbnail img-fluid rounded"
+                             style="max-width: 250px;"
+                             alt="QR chuyển khoản">
+                        <div class="mt-3 text-start small text-muted">
+                            <p class="mb-1">👤 Chủ tài khoản: <strong>Nguyễn Thị Hà Lan</strong></p>
+                            <p class="mb-1">🏦 Ngân hàng: <strong>MB Bank</strong></p>
+                            <p class="mb-0">📝 Nội dung: <strong>Thanh toán đơn hàng</strong></p>
+                        </div>
+                    </div>
                 </div>
+
+
+
+
 
                 <!-- Hidden tổng tiền -->
                 <input type="hidden" name="tongTien" th:value="${tongTien}" />

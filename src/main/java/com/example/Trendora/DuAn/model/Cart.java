@@ -41,9 +41,9 @@ public class Cart {
         BigDecimal tongTien = getTongTien();
         BigDecimal tienGiam = BigDecimal.ZERO;
 
-        String loai = giamGia.getLoaiGiamGia().toLowerCase();
+        int loai = giamGia.getLoaiGiamGia(); // int rồi, không cần toLowerCase
 
-        if (loai.contains("phần") || loai.contains("phan")) {
+        if (loai == 1) {
             // phần trăm
             tienGiam = tongTien.multiply(BigDecimal.valueOf(giamGia.getGiaTriGiam()))
                     .divide(BigDecimal.valueOf(100));
@@ -55,6 +55,7 @@ public class Cart {
         BigDecimal ketQua = tongTien.subtract(tienGiam);
         return ketQua.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : ketQua;
     }
+
 
     public void clear() {
         items.clear();

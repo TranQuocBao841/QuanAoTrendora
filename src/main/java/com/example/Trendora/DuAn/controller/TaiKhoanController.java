@@ -11,7 +11,9 @@ import com.example.Trendora.DuAn.repository.HoaDonRepo;
 import com.example.Trendora.DuAn.repository.KhachHangRepo;
 import com.example.Trendora.DuAn.repository.TaiKhoanRepo;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -145,7 +147,6 @@ public class TaiKhoanController {
 
         TaiKhoan taiKhoan = (TaiKhoan) user;
 
-        // Kiểm tra xem tài khoản có liên kết với khách hàng không
         if (taiKhoan.getKhachHang() == null) {
             model.addAttribute("error", "Tài khoản chưa được liên kết với thông tin khách hàng.");
             return "redirect:/quan-ao/login";
@@ -170,8 +171,11 @@ public class TaiKhoanController {
 
         model.addAttribute("chiTietMap", chiTietMap);
 
+        model.addAttribute("steps", TrangThaiDonHang.values());
+
         return "ViewTaiKhoanUser/thong-tin";
     }
+
 
 
 
@@ -250,7 +254,5 @@ public class TaiKhoanController {
         }
         return "redirect:/quan-ao/thong-tin"; // đổi thành trang hiển thị đơn hàng của người dùng
     }
-
-
 
 }

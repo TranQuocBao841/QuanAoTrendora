@@ -67,7 +67,7 @@
                                     <td th:text="${gg.tenGiamGia}">Tên</td>
                                     <td th:text="${gg.ngayBatDau}">Bắt đầu</td>
                                     <td th:text="${gg.ngayKetThuc}">Kết thúc</td>
-                                    <td th:text="${gg.loaiGiamGia}">Loại</td>
+                                    <td th:text="${gg.loaiGiamGia == 0 ? 'Tiền mặt' : 'Phần trăm'}">Loại</td>
                                     <td th:text="${gg.giaTriGiam}">Giá trị</td>
                                     <td th:text="${gg.soLuong}">Số lượng</td>
                                     <td th:text="${gg.trangThai == 1 ? 'Hoạt động' : 'Ngừng'}">Trạng thái</td>

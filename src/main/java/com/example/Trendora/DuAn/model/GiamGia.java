@@ -41,9 +41,9 @@ public class GiamGia {
     @Column(name = "ngay_ket_thuc", nullable = false)
     private LocalDateTime ngayKetThuc;
 
-    @NotBlank(message = "Loại giảm giá không được để trống")
+    @NotNull(message = "Vui lòng chọn loại giảm giá")
     @Column(name = "loai_giam_gia", nullable = false)
-    private String loaiGiamGia;
+    private Integer loaiGiamGia;
 
     @NotNull(message = "Giá trị giảm không được để trống")
     @DecimalMin(value = "0.0", inclusive = false, message = "Giá trị giảm phải lớn hơn 0")

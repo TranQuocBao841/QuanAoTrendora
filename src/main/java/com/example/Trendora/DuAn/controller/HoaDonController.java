@@ -11,6 +11,7 @@ import com.example.Trendora.DuAn.repository.HoaDonChiTietRepo;
 import com.example.Trendora.DuAn.repository.HoaDonRepo;
 import com.example.Trendora.DuAn.repository.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +38,21 @@ public class HoaDonController {
 
     @GetMapping("/hien-thi")
     public String hienThi(Model model,
-                          @RequestParam(value = "maHd", required = false) String maHd) {
-        List<HoaDonDTO> list = service.getAllOrSearch(maHd);
-        model.addAttribute("list", list);
+                          @RequestParam(value = "maHd", required = false) String maHd,
+                          @RequestParam(value = "page", defaultValue = "0") int page) {
+
+        int size = 6; // Mỗi trang 6 hóa đơn
+
+        Page<HoaDonDTO> hoaDonPage = service.getAllOrSearch(maHd, page, size);
+
+        model.addAttribute("list", hoaDonPage.getContent()); // danh sách hóa đơn trang hiện tại
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", hoaDonPage.getTotalPages());
         model.addAttribute("search", maHd);
+
         return "ViewHoaDon/view";
     }
+
 
 
     @GetMapping("/update")

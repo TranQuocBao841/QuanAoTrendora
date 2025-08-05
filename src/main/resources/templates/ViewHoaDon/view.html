@@ -45,20 +45,6 @@
                 <div class="box-body table-responsive no-padding">
 
                     <!-- Thông báo thành công -->
-                    <div th:if="${success}"
-                         class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 z-3"
-                         role="alert">
-                        <strong>✅ Thành công! </strong><span th:text="${success}"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-
-                    <!-- Thông báo lỗi -->
-                    <div th:if="${error}"
-                         class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 z-3"
-                         role="alert">
-                        <strong>❌ Lỗi! </strong><span th:text="${error}"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
                     <table class="table table-hover">
                         <tbody>
                         <tr>
@@ -101,7 +87,7 @@
                                     <a th:href="@{'/hoa-don/detail?id=' + ${hd.id}}" class="btn btn-primary btn-sm">Chi tiết</a>
                                     <a th:href="@{'/hoa-don/in?id=' + ${hd.id} + '&redirect=hoa-don/hien-thi'}"
                                        class="btn btn-success btn-sm"
-                                       >
+                                    >
                                         In lại hóa đơn
                                     </a>
 
@@ -117,6 +103,33 @@
                         </th:block>
                         </tbody>
                     </table>
+                    <!-- Phân trang -->
+                    <div class="box-footer clearfix">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+
+                            <!-- Nút Previous -->
+                            <li th:classappend="${currentPage == 0}? 'disabled'">
+                                <a th:if="${currentPage > 0}"
+                                   th:href="@{/hoa-don/hien-thi(page=${currentPage-1}, maHd=${search})}">&laquo;</a>
+                                <span th:if="${currentPage == 0}">&laquo;</span>
+                            </li>
+
+                            <!-- Các trang -->
+                            <li th:each="i : ${#numbers.sequence(0, totalPages-1)}"
+                                th:classappend="${i == currentPage}? 'active'">
+                                <a th:href="@{/hoa-don/hien-thi(page=${i}, maHd=${search})}"
+                                   th:text="${i+1}"></a>
+                            </li>
+
+                            <!-- Nút Next -->
+                            <li th:classappend="${currentPage + 1 == totalPages}? 'disabled'">
+                                <a th:if="${currentPage + 1 < totalPages}"
+                                   th:href="@{/hoa-don/hien-thi(page=${currentPage+1}, maHd=${search})}">&raquo;</a>
+                                <span th:if="${currentPage + 1 == totalPages}">&raquo;</span>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -42,10 +42,86 @@
             color: #0d6efd;
             margin-right: 8px;
         }
+        .progress-tracker-horizontal {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0;
+        }
 
-        label.form-label {
-            color: black !important;
-            display: inline-block !important;
+        .progress-tracker-horizontal::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #ccc;
+            z-index: 0;
+            border-radius: 2px;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            height: 4px;
+            background-color: #28a745;
+            z-index: 1;
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+
+        .step-item {
+            position: relative;
+            text-align: center;
+            flex: 1;
+            z-index: 2;
+            padding: 0 4px;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            background-color: #ccc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .step-circle i {
+            font-size: 18px;
+            color: white;
+        }
+
+        .step-label {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .step-item.completed .step-circle {
+            background-color: #28a745;
+        }
+
+        .step-item.active .step-circle {
+            background-color: #007bff;
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+        }
+
+        .step-item.cancelled .step-circle {
+            background-color: red;
+        }
+
+        .step-item.greyed .step-circle {
+            background-color: #aaa;
         }
     </style>
 
@@ -568,8 +644,8 @@
         </div>
 
         <!-- Cập nhật -->
-        <div class="tab-pane fade " id="capnhat" role="tabpanel">
-            <h4 class="mb-3 st">Cập nhật thông tin</h4>
+        <div class="tab-pane fade" id="capnhat" role="tabpanel">
+            <h4 class="mb-3">Cập nhật thông tin</h4>
             <form th:action="@{/quan-ao/cap-nhat-thong-tin}" method="post">
                 <div class="mb-3">
                     <label for="tenDangNhap" class="form-label">Họ và Tên</label>
@@ -681,7 +757,45 @@
                                             <p><strong>Ngày tạo:</strong> <span th:text="${#temporals.format(hd.ngayTao, 'dd/MM/yyyy HH:mm')}"></span></p>
                                             <p><strong>Trạng thái:</strong> <span th:text="${hd.trangThai == 1 ? 'Đã thanh toán' : 'Chưa thanh toán'}"></span></p>
                                             <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(hd.tongTien, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span></p>
+                                            <div class="container mt-4">
+                                                <p><strong>Trạng thái đơn hàng</strong></p>
 
+                                                <div class="progress-tracker-horizontal">
+
+                                                    <div th:if="${hd.trangThaiDonHang.name() != 'DA_HUY'}"
+                                                         th:with="widthPercent=(${hd.trangThaiDonHang.ordinal()} * 100.0) / (${#lists.size(steps) - 2})"
+                                                         th:style="'width:' + widthPercent + '%'"
+                                                         class="progress-line">
+                                                    </div>
+
+
+
+                                                    <!-- Các bước -->
+                                                    <div class="step-item"
+                                                         th:each="step, iterStat : ${steps}"
+                                                         th:with="
+                isCancelled=${hd.trangThaiDonHang.name() == 'DA_HUY'},
+                iconClass=
+                    ${step.name() == 'CHO_XAC_NHAN'     ? 'fas fa-hourglass-start' :
+                      step.name() == 'DA_XAC_NHAN'      ? 'fas fa-check' :
+                      step.name() == 'DANG_DONG_GOI'    ? 'fas fa-box' :
+                      step.name() == 'DANG_VAN_CHUYEN'  ? 'fas fa-truck' :
+                      step.name() == 'DA_GIAO'          ? 'fas fa-house' :
+                      step.name() == 'DA_HOAN_THANH'    ? 'fas fa-circle-check' :
+                      step.name() == 'DA_HUY'           ? 'fas fa-circle-xmark' : ''}"
+                                                         th:classappend="
+                ${isCancelled} ?
+                    ${step.name() == 'DA_HUY' ? 'cancelled' : 'greyed'} :
+                    ${iterStat.index < hd.trangThaiDonHang.ordinal() ? 'completed' :
+                      step.name() == hd.trangThaiDonHang.name() ? 'active' : ''}">
+
+                                                        <div class="step-circle">
+                                                            <i th:class="${iconClass}"></i>
+                                                        </div>
+                                                        <div class="step-label" th:text="${step.moTa}"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <hr>
                                             <h6>Danh sách sản phẩm:</h6>
                                             <table class="table table-bordered table-striped">
@@ -715,6 +829,7 @@
                 </table>
             </div>
         </div>
+
         <div class="tab-pane fade" id="hoanthanh" role="tabpanel">
             <h4 class="mb-3">Đơn hàng đã hoàn thành</h4>
             <h5 class="mb-3">Hãy chia sẻ trải nghiệm của bạn để chúng tôi có thể cải thiện cho lần mua hàng tiếp theo!</h5>

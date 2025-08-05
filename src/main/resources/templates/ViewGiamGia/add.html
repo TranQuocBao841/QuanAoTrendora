@@ -67,7 +67,11 @@
                             <div class="form-group" th:classappend="${#fields.hasErrors('loaiGiamGia')} ? 'has-error'">
                                 <label for="loaiGiamGia" class="col-sm-2 control-label">Loại giảm giá</label>
                                 <div class="col-sm-10">
-                                    <input type="text" th:field="*{loaiGiamGia}" class="form-control" id="loaiGiamGia" placeholder="Nhập loại giảm giá"/>
+                                    <select th:field="*{loaiGiamGia}" class="form-control" id="loaiGiamGia">
+                                        <option value="">-- Chọn loại giảm giá --</option>
+                                        <option value="0" th:selected="${loaiGiamGia == 0}">Tiền mặt</option>
+                                        <option value="1" th:selected="${loaiGiamGia == 1}">Phần trăm</option>
+                                    </select>
                                     <p class="help-block" th:if="${#fields.hasErrors('loaiGiamGia')}" th:errors="*{loaiGiamGia}"></p>
                                 </div>
                             </div>

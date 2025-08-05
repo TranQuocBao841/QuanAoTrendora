@@ -8,6 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+
 import java.util.List;
 import java.util.Optional;
 
@@ -19,12 +26,27 @@ public class HoaDonService {
     @Autowired
     private HoaDonChiTietRepo hoaDonChiTietRepo;
 
-    public List<HoaDonDTO> getAllOrSearch(String maHd) {
+    public Page<HoaDonDTO> getAllOrSearch(String maHd, int page, int size) {
         if (maHd != null && maHd.trim().isEmpty()) {
             maHd = null;
         }
-        return hoaDonRepo.findAllOrSearch(maHd);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "ngayTao"));
+
+        // Giả sử repo cũ của bạn trả về List<HoaDonDTO>
+        List<HoaDonDTO> fullList = hoaDonRepo.findAllOrSearch(maHd);
+
+        // 🔹 Sắp xếp hóa đơn mới lên trên cùng
+        fullList.sort((h1, h2) -> h2.getNgayTao().compareTo(h1.getNgayTao()));
+
+        // 🔹 Phân trang thủ công
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), fullList.size());
+        List<HoaDonDTO> subList = fullList.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, fullList.size());
     }
+
 
 
     public List<HoaDonChiTietDTO> getChiTiet(Integer hoaDonId) {

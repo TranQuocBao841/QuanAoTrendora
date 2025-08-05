@@ -149,11 +149,15 @@ public class BanHangTaiQuayController {
                     && LocalDateTime.now().isAfter(giamGia.getNgayBatDau())
                     && LocalDateTime.now().isBefore(giamGia.getNgayKetThuc())) {
 
-                if (giamGia.getLoaiGiamGia().equalsIgnoreCase("PERCENT")) {
+                Integer loai = giamGia.getLoaiGiamGia();
+                if (loai != null && loai == 1) {
+                    // Giảm theo phần trăm
                     tongTienSauGiam = tongTienGoc - (tongTienGoc * giamGia.getGiaTriGiam()) / 100;
                 } else {
+                    // Giảm theo tiền mặt
                     tongTienSauGiam = tongTienGoc - giamGia.getGiaTriGiam();
                 }
+
 
                 if (tongTienSauGiam < 0) tongTienSauGiam = 0;
 
