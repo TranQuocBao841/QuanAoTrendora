@@ -1,5 +1,4 @@
 package com.example.Trendora.DuAn.controller;
-
 import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
 import com.example.Trendora.DuAn.model.*;
 import com.example.Trendora.DuAn.repository.*;
@@ -34,7 +33,9 @@ import java.math.BigDecimal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
@@ -68,12 +69,16 @@ public class BanHangTaiQuayController {
 
     @Autowired
     private GiamGiaRepo giamGiaRepo;
+
+    @Autowired
+    private NhanVienRepo nhanVienRepo;
+
     @GetMapping("/hien-thi")
     public String hienThiBanHang(@RequestParam(value = "keyword", required = false) String keyword,
                                  @RequestParam(value = "danhMuc", required = false) Integer danhMucId,
                                  @RequestParam(value = "mauSac", required = false) Integer mauSac,
                                  @RequestParam(value = "kichThuoc", required = false) Integer kichThuoc,
-                                 Model model,HttpSession session) {
+                                 Model model, HttpSession session) {
 
         List<SanPham> danhSachSanPham;
 // ✅ Nếu quay lại sau khi thanh toán thì không có giỏ hàng nữa
@@ -277,23 +282,8 @@ public class BanHangTaiQuayController {
 
     }
 
-    @GetMapping("/qr-thanh-toan")
-    public String hienThiQR(@RequestParam("idHoaDon") Integer idHoaDon, Model model) {
-        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).orElse(null);
-        if (hoaDon == null) {
-            return "redirect:/ban-hang/hien-thi";
-        }
 
-        long tongTien = hoaDon.getTongTien();
-        String qrUrl = "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongTien
-                + "&addInfo=Thanh%20toan%20tai%20quay&accountName=NGUYEN%20THI%20HA%20LAN";
 
-        model.addAttribute("qrUrl", qrUrl);
-
-        model.addAttribute("tongTien", tongTien);
-        model.addAttribute("hoaDon", hoaDon);
-        return "ViewBanHang/qr-thanh-toan";
-    }
     // Trang hiển thị hóa đơn
     @GetMapping("/in-hoa-don/{id}")
     public String inHoaDon(@PathVariable("id") Integer id, Model model,
@@ -400,10 +390,225 @@ public class BanHangTaiQuayController {
 
         document.close();
     }
+
     public BufferedImage generateQRImage(String text, int width, int height) throws WriterException {
         BitMatrix matrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, width, height);
         return MatrixToImageWriter.toBufferedImage(matrix);
     }
+
+    @GetMapping("/qr-thanh-toan")
+    public String hienThiQR(@RequestParam("idHoaDon") Integer idHoaDon, Model model) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).orElse(null);
+        if (hoaDon == null) {
+            return "redirect:/ban-hang/hien-thi";
+        }
+
+        long tongTien = hoaDon.getTongTien();
+        String qrUrl = "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongTien
+                + "&addInfo=Thanh%20toan%20tai%20quay&accountName=NGUYEN%20THI%20HA%20LAN";
+
+        model.addAttribute("qrUrl", qrUrl);
+
+        model.addAttribute("tongTien", tongTien);
+        model.addAttribute("hoaDon", hoaDon);
+        return "ViewBanHang/qr-thanh-toan";
+    }
+
+
+    @PostMapping("/dat-hang")
+    public String xuLyDatHang(@RequestParam Map<String, String> params,
+                              HttpSession session,
+                              Model model,
+                              RedirectAttributes redirect) {
+
+        // 1. Kiểm tra đăng nhập
+        TaiKhoan taiKhoan = (TaiKhoan) session.getAttribute("adminDangNhap");
+        if (taiKhoan == null || taiKhoan.getLoaiTaiKhoan() != 1) {
+            return "redirect:/quan-ao/login";
+        }
+
+        NhanVien nhanVien = taiKhoan.getNhanVien();
+
+        // ==== 1. XỬ LÝ KHÁCH HÀNG ====
+        // ==== 2. ĐỊA CHỈ GIAO HÀNG ====
+        String diaChiGiaoHang = params.get("diaChiGiaoHang");
+        KhachHang khachHang = null;
+        String khachHangIdStr = params.get("khachHangId");
+
+        if (khachHangIdStr != null && !khachHangIdStr.isEmpty()) {
+            // Khách đã chọn từ DB → dùng trực tiếp, không validate
+            Integer khachHangId = Integer.parseInt(khachHangIdStr);
+            khachHang = khachHangRepo.findById(khachHangId).orElse(null);
+            if (khachHang == null) {
+                redirect.addFlashAttribute("error", "Khách hàng không tồn tại!");
+                return "redirect:/ban-hang/hien-thi?tab=dat-hang";
+            }
+        } else {
+            // Khách hàng mới → validate dữ liệu trước khi tạo
+            String tenKh = params.get("tenKh");
+            String diaChi = params.get("diaChi");
+            String sdt = params.get("sdt");
+
+            if(tenKh == null || tenKh.trim().isEmpty() || sdt == null || sdt.trim().isEmpty()) {
+                redirect.addFlashAttribute("error", "Vui lòng nhập đầy đủ tên và SĐT khách hàng!");
+                return "redirect:/ban-hang/hien-thi?tab=dat-hang";
+            }
+
+            if(!sdt.matches("^0\\d{9}$")) { // kiểm tra số điện thoại đúng định dạng
+                redirect.addFlashAttribute("error", "SĐT không hợp lệ!");
+                return "redirect:/ban-hang/hien-thi?tab=dat-hang";
+            }
+
+            // Nếu hợp lệ mới tạo và lưu
+            khachHang = new KhachHang();
+            khachHang.setTenKh(tenKh);
+            khachHang.setDiaChi(diaChi != null ? diaChi : "Việt Nam");
+            khachHang.setSdt(sdt);
+            khachHang.setTrangThai(1);
+            khachHang.setGioiTinh(true);
+            khachHang.setNgaySinh(LocalDate.of(2000,1,1));
+            khachHang.setQuocTich("Việt Nam");
+            khachHang.setEmail("noemail" + System.currentTimeMillis() + "@example.com");
+            khachHang.setMaKh("KH" + System.currentTimeMillis());
+            khachHang = khachHangRepo.save(khachHang);
+
+        }
+
+
+
+
+        // 3. Lấy hình thức thanh toán
+        int idHinhThuc = Integer.parseInt(params.get("hinhThuc"));
+        int tongTienGoc = Integer.parseInt(params.get("tongTien"));
+        int tongTienSauGiam = tongTienGoc;
+
+        HinhThucThanhToan hinhThuc = thanhToanRepo.findById(idHinhThuc).orElse(null);
+
+        // 4. Xử lý giảm giá
+        GiamGia giamGia = null;
+        String giamGiaStr = params.get("giamGiaId");
+        if (giamGiaStr != null && !giamGiaStr.isEmpty()) {
+            int idGiamGia = Integer.parseInt(giamGiaStr);
+            giamGia = giamGiaRepo.findById(idGiamGia).orElse(null);
+
+            if (giamGia != null && giamGia.getSoLuong() > 0
+                    && LocalDateTime.now().isAfter(giamGia.getNgayBatDau())
+                    && LocalDateTime.now().isBefore(giamGia.getNgayKetThuc())) {
+
+                Integer loai = giamGia.getLoaiGiamGia();
+                if (loai != null && loai == 1) {
+                    tongTienSauGiam = tongTienGoc - (tongTienGoc * giamGia.getGiaTriGiam()) / 100;
+                } else {
+                    tongTienSauGiam = tongTienGoc - giamGia.getGiaTriGiam();
+                }
+                if (tongTienSauGiam < 0) tongTienSauGiam = 0;
+
+                giamGia.setSoLuong(giamGia.getSoLuong() - 1);
+                giamGiaRepo.save(giamGia);
+            }
+        }
+
+        // 5. Kiểm tra tồn kho & tạo giỏ hàng
+        List<String> loiSanPham = new ArrayList<>();
+        Map<Integer, Integer> gioHang = new HashMap<>();
+
+        for (String key : params.keySet()) {
+            if (key.startsWith("sp_")) {
+                String rawValue = params.get(key);
+                if (rawValue == null || rawValue.isEmpty()) continue;
+
+                Integer idSp = Integer.parseInt(key.substring(3));
+                int soLuong = Integer.parseInt(rawValue);
+
+                SanPham sp = sanPhamRepo.findById(idSp).orElse(null);
+                if (sp != null && soLuong > 0) {
+                    if (soLuong > sp.getSoLuong()) {
+                        loiSanPham.add("❌ Sản phẩm '" + sp.getTenSanPham() + "' chỉ còn " + sp.getSoLuong() + " cái.");
+                    } else {
+                        gioHang.put(idSp, soLuong);
+                    }
+                }
+            }
+        }
+
+        if (!loiSanPham.isEmpty()) {
+            redirect.addFlashAttribute("error", "Không thể đặt hàng:\n" + String.join("\n", loiSanPham));
+            return "redirect:/ban-hang/hien-thi?tab=dat-hang";
+        }
+
+        // 6. Tạo hóa đơn
+        HoaDon hoaDon = new HoaDon();
+        hoaDon.setMaHd("DH" + System.currentTimeMillis());
+        hoaDon.setNgayTao(LocalDateTime.now());
+        hoaDon.setTrangThai(1);
+        hoaDon.setTongTien(tongTienSauGiam);
+        hoaDon.setNhanVien(nhanVien);
+        hoaDon.setKhachHang(khachHang);
+        hoaDon.setHinhThucThanhToan(hinhThuc);
+        hoaDon.setGiamGia(giamGia);
+        hoaDon.setTrangThaiDonHang(TrangThaiDonHang.DA_XAC_NHAN);
+
+        // **Set địa chỉ giao hàng**
+        hoaDon.setDiaChiGiaoHang(diaChiGiaoHang);
+
+        hoaDonRepo.save(hoaDon);
+
+        // 7. Lưu chi tiết hóa đơn + trừ tồn kho
+        for (Map.Entry<Integer, Integer> entry : gioHang.entrySet()) {
+            Integer idSp = entry.getKey();
+            Integer soLuong = entry.getValue();
+
+            SanPham sp = sanPhamRepo.findById(idSp).orElse(null);
+            if (sp != null) {
+                HoaDonChiTiet ct = new HoaDonChiTiet();
+                ct.setHoaDon(hoaDon);
+                ct.setSanPham(sp);
+                ct.setSoLuong(soLuong);
+                BigDecimal donGia = sp.getGia();
+                BigDecimal thanhTien = donGia.multiply(BigDecimal.valueOf(soLuong));
+                ct.setDonGia(donGia);
+                ct.setThanhTien(thanhTien);
+                ct.setMaHdct("CT" + System.nanoTime());
+                ct.setTrangThai(1);
+                hoaDonCTRepo.save(ct);
+
+                sp.setSoLuong(sp.getSoLuong() - soLuong);
+                sanPhamRepo.save(sp);
+            }
+        }
+
+        // 8. QR nếu là chuyển khoản hoặc ví
+        if (hinhThuc != null && (
+                hinhThuc.getTenHinhThuc().equalsIgnoreCase("Chuyển khoản") ||
+                        hinhThuc.getTenHinhThuc().equalsIgnoreCase("Ví điện tử"))) {
+
+            String qrUrl = "https://img.vietqr.io/image/MB-0912713606-compact.png"
+                    + "?amount=" + tongTienSauGiam
+                    + "&addInfo=Dat%20hang%20online"
+                    + "&accountName=NGUYEN%20THI%20HA%20LAN";
+
+            model.addAttribute("qrUrl", qrUrl);
+        }
+
+        model.addAttribute("hoaDon", hoaDon);
+        model.addAttribute("tongTienGoc", tongTienGoc);
+        model.addAttribute("tongTienSauGiam", tongTienSauGiam);
+        model.addAttribute("giamGia", giamGia);
+        model.addAttribute("tenKhach", khachHang.getTenKh());
+        model.addAttribute("hinhThuc", hinhThuc.getTenHinhThuc());
+
+        redirect.addFlashAttribute("hoaDonId", hoaDon.getId());
+
+        session.removeAttribute("gioHang");
+        session.removeAttribute("tongTien");
+        session.removeAttribute("khachHang");
+        session.removeAttribute("giamGia");
+
+        redirect.addFlashAttribute("success", "🎉 Đặt hàng thành công!");
+        return "redirect:/ban-hang/hien-thi?tab=dat-hang";
+    }
+
+
 
 
 }

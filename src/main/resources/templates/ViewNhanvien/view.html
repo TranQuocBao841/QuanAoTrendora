@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
+
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
     <head th:replace="~{ViewSanPham/layout/head :: head}"></head>
@@ -25,7 +26,6 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Danh Sách Nhân Viên</h3>
-
                     <div>
                         <a class="btn btn-success" href="/nhan-vien/viewadd">
                             <i class="fas fa-plus"></i>Thêm mới
@@ -91,6 +91,24 @@
         reserved.
     </footer>
 </div>
+
+<script>
+    // Tự động ẩn alert sau 3 giây
+    setTimeout(function () {
+        let successAlert = document.getElementById('alert-success');
+        if (successAlert) {
+            let bsAlert = new bootstrap.Alert(successAlert);
+            bsAlert.close();
+        }
+
+        let errorAlert = document.getElementById('alert-error');
+        if (errorAlert) {
+            let bsAlert = new bootstrap.Alert(errorAlert);
+            bsAlert.close();
+        }
+    }, 3000); // 3000 = 3 giây
+</script>
+
 <script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script th:src="@{/assets/bower_components/jquery/dist/jquery.min.js}"></script>
 <!-- jQuery UI 1.11.4 -->

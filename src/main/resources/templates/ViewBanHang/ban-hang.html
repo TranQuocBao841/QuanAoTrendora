@@ -48,37 +48,42 @@
         <div class="container-fluid">
             <h3 class="text-primary"><i class="glyphicon glyphicon-shopping-cart"></i> Bán hàng tại quầy</h3>
 
-            <!-- Tìm kiếm và lọc -->
-            <div class="form-inline mb-3">
-                <input type="text" class="form-control mr-2" id="searchSanPham" placeholder="Tìm tên sản phẩm...">
+            <div class="row"style="display: flex; align-items: stretch;">
 
-                <select id="filterDanhMuc" class="form-control mr-2">
-                    <option value="">-- Danh mục --</option>
-                    <option th:each="dm : ${danhMucs}" name="tendanhMuc" th:value="${dm.id}" th:text="${dm.tendanhMuc}"></option>
-                </select>
+                <!-- Danh sách sản phẩm cố định bên trái -->
+                <div class="col-md-7" style="display: flex; flex-direction: column;">
+                    <div class="box box-primary"style="flex: 1; display: flex; flex-direction: column;">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Danh sách sản phẩm</h3>
+                        </div>
+                        <!-- Thanh lọc nằm ngang ngay trên bảng -->
+                        <div class="box-body"style="flex: 1; overflow-y: auto;">
+                            <div class="form-inline" style="margin-bottom: 15px; gap:10px; flex-wrap: wrap;">
+                                <input type="text" class="form-control" id="searchSanPham" placeholder="Tìm tên sản phẩm..." style="width:200px;">
 
-                <select id="filterMauSac" class="form-control mr-2">
-                    <option value="">-- Màu sắc --</option>
-                    <option th:each="m : ${listMau}" name="tenmauSac" th:value="${m.id}" th:text="${m.tenmauSac}"></option>
-                </select>
+                                <select id="filterDanhMuc" class="form-control" style="width:150px;">
+                                    <option value="">-- Danh mục --</option>
+                                    <option th:each="dm : ${danhMucs}" th:value="${dm.id}" th:text="${dm.tendanhMuc}"></option>
+                                </select>
 
-                <select id="filterKichThuoc" class="form-control mr-2">
-                    <option value="">-- Kích thước --</option>
-                    <option th:each="kt : ${listSize}"  name="tenkichThuoc"  th:value="${kt.id}" th:text="${kt.tenkichThuoc}"></option>
-                </select>
-            </div>
+                                <select id="filterMauSac" class="form-control" style="width:120px;">
+                                    <option value="">-- Màu sắc --</option>
+                                    <option th:each="m : ${listMau}" th:value="${m.id}" th:text="${m.tenmauSac}"></option>
+                                </select>
 
-            <form method="post" th:action="@{/ban-hang/thanh-toan}" oninput="tinhTongTien()" id="formThanhToan">
-                <div class="row">
+                                <select id="filterKichThuoc" class="form-control" style="width:120px;">
+                                    <option value="">-- Kích thước --</option>
+                                    <option th:each="kt : ${listSize}" th:value="${kt.id}" th:text="${kt.tenkichThuoc}"></option>
+                                </select>
+                                <!-- Nút Reset -->
+                                <!-- Nút Reset -->
+                                <button type="button" class="btn" style="background-color:#3c8dbc; color:white;" onclick="resetFilters()">
+                                    <i class="glyphicon glyphicon-refresh"></i> Reset
+                                </button>
 
-                    <!-- DANH SÁCH SẢN PHẨM -->
-                    <div class="col-md-8">
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <h4 class="box-title">Danh sách sản phẩm</h4>
                             </div>
-                            <div class="box-body table-responsive no-padding" style=" overflow-y: auto;">
-                                <table class="table" id="productTable">
+                            <div style="max-height: 700px; overflow-y: auto;">
+                                <table class="table table-striped table-bordered" id="productTable">
                                     <thead>
                                     <tr>
                                         <th>Ảnh</th>
@@ -91,9 +96,9 @@
                                     <tbody>
                                     <tr th:each="sp : ${danhSachSanPham}"
                                         th:attr="data-ten=${sp.tenSanPham},
-                                         data-danhmuc=${sp.danhMuc.id},
-                                         data-mau=${sp.mauSac.id},
-                                         data-size=${sp.kichThuoc.id}">
+                                            data-danhmuc=${sp.danhMuc.id},
+                                            data-mau=${sp.mauSac.id},
+                                            data-size=${sp.kichThuoc.id}">
                                         <td><img th:src="@{${sp.anhSanPham}}" width="50px" /></td>
                                         <td>
                                             <span th:text="${sp.tenSanPham}"></span><br>
@@ -108,8 +113,8 @@
                                         </td>
                                         <td>
                                         <td>
-                                            <button type="button" class="btn btn-success btn-sm"
-                                                    th:attr="onclick=|themVaoGioHang('${sp.id}', '${sp.tenSanPham}', '${sp.kichThuoc.tenkichThuoc}', '${sp.gia}', '${sp.soLuong}')|">
+                                            <button type="button" class="btn btn-success btn-add-cart"
+                                                    th:attr="onclick=|themVaoGioHangTheoTab('${sp.id}', '${sp.tenSanPham}', '${sp.kichThuoc.tenkichThuoc}', '${sp.gia}', '${sp.soLuong}')|">
                                                 <i class="glyphicon glyphicon-plus"></i> Thêm
                                             </button>
                                         </td>
@@ -118,238 +123,372 @@
                                     </tr>
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- FORM THANH TOÁN BÊN PHẢI -->
-                    <div class="col-md-4">
-                        <div class="box box-success">
-                            <div class="box-header with-border">
-                                <h4 class="box-title">Thông tin thanh toán</h4>
-                            </div>
-                            <div class="box-body">
+                <!-- Tabs bên phải -->
+                <div class="col-md-5">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_banhang" data-toggle="tab">Bán hàng tại quầy</a></li>
+                            <li><a href="#tab_dathang" data-toggle="tab">Giao hàng</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <!-- Tab Bán hàng -->
+                            <div class="tab-pane active" id="tab_banhang">
+                                <div class="box-body" >
+                                    <form method="post" th:action="@{/ban-hang/thanh-toan}" id="formThanhToan">
+                                        <!-- KHÁCH HÀNG -->
+                                        <div class="form-group">
+                                            <label>Khách hàng:</label>
+                                            <div class="input-group">
+                                                <input type="text" id="tenKhachHang" readonly placeholder="Chưa chọn khách hàng" class="form-control">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary" onclick="openKhachHangModal('banhang')">
+                                                        <i class="glyphicon glyphicon-user"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger" id="xoaKhachHangBanHang" onclick="xoaKhachHang('banhang')" style="display:none;">Xóa</button>
+                                                </span>
+                                            </div>
+                                            <input type="hidden" name="khachHang" id="idKhachHang">
+                                        </div>
 
-                                <!-- KHÁCH HÀNG -->
-                                <div class="form-group">
-                                    <label>Khách hàng:</label>
-                                    <div class="input-group">
-                                        <input type="text" id="tenKhachHang" readonly placeholder="Chưa chọn khách hàng" class="form-control">
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-primary" onclick="openKhachHangModal()">
-                                                <i class="glyphicon glyphicon-user"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-                                    <input type="hidden" name="khachHang" id="idKhachHang">
+                                        <!-- GIỎ HÀNG BÊN PHẢI -->
+                                        <div class="form-group" id="gioHangTable" style="display: none;">
+                                            <label><i class="glyphicon glyphicon-list-alt"></i> Sản phẩm đã chọn:</label>
+                                            <div class="table-responsive" style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd;">
+                                                <table class="table table-bordered table-condensed" style="margin-bottom: 0;">
+                                                    <thead>
+                                                    <tr class="bg-info">
+                                                        <th>Tên</th>
+                                                        <th>Size</th>
+                                                        <th>Số lượng</th>
+                                                        <th>Đơn giá</th>
+                                                        <th>Thành tiền</th>
+                                                        <th>Xóa</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="gioHangBody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <!-- GIẢM GIÁ -->
+                                        <div class="form-group">
+                                            <label>Chọn phiếu giảm giá:</label>
+                                            <select name="giamGiaId" class="form-control" id="giamGiaSelect" onchange="apDungGiamGia()">
+                                                <option value="">-- Không áp dụng --</option>
+                                                <option th:each="gg : ${phieuGiamGias}"
+                                                        th:value="${gg.id}"
+                                                        th:data-loai="${gg.loaiGiamGia}"
+                                                        th:data-gia-tri="${gg.giaTriGiam}"
+                                                        th:text="${gg.tenGiamGia + ' (' + gg.giaTriGiam + (gg.loaiGiamGia == 'PERCENT' ? '%' : '₫') + ')'}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <!-- HÌNH THỨC THANH TOÁN -->
+                                        <div class="form-group">
+                                            <label>Hình thức thanh toán:</label>
+                                            <select name="hinhThuc" class="form-control" required onchange="xuLyHinhThucThanhToan(this.value)">
+                                                <option value="">-- Chọn hình thức --</option>
+                                                <option th:each="ht : ${hinhThucs}" th:value="${ht.id}" th:text="${ht.tenHinhThuc}"></option>
+                                            </select>
+                                        </div>
+
+                                        <!-- THÔNG TIN TIỀN -->
+                                        <div class="form-group row">
+                                            <label class="col-xs-6">Tổng tiền hàng:</label>
+                                            <div class="col-xs-6 text-right text-primary">
+                                                <b><span id="tong-tien-goc">0</span> ₫</b>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row">
+                                            <label class="col-xs-6">Giảm giá:</label>
+                                            <div class="col-xs-6 text-right text-success">
+                                                <b><span id="muc-giam">0</span> ₫</b>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-xs-6"><strong>Tổng thanh toán:</strong></label>
+                                            <div class="col-xs-6 text-right text-danger">
+                                                <b><span id="tong-tien">0</span> ₫</b>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="tongTien" id="tongTienHidden" value="0">
+
+                                        <!-- QR THANH TOÁN -->
+                                        <div class="form-group" id="qrThanhToanContainer" style="display: none;">
+                                            <label>Mã QR chuyển khoản (MB Bank):</label>
+                                            <div class="text-center">
+                                                <img id="qrCodeImg" src="" alt="QR Code MB Bank" style="max-width: 300px; margin-top: 20px;">
+                                                <p><small>Người nhận: Nguyễn Thị Hà Lan (MB Bank – STK: 0912713606)</small></p>
+                                            </div>
+                                        </div>
+
+                                        <div id="tienMatFields" style="display: none;">
+                                            <!-- TIỀN KHÁCH ĐƯA -->
+                                            <div class="form-group">
+                                                <label>Tiền khách đưa:</label>
+                                                <input type="number" class="form-control" id="tienKhachDua" name="tienKhachDua" min="0" oninput="tinhTienThua()">
+                                            </div>
+
+                                            <!-- TIỀN TRẢ LẠI -->
+                                            <div class="form-group">
+                                                <label>Tiền trả lại khách:</label>
+                                                <input type="text" class="form-control" id="tienThua" readonly>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Nút Thanh Toán + In Hóa Đơn -->
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <button type="submit" class="btn btn-success">Thanh toán</button>
+                                        </div>
+                                        <div th:if="${hoaDonId != null}">
+                                            <a class="btn btn-primary mt-3"
+                                               th:href="@{'/ban-hang/in-hoa-don/' + ${hoaDonId} + '?redirect=ban-hang/hien-thi'}">
+                                                Xem & In hóa đơn
+                                            </a>
+                                        </div>
+                                    </form>
                                 </div>
+                            </div>
+                            <!-- Tab Đặt hàng -->
+                            <!-- Tab Đặt hàng Online -->
+                            <div class="tab-pane" id="tab_dathang">
+                                <div class="box-body" >
+                                    <!-- Thông báo thành công / lỗi -->
+                                    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-                                <!-- GIỎ HÀNG BÊN PHẢI -->
-                                <div class="form-group" id="gioHangSection" style="display: none;">
-                                    <label><i class="glyphicon glyphicon-list-alt"></i> Sản phẩm đã chọn:</label>
-                                    <div class="table-responsive" style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd;">
-                                        <table class="table table-bordered table-condensed" style="margin-bottom: 0;">
+                                    <form method="post" th:action="@{/ban-hang/dat-hang}" onsubmit="addHiddenInputsDatHang()">
+                                        <h4>Giỏ hàng - Đặt hàng</h4>
+
+                                        <!-- Chọn khách hàng -->
+                                        <div class="form-group">
+                                            <label>Khách hàng:</label>
+                                            <div class="input-group">
+                                                <input type="text" id="tenKhachHangDatHang" readonly placeholder="Chưa chọn khách hàng" class="form-control">
+                                                <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-primary" onclick="openKhachHangModal('dathang')">Chọn</button>
+                                                        <button type="button" class="btn btn-danger" id="xoaKhachHangDatHang" onclick="xoaKhachHang('dathang')" style="display:none;">Xóa</button>
+                                                    </span>
+                                            </div>
+                                            <input type="hidden" id="idKhachHangDatHang" name="khachHangId">
+                                        </div>
+
+                                        <!-- Nếu không chọn khách, nhập thủ công -->
+                                        <div id="thongTinDatHang" th:if="${idKhachHangDatHang == null}">
+                                            <div class="form-group">
+                                                <label>Tên khách hàng</label>
+                                                <input type="text" class="form-control" id="tenKh" name="tenKh" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Số điện thoại</label>
+                                                <input type="text" class="form-control" id="sdt" name="sdt" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Địa chỉ giao hàng</label>
+                                                <textarea class="form-control" id="diaChi" name="diaChiGiaoHang" ></textarea>
+                                            </div>
+                                        </div>
+
+                                        <!-- Giỏ hàng -->
+                                        <table class="table table-bordered">
                                             <thead>
-                                            <tr class="bg-info">
+                                            <tr>
                                                 <th>Tên</th>
                                                 <th>Size</th>
-                                                <th>Số lượng</th>
-                                                <th>Đơn giá</th>
+                                                <th>SL</th>
+                                                <th>Giá</th>
                                                 <th>Thành tiền</th>
-                                                <th>Xóa</th>
+                                                <th>Hành động</th>
                                             </tr>
                                             </thead>
-                                            <tbody id="gioHangBody"></tbody>
+                                            <tbody id="cartDatHangBody"></tbody>
                                         </table>
-                                    </div>
-                                </div>
-                                <hr>
-                                <!-- GIẢM GIÁ -->
-                                <div class="form-group">
-                                    <label>Chọn phiếu giảm giá:</label>
-                                    <select name="giamGiaId" class="form-control" id="giamGiaSelect" onchange="apDungGiamGia()">
-                                        <option value="">-- Không áp dụng --</option>
-                                        <option th:each="gg : ${phieuGiamGias}"
-                                                th:value="${gg.id}"
-                                                th:data-loai="${gg.loaiGiamGia}"
-                                                th:data-gia-tri="${gg.giaTriGiam}"
-                                                th:text="${gg.tenGiamGia + ' (' + gg.giaTriGiam + (gg.loaiGiamGia == 'PERCENT' ? '%' : '₫') + ')'}">
-                                        </option>
-                                    </select>
-                                </div>
-                                <!-- HÌNH THỨC THANH TOÁN -->
-                                <div class="form-group">
-                                    <label>Hình thức thanh toán:</label>
-                                    <select name="hinhThuc" class="form-control" required onchange="xuLyHinhThucThanhToan(this.value)">
-                                        <option value="">-- Chọn hình thức --</option>
-                                        <option th:each="ht : ${hinhThucs}" th:value="${ht.id}" th:text="${ht.tenHinhThuc}"></option>
-                                    </select>
-                                </div>
 
-                                <!-- THÔNG TIN TIỀN -->
-                                <div class="form-group row">
-                                    <label class="col-xs-6">Tổng tiền hàng:</label>
-                                    <div class="col-xs-6 text-right text-primary">
-                                        <b><span id="tong-tien-goc">0</span> ₫</b>
-                                    </div>
-                                </div>
+                                        <!-- Phiếu giảm giá -->
+                                        <div class="form-group">
+                                            <label>Chọn phiếu giảm giá:</label>
+                                            <select id="giamGiaSelectDatHang" name="giamGiaId" class="form-control">
+                                                <option value="">-- Không áp dụng --</option>
+                                                <option th:each="gg : ${phieuGiamGias}"
+                                                        th:value="${gg.id}"
+                                                        th:data-loai="${gg.loaiGiamGia}"
+                                                        th:data-gia-tri="${gg.giaTriGiam}"
+                                                        th:text="${gg.tenGiamGia + ' (' + gg.giaTriGiam + (gg.loaiGiamGia == 'PERCENT' ? '%' : '₫') + ')'}">
+                                                </option>
+                                            </select>
+                                        </div>
 
+                                        <!-- Hình thức thanh toán -->
+                                        <div class="form-group">
+                                            <label>Hình thức thanh toán:</label>
+                                            <select id="hinhThucSelectDatHang" name="hinhThuc" class="form-control" required>
+                                                <option value="">-- Chọn hình thức --</option>
+                                                <option th:each="ht : ${hinhThucs}" th:value="${ht.id}" th:text="${ht.tenHinhThuc}"></option>
+                                            </select>
+                                        </div>
 
-                                <div class="form-group row">
-                                    <label class="col-xs-6">Giảm giá:</label>
-                                    <div class="col-xs-6 text-right text-success">
-                                        <b><span id="muc-giam">0</span> ₫</b>
-                                    </div>
-                                </div>
+                                        <!-- THÔNG TIN TIỀN - Đặt hàng -->
+                                        <div class="form-group row">
+                                            <label class="col-xs-6">Tổng tiền hàng:</label>
+                                            <div class="col-xs-6 text-right text-primary">
+                                                <b><span id="tongTienHangDatHang">0</span> ₫</b>
+                                            </div>
+                                        </div>
 
-                                <div class="form-group row">
-                                    <label class="col-xs-6"><strong>Tổng thanh toán:</strong></label>
-                                    <div class="col-xs-6 text-right text-danger">
-                                        <b><span id="tong-tien">0</span> ₫</b>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="tongTien" id="tongTienHidden" value="0">
+                                        <div class="form-group row">
+                                            <label class="col-xs-6">Giảm giá:</label>
+                                            <div class="col-xs-6 text-right text-success">
+                                                <b><span id="giamGiaTienDatHang">0</span> ₫</b>
+                                            </div>
+                                        </div>
 
-                                <!-- QR THANH TOÁN -->
-                                <div class="form-group" id="qrThanhToanContainer" style="display: none;">
-                                    <label>Mã QR chuyển khoản (MB Bank):</label>
-                                    <div class="text-center">
-                                        <img id="qrCodeImg" src="" alt="QR Code MB Bank" style="max-width: 300px; margin-top: 20px;">
-                                        <p><small>Người nhận: Nguyễn Thị Hà Lan (MB Bank – STK: 0912713606)</small></p>
-                                    </div>
-                                </div>
-
-                                <div id="tienMatFields" style="display: none;">
-                                    <!-- TIỀN KHÁCH ĐƯA -->
-                                    <div class="form-group">
-                                        <label>Tiền khách đưa:</label>
-                                        <input type="number" class="form-control" id="tienKhachDua" name="tienKhachDua" min="0" oninput="tinhTienThua()">
-                                    </div>
-
-                                    <!-- TIỀN TRẢ LẠI -->
-                                    <div class="form-group">
-                                        <label>Tiền trả lại khách:</label>
-                                        <input type="text" class="form-control" id="tienThua" readonly>
-                                    </div>
-                                </div>
+                                        <div class="form-group row">
+                                            <label class="col-xs-6"><strong>Tổng thanh toán:</strong></label>
+                                            <div class="col-xs-6 text-right text-danger">
+                                                <b><span id="tongThanhToanDatHang">0</span> ₫</b>
+                                            </div>
+                                        </div>
 
 
-                                <!-- Nút Thanh Toán + In Hóa Đơn -->
-                                <div class="d-flex justify-content-end gap-2">
-                                    <button type="submit" class="btn btn-success">Thanh toán</button>
+                                        <!-- QR THANH TOÁN - Đặt hàng -->
+                                        <div class="form-group" id="qrThanhToanContainerDatHang" style="display: none;">
+                                            <label>Mã QR chuyển khoản (MB Bank):</label>
+                                            <div class="text-center">
+                                                <img id="qrCodeImgDatHang" src="" alt="QR Code MB Bank" style="max-width: 300px; margin-top: 20px;">
+                                                <p><small>Người nhận: Nguyễn Thị Hà Lan (MB Bank – STK: 0912713606)</small></p>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Tiền mặt -->
+                                        <div id="tienMatFieldsDatHang" style="display:none;">
+                                            <div class="form-group">
+                                                <label>Tiền khách đưa:</label>
+                                                <input type="text" class="form-control" id="tienKhachDuaDatHang" placeholder="Nhập số tiền khách đưa">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Tiền thừa:</label>
+                                                <input type="text" class="form-control" id="tienThuaDatHang" readonly>
+                                            </div>
+                                        </div>
+
+
+                                        <button type="submit" class="btn btn-primary">Giao hàng</button>
+                                    </form>
                                 </div>
-                                <div th:if="${hoaDonId != null}">
-                                    <a class="btn btn-primary mt-3"
-                                       th:href="@{'/ban-hang/in-hoa-don/' + ${hoaDonId} + '?redirect=ban-hang/hien-thi'}">
-                                        Xem & In hóa đơn
-                                    </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="khachHangModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Danh sách khách hàng</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>                        </div>
+                            <div class="modal-body">
+                                <!-- Thêm ô tìm kiếm -->
+                                <div style="margin-bottom:10px;">
                                 </div>
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Tên</th>
+                                        <th>SĐT</th>
+                                        <th>Địa chỉ</th>
+                                        <th>Email</th>
+                                        <th>Ngày sinh</th>
+                                        <th>Chọn</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="kh : ${khachHangs}">
+                                        <td th:text="${kh.tenKh}"></td>
+                                        <td th:text="${kh.sdt}"></td>
+                                        <td th:text="${kh.diaChi}"></td>
+                                        <td th:text="${kh.email}"></td>
+                                        <td th:text="${kh.ngaySinh}"></td>
+                                        <td>
+                                            <button type="button" class="btn btn-success btn-sm"
+                                                    th:attr="onclick=|chonKhachHang('${kh.idKh}', '${kh.tenKh}')|">
+                                                <i class="glyphicon glyphicon-ok"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default" data-dismiss="modal">Đóng</button>
                             </div>
                         </div>
                     </div>
-
-                </div>
-            </form>
-        </div>
-
-        <div class="modal fade" id="khachHangModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Danh sách khách hàng</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>Tên</th>
-                                <th>SĐT</th>
-                                <th>Địa chỉ</th>
-                                <th>Email</th>
-                                <th>Ngày sinh</th>
-                                <th>Chọn</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="kh : ${khachHangs}">
-                                <td th:text="${kh.tenKh}"></td>
-                                <td th:text="${kh.sdt}"></td>
-                                <td th:text="${kh.diaChi}"></td>
-                                <td th:text="${kh.email}"></td>
-                                <td th:text="${kh.ngaySinh}"></td>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-sm"
-                                            th:attr="onclick=|chonKhachHang('${kh.idKh}', '${kh.tenKh}')|">
-                                        <i class="glyphicon glyphicon-ok"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-default" data-dismiss="modal">Đóng</button>
-                    </div>
                 </div>
             </div>
-        </div>
+            <!-- Modal Chi tiết sản phẩm -->
+            <div class="modal fade" id="modalChiTietSanPham" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content box box-primary">
+                        <div class="modal-header with-border">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><i class="fa fa-info-circle text-blue"></i> Chi tiết sản phẩm</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <!-- Ảnh bên trái -->
+                                <div class="col-sm-5 text-center">
+                                    <img id="chiTietAnh" src="" class="img-responsive img-thumbnail" style="max-height:300px;" alt="Ảnh sản phẩm">
+                                </div>
 
+                                <!-- Thông tin bên phải -->
+                                <div class="col-sm-7">
+                                    <h4 id="chiTietTen" class="text-primary text-bold"></h4>
+                                    <p><strong>Mã sản phẩm:</strong> <span id="chiTietMa"></span></p>
+                                    <p><strong>Giá:</strong> <span id="chiTietGia"></span> ₫</p>
+                                    <p><strong>Mô tả:</strong> <span id="chiTietMoTa"></span></p>
+                                    <hr style="margin: 10px 0;">
 
-        <!-- Modal Chi tiết sản phẩm -->
-        <div class="modal fade" id="modalChiTietSanPham" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content box box-primary">
-                    <div class="modal-header with-border">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title"><i class="fa fa-info-circle text-blue"></i> Chi tiết sản phẩm</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <!-- Ảnh bên trái -->
-                            <div class="col-sm-5 text-center">
-                                <img id="chiTietAnh" src="" class="img-responsive img-thumbnail" style="max-height:300px;" alt="Ảnh sản phẩm">
-                            </div>
-
-                            <!-- Thông tin bên phải -->
-                            <div class="col-sm-7">
-                                <h4 id="chiTietTen" class="text-primary text-bold"></h4>
-                                <p><strong>Mã sản phẩm:</strong> <span id="chiTietMa"></span></p>
-                                <p><strong>Giá:</strong> <span id="chiTietGia"></span> ₫</p>
-                                <p><strong>Mô tả:</strong> <span id="chiTietMoTa"></span></p>
-                                <hr style="margin: 10px 0;">
-
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <p><strong>Màu sắc:</strong> <span id="chiTietMauSac"></span></p>
-                                        <p><strong>Kích thước:</strong> <span id="chiTietKichThuoc"></span></p>
-                                        <p><strong>Chất liệu:</strong> <span id="chiTietChatLieu"></span></p>
-                                        <p><strong>Phong cách:</strong> <span id="chiTietPhongCach"></span></p>
-                                        <p><strong>Tay áo:</strong> <span id="chiTietTayAo"></span></p>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <p><strong>Cổ áo:</strong> <span id="chiTietCoAo"></span></p>
-                                        <p><strong>Khuy áo:</strong> <span id="chiTietKhuyAo"></span></p>
-                                        <p><strong>Kiểu dáng:</strong> <span id="chiTietKieuDang"></span></p>
-                                        <p><strong>Đường may:</strong> <span id="chiTietDuongMay"></span></p>
-                                        <p><strong>Họa tiết:</strong> <span id="chiTietHoaTiet"></span></p>
-                                        <p><strong>Danh mục:</strong> <span id="chiTietDanhMuc"></span></p>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <p><strong>Màu sắc:</strong> <span id="chiTietMauSac"></span></p>
+                                            <p><strong>Kích thước:</strong> <span id="chiTietKichThuoc"></span></p>
+                                            <p><strong>Chất liệu:</strong> <span id="chiTietChatLieu"></span></p>
+                                            <p><strong>Phong cách:</strong> <span id="chiTietPhongCach"></span></p>
+                                            <p><strong>Tay áo:</strong> <span id="chiTietTayAo"></span></p>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <p><strong>Cổ áo:</strong> <span id="chiTietCoAo"></span></p>
+                                            <p><strong>Khuy áo:</strong> <span id="chiTietKhuyAo"></span></p>
+                                            <p><strong>Kiểu dáng:</strong> <span id="chiTietKieuDang"></span></p>
+                                            <p><strong>Đường may:</strong> <span id="chiTietDuongMay"></span></p>
+                                            <p><strong>Họa tiết:</strong> <span id="chiTietHoaTiet"></span></p>
+                                            <p><strong>Danh mục:</strong> <span id="chiTietDanhMuc"></span></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+                        <div class="modal-footer">
+                            <button class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
+            <!-- /.content -->
+        </div>
+    </div>  <!-- /.content-wrapper -->
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
             <b>Version</b> 2.4.13
@@ -358,6 +497,477 @@
         reserved.
     </footer>
 </div>
+
+
+<!--gộp cả 2 cai-->
+<script>
+    // ----------------- GIỎ HÀNG CHO MỖI TAB -----------------
+    let gioHangBanHang = [];
+    let gioHangDatHang = [];
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Khôi phục giỏ hàng bán hàng từ localStorage
+        const data = localStorage.getItem("gioHangBanHang");
+        if (data) {
+            gioHangBanHang = JSON.parse(data);
+            hienThiGioHangBanHang();
+        }
+
+        // Xử lý các input và select
+        document.getElementById("tienKhachDua")?.addEventListener("keydown", function(e){
+            if(e.key === "Enter"){ e.preventDefault(); tinhTienThua(); }
+        });
+
+        document.getElementById('hinhThucSelect')?.addEventListener('change', function(){ xuLyHinhThucThanhToan(this.value); });
+        document.getElementById('giamGiaSelect')?.addEventListener('change', tinhTongTien);
+        document.getElementById("hinhThucSelectDatHang")?.addEventListener("change", apDungGiamGiaDatHang);
+        document.getElementById("giamGiaSelectDatHang")?.addEventListener("change", apDungGiamGiaDatHang);
+
+        // Submit form bán hàng
+        document.getElementById("formThanhToan")?.addEventListener("submit", function(e){
+            addHiddenInputsBanHang(); // thêm các input ẩn cho sản phẩm
+            // Xóa giỏ hàng trong localStorage sau submit
+            localStorage.removeItem("gioHangBanHang");
+            gioHangBanHang = [];
+            hienThiGioHangBanHang();
+            this.querySelector("button[type=submit]").disabled = true;
+        });
+
+        // ----------------- SUBMIT FORM ĐẶT HÀNG -----------------
+        document.querySelector("#tab_dathang form")?.addEventListener("submit", function(event){
+            const khInput = document.getElementById("idKhachHangDatHang");
+            const ten = document.getElementById("tenKh").value.trim();
+            const sdt = document.getElementById("sdt").value.trim();
+            const diaChi = document.getElementById("diaChi").value.trim();
+
+            if(!khInput.value){ // khách mới
+                if(!ten || !sdt || !diaChi){
+                    alert("Vui lòng nhập đầy đủ thông tin khách hàng mới!");
+                    event.preventDefault();
+                    return false;
+                }
+            } else {
+                // Khách cũ → xóa các input khách mới để không gửi lên server
+                const tenInput = document.getElementById("tenKh");
+                const sdtInput = document.getElementById("sdt");
+                const diaChiInput = document.getElementById("diaChi");
+                if (tenInput) tenInput.removeAttribute("name");
+                if (sdtInput) sdtInput.removeAttribute("name");
+                if (diaChiInput) diaChiInput.removeAttribute("name");
+            }
+
+
+            // Thêm các input ẩn sản phẩm
+            addHiddenInputsDatHang(event);
+        });
+
+    });
+
+    // ----------------- HÀM CHUNG THÊM SẢN PHẨM THEO TAB -----------------
+    function themVaoGioHangTheoTab(id, ten, size, gia, tonKho=0) {
+        const tabBanhang = document.getElementById('tab_banhang');
+        const tabDatHang = document.getElementById('tab_dathang');
+
+        if (tabBanhang.classList.contains('active')) {
+            themVaoGioHangBanHang(id, ten, size, gia, tonKho);
+        } else if (tabDatHang.classList.contains('active')) {
+            themVaoGioHangDatHang(id, ten, size, gia);
+        } else {
+            console.warn('Không xác định được tab đang active.');
+        }
+    }
+
+    // ----------------- BÁN HÀNG -----------------
+    function themVaoGioHangBanHang(id, ten, size, gia, tonKho) {
+        gia = parseFloat(gia);
+        tonKho = parseInt(tonKho);
+
+        let sp = gioHangBanHang.find(p => p.id === id && p.size === size);
+        if (sp) {
+            if (sp.soLuong < tonKho) sp.soLuong += 1;
+            else alert("⚠️ Số lượng vượt quá tồn kho!");
+        } else {
+            gioHangBanHang.push({id, ten, size, gia, soLuong: 1, tonKho});
+        }
+
+        hienThiGioHangBanHang();
+        localStorage.setItem("gioHangBanHang", JSON.stringify(gioHangBanHang));
+    }
+
+    function hienThiGioHangBanHang() {
+        const tbody = document.getElementById('gioHangBody');
+        tbody.innerHTML = '';
+
+        if (gioHangBanHang.length === 0) {
+            document.getElementById('gioHangTable').style.display = 'none';
+            return;
+        } else {
+            document.getElementById('gioHangTable').style.display = 'block';
+        }
+
+        let tongTienGoc = 0;
+        gioHangBanHang.forEach((sp, index) => {
+            const thanhTien = sp.gia * sp.soLuong;
+            tongTienGoc += thanhTien;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${sp.ten}</td>
+                <td>${sp.size}</td>
+                <td>
+                    <input type="number" min="1" max="${sp.tonKho}" value="${sp.soLuong}"
+                        onchange="capNhatSoLuongBanHang(${index}, this.value)" style="width:60px;">
+                </td>
+                <td>${sp.gia.toLocaleString()} ₫</td>
+                <td>${thanhTien.toLocaleString()} ₫</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-xs" onclick="xoaSanPhamBanHang(${index})">Xóa</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('tong-tien-goc').innerText = tongTienGoc.toLocaleString();
+        tinhTongTien();
+    }
+
+    function capNhatSoLuongBanHang(index, value) {
+        value = parseInt(value); if (value < 1) value = 1;
+        const max = gioHangBanHang[index].tonKho;
+        if (value > max) value = max;
+
+        gioHangBanHang[index].soLuong = value;
+        hienThiGioHangBanHang();
+        localStorage.setItem("gioHangBanHang", JSON.stringify(gioHangBanHang));
+    }
+
+    function xoaSanPhamBanHang(index) {
+        gioHangBanHang.splice(index, 1);
+        hienThiGioHangBanHang();
+        localStorage.setItem("gioHangBanHang", JSON.stringify(gioHangBanHang));
+    }
+
+    function tinhTongTien() {
+        let tongGoc = 0;
+        gioHangBanHang.forEach(sp => { tongGoc += sp.gia * sp.soLuong; });
+
+        let giamGia = 0;
+        const select = document.getElementById('giamGiaSelect');
+        const option = select.options[select.selectedIndex];
+        const loai = option.dataset.loai;
+        const giaTri = parseFloat(option.dataset.giaTri) || 0;
+
+        if (loai === 'PERCENT') giamGia = tongGoc * giaTri / 100;
+        else giamGia = giaTri;
+
+        const tongThanhToan = Math.max(tongGoc - giamGia, 0);
+        document.getElementById('tong-tien-goc').innerText = tongGoc.toLocaleString();
+        document.getElementById('muc-giam').innerText = giamGia.toLocaleString();
+        document.getElementById('tong-tien').innerText = tongThanhToan.toLocaleString();
+        document.getElementById('tongTienHidden').value = tongThanhToan;
+
+        capNhatQR(tongThanhToan);
+    }
+
+    function capNhatQR(tongTienSauGiam) {
+        const selectHinhThuc = document.getElementById('hinhThucSelect');
+        const qrContainer = document.getElementById('qrThanhToanContainer');
+        const qrImg = document.getElementById('qrCodeImg');
+        const value = selectHinhThuc.value;
+
+        if(hinhThuc === '1' || hinhThuc === '2'){
+            qrContainer.style.display = 'block';
+            tienMatFields.style.display = 'none';
+            document.getElementById("qrCodeImgDatHang").src = "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongThanhToan;
+
+
+        } else {
+            qrContainer.style.display = 'none';
+            qrImg.src = '';
+        }
+    }
+
+    function tinhTienThua() {
+        const tienKhach = parseFloat(document.getElementById('tienKhachDua').value) || 0;
+        const tongThanhToan = parseFloat(document.getElementById('tongTienHidden').value) || 0;
+        const thua = tienKhach - tongThanhToan;
+        document.getElementById('tienThua').value = thua >= 0 ? thua.toLocaleString() : '0';
+    }
+
+    function xuLyHinhThucThanhToan(value) {
+        const qrContainer = document.getElementById('qrThanhToanContainer');
+        const tienMatFields = document.getElementById('tienMatFields');
+
+        if (value === '1' || value === '2') {
+            qrContainer.style.display = 'block';
+            tienMatFields.style.display = 'none';
+            const tongThanhToan = parseInt(document.getElementById('tongTienHidden').value);
+            document.getElementById('qrCodeImg').src = `/ban-hang/qr-code?amount=${tongThanhToan}`;
+        } else if (value === '3') {
+            qrContainer.style.display = 'none';
+            tienMatFields.style.display = 'block';
+        } else {
+            qrContainer.style.display = 'none';
+            tienMatFields.style.display = 'none';
+        }
+    }
+
+    // ----------------- ADD HIDDEN INPUTS BÁN HÀNG -----------------
+    function addHiddenInputsBanHang() {
+        const form = document.getElementById("formThanhToan");
+        if (!form) return;
+
+        // Xóa các input cũ
+        form.querySelectorAll('input[name^="sp_"]').forEach(e => e.remove());
+
+        // Thêm từng sản phẩm trong giỏ hàng
+        gioHangBanHang.forEach(sp => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "sp_" + sp.id; // sp_1, sp_2 ...
+            input.value = sp.soLuong;
+            form.appendChild(input);
+        });
+
+        // Tổng tiền
+        const tongTien = gioHangBanHang.reduce((sum, sp) => sum + sp.gia * sp.soLuong, 0);
+        const select = document.getElementById("giamGiaSelect");
+        const option = select.selectedOptions[0];
+        const loai = option.dataset.loai;
+        const giaTri = parseFloat(option.dataset.giaTri || 0);
+        const giam = loai === 'PERCENT' ? tongTien * giaTri / 100 : giaTri;
+        const tongThanhToan = Math.max(tongTien - giam, 0);
+
+        let tongTienInput = document.getElementById("tongTienHidden");
+        if (!tongTienInput) {
+            tongTienInput = document.createElement("input");
+            tongTienInput.type = "hidden";
+            tongTienInput.name = "tongTien";
+            tongTienInput.id = "tongTienHidden";
+            form.appendChild(tongTienInput);
+        }
+        tongTienInput.value = tongThanhToan;
+
+        // Khách hàng mặc định là Khách lẻ nếu chưa chọn
+        const khInput = document.getElementById("idKhachHang");
+        if (khInput && !khInput.value) khInput.value = -1; // -1 đại diện Khách lẻ
+    }
+
+
+    // ----------------- ĐẶT HÀNG ONLINE -----------------
+    function themVaoGioHangDatHang(id, ten, size, gia) {
+        let index = gioHangDatHang.findIndex(sp => sp.id == id && sp.size == size);
+        if(index >= 0) gioHangDatHang[index].soLuong += 1;
+        else gioHangDatHang.push({id, ten, size, gia: parseFloat(gia), soLuong:1});
+        capNhatGioHangDatHang();
+    }
+
+    function capNhatGioHangDatHang() {
+        let tbody = document.getElementById("cartDatHangBody");
+        tbody.innerHTML = "";
+        let tongTien = 0;
+
+        gioHangDatHang.forEach((sp, idx) => {
+            let thanhTien = sp.gia * sp.soLuong;
+            tongTien += thanhTien;
+
+            let tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${sp.ten}</td>
+                <td>${sp.size}</td>
+                <td><input type="number" min="1" value="${sp.soLuong}" onchange="capNhatSoLuongDatHang(${idx}, this.value)" style="width:60px;"></td>
+                <td>${sp.gia.toLocaleString()} ₫</td>
+                <td>${thanhTien.toLocaleString()} ₫</td>
+                <td><button class="btn btn-danger btn-xs" onclick="xoaSanPhamDatHang(${idx})"><i class="glyphicon glyphicon-trash"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById("tongTienHangDatHang").innerText = tongTien.toLocaleString();
+
+        capNhatThanhToanDatHang();
+    }
+
+    function capNhatSoLuongDatHang(index, value){
+        value = parseInt(value); if(value < 1) value = 1;
+        gioHangDatHang[index].soLuong = value;
+        capNhatGioHangDatHang();
+    }
+
+    function xoaSanPhamDatHang(index){
+        gioHangDatHang.splice(index,1);
+        capNhatGioHangDatHang();
+    }
+
+    // function apDungGiamGiaDatHang(){
+    //     const select = document.getElementById("giamGiaSelectDatHang");
+    //     const option = select.selectedOptions[0];
+    //     const loai = option.dataset.loai;
+    //     const giaTri = parseFloat(option.dataset.giaTri || 0);
+    //
+    //     let tongTien = gioHangDatHang.reduce((sum, sp) => sum + sp.gia * sp.soLuong, 0);
+    //     let giam = loai === 'PERCENT' ? tongTien * giaTri / 100 : giaTri;
+    //     let tongThanhToan = Math.max(tongTien - giam, 0);
+    //
+    //     document.getElementById("giamGiaTienDatHang").innerText = giam.toLocaleString();
+    //     document.getElementById("tongThanhToanDatHang").innerText = tongThanhToan.toLocaleString();
+    //
+    //     const hinhThuc = document.getElementById("hinhThucSelectDatHang").value;
+    //     const qrContainer = document.getElementById("qrThanhToanContainerDatHang");
+    //     const tienMatFields = document.getElementById("tienMatFieldsDatHang");
+    //
+    //     if(hinhThuc === '1' || hinhThuc === '2'){ // Chuyển khoản / ví điện tử
+    //         qrContainer.style.display = 'block';
+    //         tienMatFields.style.display = 'none';
+    //         document.getElementById("qrCodeImgDatHang").src =
+    //             "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongThanhToan;
+    //     } else if(hinhThuc === '3'){ // Tiền mặt
+    //         qrContainer.style.display = 'none';
+    //         tienMatFields.style.display = 'block';
+    //     } else { // Không chọn
+    //         qrContainer.style.display = 'none';
+    //         tienMatFields.style.display = 'none';
+    //     }
+    // }
+
+    // ----------------- HIỂN THỊ QR / TIỀN MẶT -----------------
+    function capNhatThanhToanDatHang() {
+        const selectGiamGia = document.getElementById("giamGiaSelectDatHang");
+        const option = selectGiamGia.selectedOptions[0];
+        const loai = option?.dataset.loai;
+        const giaTri = parseFloat(option?.dataset.giaTri || 0);
+
+        // Tính tổng tiền gốc
+        let tongTien = gioHangDatHang.reduce((sum, sp) => sum + sp.gia * sp.soLuong, 0);
+
+        // Tính giảm giá
+        let giam = loai === 'PERCENT' ? tongTien * giaTri / 100 : giaTri;
+        let tongThanhToan = Math.max(tongTien - giam, 0);
+
+        document.getElementById("giamGiaTienDatHang").innerText = giam.toLocaleString();
+        document.getElementById("tongThanhToanDatHang").innerText = tongThanhToan.toLocaleString();
+
+        // Lấy phương thức thanh toán
+        const hinhThuc = document.getElementById("hinhThucSelectDatHang").value;
+        const qrContainer = document.getElementById("qrThanhToanContainerDatHang");
+        const tienMatFields = document.getElementById("tienMatFieldsDatHang");
+
+        if(hinhThuc == '2' || hinhThuc == '3'){ // dùng ==
+            qrContainer.style.display = 'block';
+            tienMatFields.style.display = 'none';
+            document.getElementById("qrCodeImgDatHang").src = "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongThanhToan;
+        } else if(hinhThuc == '1'){
+            qrContainer.style.display = 'none';
+            tienMatFields.style.display = 'block';
+        } else {
+            qrContainer.style.display = 'none';
+            tienMatFields.style.display = 'none';
+        }
+
+    }
+
+    // Gọi hàm khi thay đổi giảm giá hoặc phương thức
+    document.getElementById("giamGiaSelectDatHang")?.addEventListener("change", capNhatThanhToanDatHang);
+    document.getElementById("hinhThucSelectDatHang")?.addEventListener("change", capNhatThanhToanDatHang);
+
+    // Tính tiền thừa khi tiền mặt
+    const tienKhachInput = document.getElementById("tienKhachDuaDatHang");
+    const tienThuaInput = document.getElementById("tienThuaDatHang");
+    const tongThanhToanEl = document.getElementById("tongThanhToanDatHang");
+
+    // Tính tiền thừa khi nhấn Enter
+    tienKhachInput?.addEventListener("keydown", function(e){
+        if(e.key === "Enter") {
+            e.preventDefault();
+            const tienKhach = parseFloat(this.value.replace(/,/g,'')) || 0;
+            const tongThanhToan = parseFloat(tongThanhToanEl.innerText.replace(/,/g,'')) || 0;
+            tienThuaInput.value = Math.max(tienKhach - tongThanhToan, 0).toLocaleString();
+        }
+    });
+
+    // Xóa tiền thừa khi ô tiền khách đưa rỗng
+    tienKhachInput?.addEventListener("input", function(){
+        if(this.value.trim() === "") {
+            tienThuaInput.value = "";
+        }
+    });
+    function addHiddenInputsDatHang(event){
+        const form = document.querySelector("#tab_dathang form");
+        if (!form) return;
+
+        // Xóa các input cũ
+        form.querySelectorAll('input[name^="sp_"]').forEach(e => e.remove());
+
+        // Thêm từng sản phẩm trong giỏ hàng
+        gioHangDatHang.forEach(sp => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "sp_" + sp.id;
+            input.value = sp.soLuong;
+            form.appendChild(input);
+        });
+
+        // Tính tổng tiền
+        let tongTien = gioHangDatHang.reduce((sum, sp) => sum + sp.gia * sp.soLuong, 0);
+        const selectGiamGia = document.getElementById("giamGiaSelectDatHang");
+        const option = selectGiamGia.selectedOptions[0];
+        const loai = option.dataset.loai;
+        const giaTri = parseFloat(option.dataset.giaTri || 0);
+        let giam = loai === 'PERCENT' ? tongTien * giaTri / 100 : giaTri;
+        let tongThanhToan = Math.max(tongTien - giam, 0);
+
+        // Ẩn input tổng tiền nếu chưa có
+        let tongTienInput = document.getElementById("tongTienHiddenDatHang");
+        if(!tongTienInput){
+            tongTienInput = document.createElement("input");
+            tongTienInput.type = "hidden";
+            tongTienInput.name = "tongTien";
+            tongTienInput.id = "tongTienHiddenDatHang";
+            form.appendChild(tongTienInput);
+        }
+        tongTienInput.value = tongThanhToan;
+
+
+        // QR thanh toán & tiền mặt
+        const hinhThuc = document.getElementById("hinhThucSelectDatHang").value;
+        const qrContainer = document.getElementById("qrThanhToanContainerDatHang");
+        const tienMatFields = document.getElementById("tienMatFieldsDatHang");
+        if(hinhThuc === '1' || hinhThuc === '2'){ // chuyển khoản hoặc ví điện tử
+            qrContainer.style.display = 'block';
+            tienMatFields.style.display = 'none';
+            document.getElementById("qrCodeImgDatHang").src = "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongThanhToan;
+        } else if(hinhThuc === '3'){ // tiền mặt
+            qrContainer.style.display = 'none';
+            tienMatFields.style.display = 'block';
+        } else {
+            qrContainer.style.display = 'none';
+            tienMatFields.style.display = 'none';
+        }
+    }
+    //Chọn khách cũ
+    function chonKhachHangDatHang(id, ten){
+        const khInput = document.getElementById("idKhachHangDatHang");
+        khInput.value = id; // phải tồn tại name="khachHangId"
+
+        document.getElementById("tenKhachHangDatHang").value = ten;
+        document.getElementById("thongTinDatHang").style.display = 'none';
+        document.getElementById("xoaKhachHangDatHang").style.display = 'inline-block';
+    }
+
+
+    // Xóa khách đã chọn → hiện form khách mới
+    function xoaKhachHang(tab){
+        if(tab === 'dathang'){
+            document.getElementById("idKhachHangDatHang").value = "";
+            document.getElementById("tenKhachHangDatHang").value = "";
+            document.getElementById("thongTinDatHang").style.display = 'block';
+            document.getElementById("xoaKhachHangDatHang").style.display = 'none';
+        }
+    }
+
+
+</script>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -420,255 +1030,6 @@
         });
     });
 </script>
-<!-- JavaScript xử lý -->
-<script>
-    let gioHang = [];
-
-    document.addEventListener("DOMContentLoaded", function () {
-        // Khôi phục giỏ hàng
-        const data = localStorage.getItem("gioHang");
-        if (data) {
-            gioHang = JSON.parse(data);
-            capNhatBangGioHang();
-            setTimeout(tinhTongTien, 50); // đợi DOM render xong rồi mới tính tiền
-        }
-
-        // Mặc định chọn khách lẻ nếu chưa có
-        const idKhachHang = document.getElementById("idKhachHang");
-        const tenKhachHang = document.getElementById("tenKhachHang");
-        if (!idKhachHang.value || idKhachHang.value.trim() === "") {
-            idKhachHang.value = 9;
-            tenKhachHang.value = "Khách lẻ";
-        }
-
-        // Gõ Enter để tính tiền thừa
-        const inputTienKhachDua = document.getElementById("tienKhachDua");
-        if (inputTienKhachDua) {
-            inputTienKhachDua.addEventListener("keydown", function (e) {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    tinhTienThua();
-                }
-            });
-        }
-
-        // Sau khi chọn hình thức thanh toán
-        const selectHinhThuc = document.querySelector('select[name="hinhThuc"]');
-        if (selectHinhThuc) {
-            selectHinhThuc.addEventListener('change', function () {
-                tinhTongTien(); // Cập nhật lại QR và tổng tiền
-            });
-        }
-
-        // Sự kiện lọc sản phẩm
-        ['#searchSanPham', '#filterDanhMuc', '#filterMauSac', '#filterKichThuoc'].forEach(selector => {
-            const input = document.querySelector(selector);
-            if (input) {
-                input.addEventListener('input', () => {
-                    locSanPham();
-                });
-            }
-        });
-    });
-
-    function themVaoGioHang(id, ten, size, gia, tonKho) {
-        gia = parseFloat(gia);
-        tonKho = parseInt(tonKho);
-        const itemIndex = gioHang.findIndex(sp => sp.id === id && sp.size === size);
-
-        if (itemIndex !== -1) {
-            if (gioHang[itemIndex].soLuong < tonKho) {
-                gioHang[itemIndex].soLuong++;
-                alert("✅ Đã tăng số lượng sản phẩm trong giỏ hàng.");
-            } else {
-                alert("⚠️ Số lượng vượt quá tồn kho!");
-            }
-        } else {
-            gioHang.push({ id, ten, size, gia, soLuong: 1, tonKho });
-            alert("✅ Thêm sản phẩm vào giỏ hàng thành công!");
-        }
-
-        capNhatBangGioHang();
-        tinhTongTien();
-        localStorage.setItem("gioHang", JSON.stringify(gioHang));
-    }
-
-    function capNhatBangGioHang() {
-        const tbody = document.getElementById("gioHangBody");
-        const section = document.getElementById("gioHangSection");
-        const form = document.getElementById("formThanhToan");
-
-        document.querySelectorAll(".input-gio-hang").forEach(e => e.remove());
-        tbody.innerHTML = "";
-
-        if (gioHang.length === 0) {
-            section.style.display = "none";
-            return;
-        }
-
-        section.style.display = "block";
-
-        gioHang.forEach((sp, index) => {
-            const thanhTien = sp.gia * sp.soLuong;
-            const row = `
-            <tr>
-                <td>${sp.ten}</td>
-                <td>${sp.size}</td>
-                <td>
-                    <input type="number" class="form-control input-sm so-luong"
-                        value="${sp.soLuong}" min="1" max="${sp.tonKho}"
-                        data-gia="${sp.gia}" onchange="capNhatSoLuong(${index}, this)">
-                </td>
-                <td>${sp.gia.toLocaleString()} ₫</td>
-                <td class="thanh-tien">${thanhTien.toLocaleString()} ₫</td>
-                <td>
-                    <button class="btn btn-danger btn-xs" onclick="xoaKhoiGioHang(${index})">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </button>
-                </td>
-            </tr>`;
-            tbody.insertAdjacentHTML("beforeend", row);
-
-            const inputHidden = document.createElement("input");
-            inputHidden.type = "hidden";
-            inputHidden.name = `sp_${sp.id}`;
-            inputHidden.value = sp.soLuong;
-            inputHidden.classList.add("input-gio-hang");
-            form.appendChild(inputHidden);
-        });
-
-        localStorage.setItem("gioHang", JSON.stringify(gioHang));
-    }
-
-    function capNhatSoLuong(index, input) {
-        const newQty = parseInt(input.value);
-        const max = parseInt(input.max);
-        if (newQty > max) {
-            alert("⚠️ Vượt quá số lượng tồn kho!");
-            input.value = gioHang[index].soLuong;
-            return;
-        }
-        gioHang[index].soLuong = newQty;
-        capNhatBangGioHang();
-        tinhTongTien();
-        localStorage.setItem("gioHang", JSON.stringify(gioHang));
-    }
-
-    function xoaKhoiGioHang(index) {
-        if (confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")) {
-            gioHang.splice(index, 1);
-            capNhatBangGioHang();
-            tinhTongTien();
-            localStorage.setItem("gioHang", JSON.stringify(gioHang));
-        }
-    }
-
-    function tinhTongTien() {
-        let tong = 0;
-        const rows = document.querySelectorAll("#gioHangBody tr");
-
-        rows.forEach(row => {
-            const input = row.querySelector("input.so-luong");
-            if (!input) return;
-            const donGia = parseInt(input.getAttribute("data-gia")) || 0;
-            const soLuong = parseInt(input.value) || 0;
-            const thanhTien = donGia * soLuong;
-            const cell = row.querySelector(".thanh-tien");
-            if (cell) cell.innerText = thanhTien.toLocaleString();
-            tong += thanhTien;
-        });
-
-        document.getElementById("tongTienHidden").value = tong;
-        document.getElementById("tong-tien-goc").innerText = tong.toLocaleString();
-        hienThiGiamGia(tong);
-    }
-
-    function hienThiGiamGia(tongGoc) {
-        const select = document.getElementById("giamGiaSelect");
-        const selected = select.options[select.selectedIndex];
-        let giamGia = 0;
-
-        if (selected && selected.value !== "") {
-            const loai = selected.getAttribute("data-loai");
-            const giaTri = parseInt(selected.getAttribute("data-gia-tri")) || 0;
-
-            if (loai === "PERCENT") {
-                giamGia = Math.floor(tongGoc * giaTri / 100);
-            } else {
-                giamGia = giaTri;
-            }
-
-            if (giamGia > tongGoc) giamGia = tongGoc;
-        }
-
-        document.getElementById("muc-giam").innerText = giamGia.toLocaleString();
-        document.getElementById("tong-tien").innerText = (tongGoc - giamGia).toLocaleString();
-        capNhatQR(tongGoc - giamGia);
-    }
-
-    function capNhatQR(tongTienSauGiam) {
-        const selectHinhThuc = document.querySelector('select[name="hinhThuc"]');
-        const qrContainer = document.getElementById('qrThanhToanContainer');
-        const qrImg = document.getElementById('qrCodeImg');
-        const selectedOption = selectHinhThuc.options[selectHinhThuc.selectedIndex].text.toLowerCase();
-
-        if (selectedOption.includes('chuyển khoản') || selectedOption.includes('ví điện tử')) {
-            qrContainer.style.display = 'block';
-            const qrUrl = `https://img.vietqr.io/image/MB-0912713606-compact.png?amount=${tongTienSauGiam}&addInfo=Thanh%20toan%20tai%20quay&accountName=NGUYEN%20THI%20HA%20LAN`;
-            qrImg.src = qrUrl;
-        } else {
-            qrContainer.style.display = 'none';
-            qrImg.src = '';
-        }
-    }
-
-    function tinhTienThua() {
-        const tienKhach = parseFloat(document.getElementById("tienKhachDua").value) || 0;
-        const tongThanhToanText = document.getElementById("tong-tien").innerText.replace(/[^\d]/g, '') || "0";
-        const tongThanhToan = parseFloat(tongThanhToanText);
-
-        if (!isNaN(tienKhach) && !isNaN(tongThanhToan)) {
-            const tienThua = tienKhach - tongThanhToan;
-            document.getElementById("tienThua").value = tienThua >= 0
-                ? tienThua.toLocaleString() + " đ"
-                : "Thiếu " + Math.abs(tienThua).toLocaleString() + " đ";
-        } else {
-            document.getElementById("tienThua").value = "";
-        }
-    }
-
-    function locSanPham() {
-        const keyword = document.getElementById('searchSanPham').value.toLowerCase();
-        const danhMuc = document.getElementById('filterDanhMuc').value;
-        const mau = document.getElementById('filterMauSac').value;
-        const size = document.getElementById('filterKichThuoc').value;
-
-        document.querySelectorAll('#productTable tbody tr').forEach(row => {
-            const ten = row.getAttribute('data-ten')?.toLowerCase() || '';
-            const dm = row.getAttribute('data-danhmuc') || '';
-            const ms = row.getAttribute('data-mau') || '';
-            const kt = row.getAttribute('data-size') || '';
-
-            const match =
-                (!keyword || ten.includes(keyword)) &&
-                (!danhMuc || dm === danhMuc) &&
-                (!mau || ms === mau) &&
-                (!size || kt === size);
-
-            row.style.display = match ? '' : 'none';
-        });
-    }
-
-    // Xoá localStorage sau khi thanh toán
-    document.getElementById("formThanhToan").addEventListener("submit", function () {
-        localStorage.removeItem("gioHang");
-    });
-
-    // Disable nút sau khi submit
-    document.querySelector("form").addEventListener("submit", function () {
-        this.querySelector("button[type=submit]").disabled = true;
-    });
-</script>
 
 <script>
     function tinhTienThua() {
@@ -688,63 +1049,136 @@
 </script>
 
 <script>
+    let currentTab = null;
+
     document.addEventListener("DOMContentLoaded", function () {
-        taiKhachHangDaChon();
+        // Load khách đã chọn cho cả 2 tab ngay khi DOM sẵn sàng
+        loadKhachHangBanHang();
+        loadKhachHangDatHang();
         ganSuKienLoc();
     });
 
+    // Giữ thông tin khách và lọc sản phẩm khi thay đổi input/select
     function ganSuKienLoc() {
         ['#searchSanPham', '#filterDanhMuc', '#filterMauSac', '#filterKichThuoc'].forEach(selector => {
             const input = document.querySelector(selector);
             if (input) {
                 input.addEventListener('input', () => {
-                    locSanPham();
-                    taiKhachHangDaChon(); // Đảm bảo gán lại thông tin khách sau lọc
+                    locSanPham(); // lọc sản phẩm
+                    // Load lại thông tin khách
+                    loadKhachHangBanHang();
+                    loadKhachHangDatHang();
                 });
             }
         });
     }
 
+    // ----------------- LỌC SẢN PHẨM -----------------
     function locSanPham() {
-        const keyword = document.getElementById('searchSanPham').value.toLowerCase();
-        const danhMuc = document.getElementById('filterDanhMuc').value;
+        const search = document.getElementById('searchSanPham').value.toLowerCase();
+        const dm = document.getElementById('filterDanhMuc').value;
         const mau = document.getElementById('filterMauSac').value;
-        const size = document.getElementById('filterKichThuoc').value;
+        const kt = document.getElementById('filterKichThuoc').value;
 
         document.querySelectorAll('#productTable tbody tr').forEach(row => {
-            const ten = row.getAttribute('data-ten')?.toLowerCase() || '';
-            const dm = row.getAttribute('data-danhmuc') || '';
-            const ms = row.getAttribute('data-mau') || '';
-            const kt = row.getAttribute('data-size') || '';
+            const ten = row.getAttribute('data-ten').toLowerCase();
+            const rowDm = row.getAttribute('data-danhmuc');
+            const rowMau = row.getAttribute('data-mau');
+            const rowKt = row.getAttribute('data-size');
 
-            const match =
-                (!keyword || ten.includes(keyword)) &&
-                (!danhMuc || dm === danhMuc) &&
-                (!mau || ms === mau) &&
-                (!size || kt === size);
-
-            row.style.display = match ? '' : 'none';
+            if ((search === '' || ten.includes(search)) &&
+                (dm === '' || rowDm === dm) &&
+                (mau === '' || rowMau === mau) &&
+                (kt === '' || rowKt === kt)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
         });
     }
+    function resetFilters() {
+        // Xóa giá trị các input và select
+        document.getElementById('searchSanPham').value = '';
+        document.getElementById('filterDanhMuc').value = '';
+        document.getElementById('filterMauSac').value = '';
+        document.getElementById('filterKichThuoc').value = '';
 
-    function chonKhachHang(id, ten) {
-        document.getElementById("tenKhachHang").value = ten;
-        document.getElementById("idKhachHang").value = id;
-        localStorage.setItem("khachHangDaChon", JSON.stringify({ id, ten }));
-        $('#khachHangModal').modal('hide');
+        // Hiển thị lại tất cả các hàng trong bảng
+        locSanPham();
     }
 
-    function taiKhachHangDaChon() {
-        const kh = JSON.parse(localStorage.getItem("khachHangDaChon"));
-        if (kh) {
-            document.getElementById("tenKhachHang").value = kh.ten;
-            document.getElementById("idKhachHang").value = kh.id;
+    // ----------------- BÁN HÀNG -----------------
+    function loadKhachHangBanHang() {
+        const kh = JSON.parse(localStorage.getItem("khachHangDaChonBanHang"));
+        const idInput = document.getElementById("idKhachHang");
+        const tenInput = document.getElementById("tenKhachHang");
+
+        if (!idInput || !tenInput) return;
+
+        if (kh && kh.id && kh.ten) {
+            idInput.value = kh.id;
+            tenInput.value = kh.ten;
+        } else {
+            // Mặc định Khách lẻ
+            idInput.value = 9;
+            tenInput.value = "Khách lẻ";
         }
     }
 
-    function openKhachHangModal() {
+    // ----------------- ĐẶT HÀNG -----------------
+    function loadKhachHangDatHang() {
+        const kh = JSON.parse(localStorage.getItem("khachHangDaChonDatHang"));
+        const idInput = document.getElementById("idKhachHangDatHang");
+        const tenInput = document.getElementById("tenKhachHangDatHang");
+
+        if (!idInput || !tenInput) return;
+
+        if (kh && kh.id && kh.ten) {
+            idInput.value = kh.id;
+            tenInput.value = kh.ten;
+        } else {
+            // Chưa chọn khách => để trống
+            idInput.value = "";
+            tenInput.value = "";
+        }
+    }
+
+    // ----------------- MODAL -----------------
+    function openKhachHangModal(tab) {
+        currentTab = tab; // Ghi nhớ tab gọi modal
         $('#khachHangModal').modal('show');
     }
+
+    function chonKhachHang(id, ten) {
+        if (currentTab === 'banhang') {
+            document.getElementById("idKhachHang").value = id;
+            document.getElementById("tenKhachHang").value = ten;
+            localStorage.setItem("khachHangDaChonBanHang", JSON.stringify({id, ten}));
+            document.getElementById("xoaKhachHangBanHang").style.display = "inline-block"; // ✅ hiện nút xóa
+        } else if (currentTab === 'dathang') {
+            document.getElementById("idKhachHangDatHang").value = id;
+            document.getElementById("tenKhachHangDatHang").value = ten;
+            localStorage.setItem("khachHangDaChonDatHang", JSON.stringify({id, ten}));
+            document.getElementById("xoaKhachHangDatHang").style.display = "inline-block"; // ✅ hiện nút xóa
+        }
+        $('#khachHangModal').modal('hide');
+    }
+    function xoaKhachHang(tab) {
+        if (tab === 'banhang') {
+            localStorage.removeItem("khachHangDaChonBanHang");
+            document.getElementById("idKhachHang").value = 9; // quay lại khách lẻ
+            document.getElementById("tenKhachHang").value = "Khách lẻ";
+            document.getElementById("xoaKhachHangBanHang").style.display = "none";
+        } else if (tab === 'dathang') {
+            localStorage.removeItem("khachHangDaChonDatHang");
+            document.getElementById("idKhachHangDatHang").value = "";
+            document.getElementById("tenKhachHangDatHang").value = "";
+            document.getElementById("xoaKhachHangDatHang").style.display = "none";
+        }
+    }
+
+
+
 </script>
 <script>
     function xemChiTietSanPham(id, ten, ma, gia, moTa, coAo, khuyAo, kieuDang, duongMay, hoaTiet, phongCach, chatLieu, mauSac, kichThuoc, danhMuc, tayAo, anh) {
@@ -797,6 +1231,19 @@
         }
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Nếu URL có param tab=dat-hang thì mở tab Đặt hàng
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+        if (tab === 'dat-hang') {
+            // Dùng jQuery Bootstrap tab để show
+            $('a[href="#tab_dathang"]').tab('show');
+        }
+    });
+
+</script>
+
 <script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
 <script src="/assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>

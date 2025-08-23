@@ -4,9 +4,11 @@ import com.example.Trendora.DuAn.DTO.HoaDonChiTietDTO;
 import com.example.Trendora.DuAn.DTO.HoaDonDTO;
 import com.example.Trendora.DuAn.Service.HoaDonService;
 import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
+import com.example.Trendora.DuAn.model.GiamGia;
 import com.example.Trendora.DuAn.model.HoaDon;
 import com.example.Trendora.DuAn.model.HoaDonChiTiet;
 import com.example.Trendora.DuAn.model.SanPham;
+import com.example.Trendora.DuAn.repository.GiamGiaRepo;
 import com.example.Trendora.DuAn.repository.HoaDonChiTietRepo;
 import com.example.Trendora.DuAn.repository.HoaDonRepo;
 import com.example.Trendora.DuAn.repository.SanPhamRepo;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/hoa-don")
@@ -36,19 +39,39 @@ public class HoaDonController {
     @Autowired
     private SanPhamRepo sanPhamRepo;
 
+    @Autowired
+    private GiamGiaRepo giamGiaRepo;
+
     @GetMapping("/hien-thi")
     public String hienThi(Model model,
                           @RequestParam(value = "maHd", required = false) String maHd,
+                          @RequestParam(value = "trangThaiDonHang", required = false) TrangThaiDonHang trangThaiDonHang,
                           @RequestParam(value = "page", defaultValue = "0") int page) {
 
         int size = 6; // Mỗi trang 6 hóa đơn
 
         Page<HoaDonDTO> hoaDonPage = service.getAllOrSearch(maHd, page, size);
 
+        long tongHoaDon = hoaDonRepo.count();
+        long daHoanThanh = hoaDonRepo.countByTrangThaiDonHang(TrangThaiDonHang.DA_HOAN_THANH);
+        long daHuy = hoaDonRepo.countByTrangThaiDonHang(TrangThaiDonHang.DA_HUY);
+        BigDecimal tongDoanhThu = hoaDonRepo.getTongDoanhThu();
+        if (tongDoanhThu == null) tongDoanhThu = BigDecimal.ZERO;
+
+        model.addAttribute("tongHoaDon", tongHoaDon);
+        model.addAttribute("daHoanThanh", daHoanThanh);
+        model.addAttribute("daHuy", daHuy);
+        model.addAttribute("tongDoanhThu", tongDoanhThu);
+
+        // Lấy danh sách hóa đơn cho bảng
+        List<HoaDon> danhSachHoaDon = hoaDonRepo.findAll();
+        model.addAttribute("hoaDonList", danhSachHoaDon);
+
         model.addAttribute("list", hoaDonPage.getContent()); // danh sách hóa đơn trang hiện tại
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", hoaDonPage.getTotalPages());
         model.addAttribute("search", maHd);
+
 
         return "ViewHoaDon/view";
     }
@@ -103,7 +126,7 @@ public class HoaDonController {
             // Chỉ hủy được nếu đang là CHƯA XÁC NHẬN
             if (hd.getTrangThaiDonHang() == TrangThaiDonHang.CHO_XAC_NHAN) {
 
-                // Trả hàng về kho
+                // Trả sản phẩm về kho
                 List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByHoaDon(hd);
                 for (HoaDonChiTiet ct : chiTietList) {
                     SanPham sp = ct.getSanPham();
@@ -111,11 +134,18 @@ public class HoaDonController {
                     sanPhamRepo.save(sp);
                 }
 
+                // Nếu đơn hàng có phiếu giảm giá thì hoàn lại số lượng
+                if (hd.getGiamGia() != null) {
+                    GiamGia giamGia = hd.getGiamGia();
+                    giamGia.setSoLuong(giamGia.getSoLuong() + 1); // Hoàn lại 1 lượt sử dụng
+                    giamGiaRepo.save(giamGia);
+                }
+
                 // Cập nhật trạng thái sang ĐÃ HỦY
                 hd.setTrangThaiDonHang(TrangThaiDonHang.DA_HUY);
                 hoaDonRepo.save(hd);
 
-                redirect.addFlashAttribute("success", "✅ Đơn hàng đã được hủy và hoàn kho.");
+                redirect.addFlashAttribute("success", "✅ Đơn hàng đã được hủy, hoàn kho và hoàn voucher (nếu có).");
             } else {
                 redirect.addFlashAttribute("error", "❌ Chỉ được hủy đơn chưa xác nhận.");
             }
@@ -125,6 +155,7 @@ public class HoaDonController {
 
         return "redirect:/hoa-don/hien-thi";
     }
+
 
     @GetMapping("/in")
     public String inHoaDon(@RequestParam("id") Long id, Model model,
@@ -185,4 +216,46 @@ public class HoaDonController {
 
         return "ViewBanHang/in-hoa-don";
     }
+
+    @PostMapping("/hanh-dong-tat-ca")
+    public String hanhDongTatCa(
+            @RequestParam(value = "hoaDonIds", required = false) List<Integer> hoaDonIds,
+            @RequestParam("action") String action,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        if (hoaDonIds == null || hoaDonIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "❌ Bạn chưa chọn hóa đơn nào!");
+            return "redirect:/hoa-don/hien-thi";
+        }
+
+        if ("xacNhan".equals(action)) {
+            List<HoaDon> hoaDons = hoaDonRepo.findAllById(hoaDonIds);
+
+            int demXacNhan = 0;
+            for (HoaDon hd : hoaDons) {
+                if (hd.getTrangThaiDonHang() == TrangThaiDonHang.CHO_XAC_NHAN) {
+                    hd.setTrangThaiDonHang(TrangThaiDonHang.DA_XAC_NHAN);
+                    demXacNhan++;
+                }
+            }
+
+            if (demXacNhan > 0) {
+                hoaDonRepo.saveAll(hoaDons);
+                redirectAttributes.addFlashAttribute("success", "✅ Đã xác nhận " + demXacNhan + " đơn hàng!");
+            } else {
+                redirectAttributes.addFlashAttribute("warning", "⚠️ Không có đơn nào ở trạng thái 'Chờ xác nhận' để xác nhận!");
+            }
+        }
+        else if ("in".equals(action)) {
+            List<HoaDon> hoaDons = hoaDonRepo.findAllById(hoaDonIds);
+            model.addAttribute("hoaDons", hoaDons);
+            return "ViewHoaDon/in-nhieu-hoa-don"; // view in nhiều hóa đơn
+        }
+
+        return "redirect:/hoa-don/hien-thi";
+    }
+
+
+
 }

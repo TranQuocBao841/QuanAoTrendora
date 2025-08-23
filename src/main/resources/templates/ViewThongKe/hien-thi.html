@@ -14,6 +14,11 @@
         background: #fefefe;
         border-radius: 8px;
     }
+    #pieChart {
+        width: 400px;
+        margin: auto;
+        height:400px;
+    }
 </style>
 
 <div class="wrapper">
@@ -37,17 +42,6 @@
             <div class="box box-primary">
                 <div class="box-header with-border clearfix">
                     <h3 class="box-title pull-left" style="padding-top: 7px;"> Thống Kê & Báo Cáo</h3>
-                    <form action="#" method="get" class="pull-right" style="min-width: 250px;">
-                        <div class="input-group input-group-sm">
-                            <input type="text" id="ten" name="ten" class="form-control"
-                                   placeholder="Tìm kiếm ..." th:value="${ten}">
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
                 </div>
 
                 <div class="box-body">
@@ -65,15 +59,58 @@
                         <button type="submit" class="btn btn-primary">Lọc</button>
                     </form>
 
-                    <div class="well well-sm" style="background-color: #f9f9f9; border: 1px solid #ddd;">
-                        <h3>
-                            Tổng doanh thu:
-                            <span th:text="${tongDoanhThu != null ? #numbers.formatDecimal(tongDoanhThu, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : '0 VNĐ'}"></span>
+                    <div class="row">
+                        <!-- Tổng doanh thu -->
+                        <div class="col-lg-4 col-12">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3 th:text="${tongDoanhThu != null ? #numbers.formatDecimal(tongDoanhThu, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : '0 VNĐ'}">
+                                        0 VNĐ
+                                    </h3>
+                                    <p>Tổng Doanh Thu</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-cash"></i>
+                                </div>
+                                <a th:href="@{/admin/thong-ke}" class="small-box-footer">
+                                    Xem chi tiết <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
 
-                        </h3>
-                        <p><strong>Số hóa đơn:</strong> <span th:text="${soHoaDon}"></span></p>
-                        <p><strong>Số lượng sản phẩm bán ra:</strong> <span th:text="${soLuongSanPham}"></span></p>
+                        <!-- Số hóa đơn -->
+                        <div class="col-lg-4 col-12">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3 th:text="${soHoaDon}">0</h3>
+                                    <p>Số Hóa Đơn</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-bag"></i>
+                                </div>
+                                <a th:href="@{/admin/hoa-don}" class="small-box-footer">
+                                    Xem chi tiết <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Số lượng sản phẩm bán ra -->
+                        <div class="col-lg-4 col-12">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3 th:text="${soLuongSanPham}">0</h3>
+                                    <p>Sản Phẩm Bán Ra</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-stats-bars"></i>
+                                </div>
+                                <a th:href="@{/admin/san-pham}" class="small-box-footer">
+                                    Xem chi tiết <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
+
 
                     <h4>Top sản phẩm bán chạy</h4>
                     <table class="table table-bordered table-hover table-condensed">
@@ -94,16 +131,33 @@
                     </table>
 
                     <!-- Hai biểu đồ cạnh nhau trong card UI -->
-                    <div style="display: flex; gap: 40px; margin-top: 40px; flex-wrap: wrap;">
-                        <div style="flex: 1; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <h4 style="border-bottom: 2px solid #3c8dbc; padding-bottom: 5px;">Biểu đồ doanh thu theo ngày</h4>
-                            <canvas id="bieuDo" height="250"></canvas>
+                    <div class="row">
+                        <!-- Biểu đồ cột -->
+                        <div class="col-lg-6">
+                            <div class="card card-success">
+                                <div class="card-header">
+                                    <h3 class="card-title">Doanh thu theo ngày </h3>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="barChart" style="min-height: 250px; height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
                         </div>
-                        <div style="flex: 1; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <h4 style="border-bottom: 2px solid #3c8dbc; padding-bottom: 5px;">Tỷ lệ doanh thu Top sản phẩm</h4>
-                            <canvas id="pieChart" height="250"></canvas>
+
+                        <!-- Biểu đồ tròn -->
+                        <div class="col-lg-6">
+                            <div class="card card-danger">
+                                <div class="card-header">
+                                    <h3 class="card-title">Tỷ lệ doanh thu theo sản phẩm</h3>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="pieChart" ></canvas>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
+
 
                 </div>
             </div>
@@ -119,6 +173,8 @@
 
 </div>
 
+
+
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:inline="javascript">
@@ -126,36 +182,23 @@
     let labels = /*[[${ngayList}]]*/ [];
     let data = /*[[${doanhThuList}]]*/ [];
 
-    // Màu gradient cho biểu đồ đường
-    const ctxLine = document.getElementById('bieuDo').getContext('2d');
-    const gradient = ctxLine.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, 'rgba(54, 162, 235, 0.4)');
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0.2)');
-
-    // Biểu đồ đường - Doanh thu theo ngày
-    new Chart(ctxLine, {
-        type: 'line',
+    const ctxBar = document.getElementById('barChart').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
         data: {
             labels: labels,
             datasets: [{
                 label: 'Doanh thu (VNĐ)',
                 data: data,
-                fill: true,
-                backgroundColor: gradient,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
                 borderColor: 'rgba(54, 162, 235, 1)',
-                pointBackgroundColor: '#fff',
-                pointBorderColor: 'rgba(54, 162, 235, 1)',
-                pointHoverRadius: 6,
-                pointRadius: 4,
-                tension: 0.45
+                borderWidth: 1,
+                borderRadius: 6 // bo góc cho cột nhìn mềm hơn
             }]
         },
         options: {
             responsive: true,
             plugins: {
-                title: {
-                    display: false
-                },
                 tooltip: {
                     callbacks: {
                         label: ctx => 'Doanh thu: ' + ctx.parsed.y.toLocaleString('vi-VN') + ' ₫'

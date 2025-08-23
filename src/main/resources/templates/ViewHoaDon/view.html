@@ -23,86 +23,259 @@
         </section>
         <div class="col-xs-12">
             <div class="box">
+                <!--thong báo-->
+                <div class="container-fluid mt-2">
+                    <div th:if="${success}"
+                         class="alert alert-success alert-dismissible fade in"
+                         role="alert"
+                         style="margin:10px;">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span th:text="${success}"></span>
+                    </div>
+
+                    <div th:if="${error}"
+                         class="alert alert-danger alert-dismissible fade in"
+                         role="alert"
+                         style="margin:10px;">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span th:text="${error}"></span>
+                    </div>
+                </div>
+
                 <div class="box-header">
                     <h3 class="box-title">Danh sách hóa đơn</h3>
 
-                    <div class="box-tools">
-                        <form action="/hoa-don/hien-thi" method="get">
-                            <div class="input-group input-group-sm hidden-xs" style="width: 250px;">
-                                <input type="text" id="maHd" name="maHd" class="form-control pull-right"
-                                       placeholder="Tìm kiếm hóa đơn theo mã..."
-                                       th:value="${search}">
+                    <div class="box-tools" style="margin-bottom: 10px;">
+                        <form action="/hoa-don/hien-thi" method="get" class="form-inline">
 
-                                <div class="input-group-btn">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                            <!-- Dropdown lọc trạng thái -->
+                            <select name="trangThaiDonHang" id="trangThaiDonHang" class="form-control input-sm">
+                                <option value="" th:selected="${trangThaiDonHang == null}">Tất cả</option>
+                                <option th:each="tt : ${allTrangThai}"
+                                        th:value="${tt.name()}"
+                                        th:text="${tt.ten}"
+                                        th:selected="${tt == trangThaiDonHang}">
+                                </option>
+                            </select>
+
+
+                            <!-- Ô tìm kiếm mã hóa đơn -->
+                            <div class="form-group" style="margin-left: 10px;">
+                                <input type="text" id="maHd" name="maHd" class="form-control input-sm"
+                                       placeholder="Tìm kiếm theo mã..." th:value="${search}">
                             </div>
+
+                            <!-- Nút Tìm kiếm -->
+                            <button type="submit" class="btn btn-primary btn-sm" style="margin-left: 5px;">
+                                <i class="fa fa-search"></i> Tìm
+                            </button>
+
+                            <!-- Nút Reset -->
+                            <a href="/hoa-don/hien-thi" class="btn btn-default btn-sm" style="margin-left: 5px;">
+                                <i class="fa fa-refresh"></i> Reset
+                            </a>
+
                         </form>
                     </div>
                 </div>
+
+
+                <div class="row" style="margin: 20px 0 30px 0;">
+                    <!-- Tổng hóa đơn -->
+                    <div class="col-md-3 col-sm-6 col-xs-12" style="padding: 0 10px;">
+                        <div class="info-box" style="background-color: #00c0ef; border-radius: 8px; padding: 20px; text-align: center; color: white;">
+                            <i class="fa fa-file-text-o" style="font-size: 30px; margin-bottom: 10px;"></i>
+                            <span class="info-box-text" style="font-weight: bold; font-size: 16px;">Tổng hóa đơn</span>
+                            <span class="info-box-number" th:text="${tongHoaDon}" style="font-size: 22px;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Đã hoàn thành -->
+                    <div class="col-md-3 col-sm-6 col-xs-12" style="padding: 0 10px;">
+                        <div class="info-box" style="background-color: #00a65a; border-radius: 8px; padding: 20px; text-align: center; color: white;">
+                            <i class="fa fa-check-circle" style="font-size: 30px; margin-bottom: 10px;"></i>
+                            <span class="info-box-text" style="font-weight: bold; font-size: 16px;">Đã hoàn thành</span>
+                            <span class="info-box-number" th:text="${daHoanThanh}" style="font-size: 22px;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Đã hủy -->
+                    <div class="col-md-3 col-sm-6 col-xs-12" style="padding: 0 10px;">
+                        <div class="info-box" style="background-color: #f39c12; border-radius: 8px; padding: 20px; text-align: center; color: white;">
+                            <i class="fa fa-times-circle" style="font-size: 30px; margin-bottom: 10px;"></i>
+                            <span class="info-box-text" style="font-weight: bold; font-size: 16px;">Đã hủy</span>
+                            <span class="info-box-number" th:text="${daHuy}" style="font-size: 22px;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Tổng doanh thu -->
+                    <div class="col-md-3 col-sm-6 col-xs-12" style="padding: 0 10px;">
+                        <div class="info-box" style="background-color: #00a7c0; border-radius: 8px; padding: 20px; text-align: center; color: white;">
+                            <i class="fa fa-money" style="font-size: 30px; margin-bottom: 10px;"></i>
+                            <span class="info-box-text" style="font-weight: bold; font-size: 16px;">Tổng doanh thu</span>
+                            <span class="info-box-number"
+                                  th:text="${#numbers.formatDecimal(tongDoanhThu, 0, 'COMMA', 0, 'POINT')} + ' đ'"
+                                  style="font-size: 22px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
                 <div class="box-body table-responsive no-padding">
 
+                    <form th:action="@{/hoa-don/hanh-dong-tat-ca}" method="post" id="bulkActionForm">
+                        <div class="box-body table-responsive no-padding">
+                            <!-- Bảng danh sách hóa đơn -->
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAll"> </th>
+                                    <th>STT</th>
+                                    <th>Nhân viên</th>
+                                    <th>Khách hàng</th>
+                                    <th>Giảm giá</th>
+                                    <th>Hình thức thanh toán</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Địa Chỉ giao hàng</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái đơn hàng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="hd, iterStat : ${list}">
+                                    <td>
+                                        <input type="checkbox" name="hoaDonIds" th:value="${hd.id}" class="rowCheckbox">
+                                    </td>
+                                    <td th:text="${currentPage * 6 + iterStat.index + 1}"></td>
+                                    <td th:text="${hd.tenNhanVien}"></td>
+                                    <td th:text="${hd.tenKhachHang}"></td>
+                                    <td th:text="${hd.tenGiamGia}"></td>
+                                    <td th:text="${hd.tenHinhThucThanhToan}"></td>
+                                    <td th:text="${hd.ngayTao}"></td>
+                                    <td th:text="${hd.diaChiGiaoHang}"></td>
+                                    <td th:text="${hd.tongTien}"></td>
+                                    <td th:text="${hd.trangThaiDonHang}"></td>
+                                    <td th:text="${hd.trangThai == 1 ? 'Đã thanh toán' : (hd.trangThai == 2 ? 'Đã hủy' : 'Chưa thanh toán')}"></td>
+                                    <td>
+                                        <a th:href="@{'/hoa-don/update?id=' + ${hd.id}}"
+                                           th:text="${hd.trangThai == 0 ? 'Đã thanh toán' : 'Chưa thanh toán'}"
+                                           class="btn btn-warning btn-sm"
+                                           onclick="return confirm('Cập nhật trạng thái thanh toán?');">Cập nhật</a>
+
+                                        <th:block th:if="${hd.trangThaiDonHang.name() == 'CHO_XAC_NHAN'}">
+                                            <a th:href="@{'/hoa-don/huy?id=' + ${hd.id}}" class="btn btn-danger btn-sm"
+                                               onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
+                                                Hủy đơn
+                                            </a>
+                                        </th:block>
+
+                                        <a th:href="@{'/hoa-don/detail?id=' + ${hd.id}}" class="btn btn-primary btn-sm">Chi tiết</a>
+                                        <a th:href="@{'/hoa-don/in?id=' + ${hd.id} + '&redirect=hoa-don/hien-thi'}"
+                                           class="btn btn-success btn-sm">In lại hóa đơn</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Panel ẩn hiện khi chọn -->
+                        <div id="bulkActionPanel" style="display:none; margin:15px 0;">
+                            <button type="submit" name="action" value="xacNhan" class="btn btn-success">Xác nhận </button>
+                        </div>
+                    </form>
+
+                    <script>
+                        const selectAll = document.getElementById("selectAll");
+                        const checkboxes = document.querySelectorAll(".rowCheckbox");
+                        const panel = document.getElementById("bulkActionPanel");
+
+                        selectAll.addEventListener("change", function () {
+                            checkboxes.forEach(cb => cb.checked = this.checked);
+                            panel.style.display = this.checked ? "block" : "none";
+                        });
+
+                        checkboxes.forEach(cb => {
+                            cb.addEventListener("change", function () {
+                                const anyChecked = [...checkboxes].some(c => c.checked);
+                                panel.style.display = anyChecked ? "block" : "none";
+                            });
+                        });
+                    </script>
+
+
+
                     <!-- Thông báo thành công -->
-                    <table class="table table-hover">
-                        <tbody>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nhân viên</th>
-                            <th>Khách hàng</th>
-                            <th>Giảm giá</th>
-                            <th>Hình thức thanh toán</th>
-                            <th>Mã hóa đơn</th>
-                            <th>Ngày tạo</th>
-                            <th>Địa Chỉ giao hàng</th>
-                            <th>Tổng tiền</th>
-                            <th>Trạng thái đơn hàng</th>
-                            <th>Trạng thái</th>
-                        </tr>
-                        <th:block th:each="hd : ${list}">
-                            <tr>
-                                <td th:text="${hd.id}"></td>
-                                <td th:text="${hd.tenNhanVien}"></td>
-                                <td th:text="${hd.tenKhachHang}"></td>
-                                <td th:text="${hd.tenGiamGia}"></td>
-                                <td th:text="${hd.tenHinhThucThanhToan}"></td>
-                                <td th:text="${hd.maHd}"></td>
-                                <td th:text="${hd.ngayTao}"></td>
-                                <td th:text="${hd.diaChiGiaoHang}"></td>
-                                <td th:text="${hd.tongTien}"></td>
-                                <td th:text="${hd.trangThaiDonHang}"></td>
-                                <td th:text="${hd.trangThai == 1 ? 'Đã thanh toán' : (hd.trangThai == 2 ? 'Đã hủy' : 'Chưa thanh toán')}"></td>
-                                <td>
-                                    <a th:href="@{'/hoa-don/update?id=' + ${hd.id}}"
-                                       th:text="${hd.trangThai == 0 ? 'Đã thanh toán' : 'Chưa thanh toán'}"
-                                       class="btn btn-warning btn-sm"
-                                       onclick="return confirm('Cập nhật trạng thái thanh toán?');">Cập nhật</a>
-                                    <th:block th:if="${hd.trangThaiDonHang.name() == 'CHO_XAC_NHAN'}">
-                                        <a th:href="@{'/hoa-don/huy?id=' + ${hd.id}}" class="btn btn-danger btn-sm"
-                                           onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
-                                            Hủy đơn
-                                        </a>
-                                    </th:block>
-                                    <a th:href="@{'/hoa-don/detail?id=' + ${hd.id}}" class="btn btn-primary btn-sm">Chi tiết</a>
-                                    <a th:href="@{'/hoa-don/in?id=' + ${hd.id} + '&redirect=hoa-don/hien-thi'}"
-                                       class="btn btn-success btn-sm"
-                                    >
-                                        In lại hóa đơn
-                                    </a>
+                    <!--                    <table class="table table-hover">-->
+                    <!--                        <tbody>-->
+                    <!--                        <tr>-->
+                    <!--                            <th>STT</th>-->
+                    <!--                            <th>Nhân viên</th>-->
+                    <!--                            <th>Khách hàng</th>-->
+                    <!--                            <th>Giảm giá</th>-->
+                    <!--                            <th>Hình thức thanh toán</th>-->
+                    <!--&lt;!&ndash;                            <th>Mã hóa đơn</th>&ndash;&gt;-->
+                    <!--                            <th>Ngày tạo</th>-->
+                    <!--                            <th>Địa Chỉ giao hàng</th>-->
+                    <!--                            <th>Tổng tiền</th>-->
+                    <!--                            <th>Trạng thái đơn hàng</th>-->
+                    <!--                            <th>Trạng thái</th>-->
+                    <!--                            <th>Hành động</th>-->
+                    <!--                        </tr>-->
+                    <!--                        <th:block th:each="hd, iterStat : ${list}">-->
+                    <!--                            <tr>-->
+                    <!--                                <td th:text="${currentPage * 6 + iterStat.index + 1}"></td>-->
+                    <!--                                <td th:text="${hd.tenNhanVien}"></td>-->
+                    <!--                                <td th:text="${hd.tenKhachHang}"></td>-->
+                    <!--                                <td th:text="${hd.tenGiamGia}"></td>-->
+                    <!--                                <td th:text="${hd.tenHinhThucThanhToan}"></td>-->
+                    <!--&lt;!&ndash;                                <td th:text="${hd.maHd}"></td>&ndash;&gt;-->
+                    <!--                                <td th:text="${hd.ngayTao}"></td>-->
+                    <!--                                <td th:text="${hd.diaChiGiaoHang}"></td>-->
+                    <!--                                <td th:text="${hd.tongTien}"></td>-->
+                    <!--                                <td th:text="${hd.trangThaiDonHang}"></td>-->
+                    <!--                                <td th:text="${hd.trangThai == 1 ? 'Đã thanh toán' : (hd.trangThai == 2 ? 'Đã hủy' : 'Chưa thanh toán')}"></td>-->
+                    <!--                                <td>-->
+                    <!--                                    <a th:href="@{'/hoa-don/update?id=' + ${hd.id}}"-->
+                    <!--                                       th:text="${hd.trangThai == 0 ? 'Đã thanh toán' : 'Chưa thanh toán'}"-->
+                    <!--                                       class="btn btn-warning btn-sm"-->
+                    <!--                                       onclick="return confirm('Cập nhật trạng thái thanh toán?');">Cập nhật-->
+                    <!--                                    </a>-->
+
+                    <!--                                    <th:block th:if="${hd.trangThaiDonHang.name() == 'CHO_XAC_NHAN'}">-->
+                    <!--                                        <a th:href="@{'/hoa-don/huy?id=' + ${hd.id}}" class="btn btn-danger btn-sm"-->
+                    <!--                                           onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">-->
+                    <!--                                            Hủy đơn-->
+                    <!--                                        </a>-->
+                    <!--                                    </th:block>-->
+
+                    <!--                                    <a th:href="@{'/hoa-don/detail?id=' + ${hd.id}}" class="btn btn-primary btn-sm">Chi tiết</a>-->
+
+                    <!--                                    <a th:href="@{'/hoa-don/in?id=' + ${hd.id} + '&redirect=hoa-don/hien-thi'}"-->
+                    <!--                                       class="btn btn-success btn-sm">-->
+                    <!--                                        In lại hóa đơn-->
+                    <!--                                    </a>-->
 
 
-                                    <!--                                    <a th:href="@{'/hoa-don/in?id=' + ${hd.id}}"-->
-                                    <!--                                       class="btn btn-success btn-sm"-->
-                                    <!--                                       target="_blank">-->
-                                    <!--                                        In lại hóa đơn-->
-                                    <!--                                    </a>-->
+                    <!--                                    &lt;!&ndash;                                    <a th:href="@{'/hoa-don/in?id=' + ${hd.id}}"&ndash;&gt;-->
+                    <!--                                    &lt;!&ndash;                                       class="btn btn-success btn-sm"&ndash;&gt;-->
+                    <!--                                    &lt;!&ndash;                                       target="_blank">&ndash;&gt;-->
+                    <!--                                    &lt;!&ndash;                                        In lại hóa đơn&ndash;&gt;-->
+                    <!--                                    &lt;!&ndash;                                    </a>&ndash;&gt;-->
 
-                                </td>
-                            </tr>
-                        </th:block>
-                        </tbody>
-                    </table>
+                    <!--                                </td>-->
+                    <!--                            </tr>-->
+                    <!--                        </th:block>-->
+                    <!--                        </tbody>-->
+                    <!--                    </table>-->
                     <!-- Phân trang -->
                     <div class="box-footer clearfix">
                         <ul class="pagination pagination-sm no-margin pull-right">
