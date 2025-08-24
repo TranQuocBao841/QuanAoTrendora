@@ -57,7 +57,7 @@
                             <h3 class="box-title">Danh sách sản phẩm</h3>
                         </div>
                         <!-- Thanh lọc nằm ngang ngay trên bảng -->
-                        <div class="box-body"style="flex: 1; overflow-y: auto;">
+                        <div class="box-body">
                             <div class="form-inline" style="margin-bottom: 15px; gap:10px; flex-wrap: wrap;">
                                 <input type="text" class="form-control" id="searchSanPham" placeholder="Tìm tên sản phẩm..." style="width:200px;">
 
@@ -90,7 +90,7 @@
                                         <th>Tên sản phẩm</th>
                                         <th>Giá</th>
                                         <th>Số lượng</th>
-                                        <th>#</th>
+
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -127,6 +127,8 @@
                         </div>
                     </div>
                 </div>
+
+
 
                 <!-- Tabs bên phải -->
                 <div class="col-md-5">
@@ -275,13 +277,12 @@
                                             <div class="input-group">
                                                 <input type="text" id="tenKhachHangDatHang" readonly placeholder="Chưa chọn khách hàng" class="form-control">
                                                 <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-primary" onclick="openKhachHangModal('dathang')">Chọn</button>
+                                                        <button type="button" class="btn btn-primary"  data-target="khachHangModal" onclick="openKhachHangModal('dathang')">Chọn</button>
                                                         <button type="button" class="btn btn-danger" id="xoaKhachHangDatHang" onclick="xoaKhachHang('dathang')" style="display:none;">Xóa</button>
                                                     </span>
                                             </div>
                                             <input type="hidden" id="idKhachHangDatHang" name="khachHangId">
                                         </div>
-
                                         <!-- Nếu không chọn khách, nhập thủ công -->
                                         <div id="thongTinDatHang" th:if="${idKhachHangDatHang == null}">
                                             <div class="form-group">
@@ -396,38 +397,40 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title">Danh sách khách hàng</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>                        </div>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
                             <div class="modal-body">
                                 <!-- Thêm ô tìm kiếm -->
-                                <div style="margin-bottom:10px;">
+                                <div style="margin-bottom:10px;"></div>
+                                <div style="max-height: 550px; overflow-y: auto;">
+                                    <table class="table table-bordered table-hover" >
+                                        <thead>
+                                        <tr>
+                                            <th>Tên</th>
+                                            <th>SĐT</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Email</th>
+                                            <th>Ngày sinh</th>
+                                            <th>Chọn</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="kh : ${khachHangs}">
+                                            <td th:text="${kh.tenKh}"></td>
+                                            <td th:text="${kh.sdt}"></td>
+                                            <td th:text="${kh.diaChi}"></td>
+                                            <td th:text="${kh.email}"></td>
+                                            <td th:text="${kh.ngaySinh}"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-success btn-sm"
+                                                        th:attr="onclick=|chonKhachHang('${kh.idKh}', '${kh.tenKh}', '${kh.diaChi}')|">
+                                                    <i class="glyphicon glyphicon-ok"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <table class="table table-bordered table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>Tên</th>
-                                        <th>SĐT</th>
-                                        <th>Địa chỉ</th>
-                                        <th>Email</th>
-                                        <th>Ngày sinh</th>
-                                        <th>Chọn</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="kh : ${khachHangs}">
-                                        <td th:text="${kh.tenKh}"></td>
-                                        <td th:text="${kh.sdt}"></td>
-                                        <td th:text="${kh.diaChi}"></td>
-                                        <td th:text="${kh.email}"></td>
-                                        <td th:text="${kh.ngaySinh}"></td>
-                                        <td>
-                                            <button type="button" class="btn btn-success btn-sm"
-                                                    th:attr="onclick=|chonKhachHang('${kh.idKh}', '${kh.tenKh}')|">
-                                                <i class="glyphicon glyphicon-ok"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-default" data-dismiss="modal">Đóng</button>
@@ -488,7 +491,8 @@
 
             <!-- /.content -->
         </div>
-    </div>  <!-- /.content-wrapper -->
+    </div>
+    <!-- /.content-wrapper -->
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
             <b>Version</b> 2.4.13
@@ -498,42 +502,59 @@
     </footer>
 </div>
 
-
-<!--gộp cả 2 cai-->
 <script>
-    // ----------------- GIỎ HÀNG CHO MỖI TAB -----------------
     let gioHangBanHang = [];
     let gioHangDatHang = [];
 
     document.addEventListener("DOMContentLoaded", function () {
-        // Khôi phục giỏ hàng bán hàng từ localStorage
-        const data = localStorage.getItem("gioHangBanHang");
-        if (data) {
-            gioHangBanHang = JSON.parse(data);
+
+        // ----------------- KHÔI PHỤC GIỎ HÀNG ĐẶT HÀNG -----------------
+        if(!localStorage.getItem("gioHangDatHang")){
+            document.getElementById("idKhachHangDatHang").value = "";
+            document.getElementById("thongTinDatHang").style.display = 'block';
+            document.getElementById("xoaKhachHangDatHang").style.display = 'none';
+        } else {
+            gioHangDatHang = JSON.parse(localStorage.getItem("gioHangDatHang"));
+            capNhatGioHangDatHang();
+        }
+
+        // ----------------- KHÔI PHỤC GIỎ HÀNG BÁN HÀNG -----------------
+        if(!localStorage.getItem("gioHangBanHang")){
+            gioHangBanHang = [];
+            hienThiGioHangBanHang();
+        } else {
+            gioHangBanHang = JSON.parse(localStorage.getItem("gioHangBanHang"));
             hienThiGioHangBanHang();
         }
 
-        // Xử lý các input và select
-        document.getElementById("tienKhachDua")?.addEventListener("keydown", function(e){
-            if(e.key === "Enter"){ e.preventDefault(); tinhTienThua(); }
+        // ----------------- GIỮ NGUYÊN GIỎ HÀNG KHI CHUYỂN TAB -----------------
+        document.querySelectorAll('a[data-toggle="tab"]').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', function(e) {
+                const targetId = e.target.getAttribute('href');
+                if (targetId === '#tab_banhang') {
+                    hienThiGioHangBanHang(); // chỉ hiển thị lại giỏ hàng JS hiện tại
+                } else if (targetId === '#tab_dathang') {
+                    capNhatGioHangDatHang(); // chỉ hiển thị lại giỏ hàng JS hiện tại
+                }
+            });
         });
 
-        document.getElementById('hinhThucSelect')?.addEventListener('change', function(){ xuLyHinhThucThanhToan(this.value); });
+
+        // ----------------- EVENT CHO BÁN HÀNG -----------------
+        document.getElementById("tienKhachDua")?.addEventListener("keydown", e => { if(e.key==="Enter"){ e.preventDefault(); tinhTienThua(); }});
+        document.getElementById('hinhThucSelect')?.addEventListener('change', e => capNhatQR(parseFloat(document.getElementById('tongTienHidden').value || 0)));
         document.getElementById('giamGiaSelect')?.addEventListener('change', tinhTongTien);
-        document.getElementById("hinhThucSelectDatHang")?.addEventListener("change", apDungGiamGiaDatHang);
-        document.getElementById("giamGiaSelectDatHang")?.addEventListener("change", apDungGiamGiaDatHang);
 
-        // Submit form bán hàng
-        document.getElementById("formThanhToan")?.addEventListener("submit", function(e){
+        document.getElementById("formThanhToan")?.addEventListener("submit", function(e) {
             addHiddenInputsBanHang(); // thêm các input ẩn cho sản phẩm
-            // Xóa giỏ hàng trong localStorage sau submit
-            localStorage.removeItem("gioHangBanHang");
-            gioHangBanHang = [];
-            hienThiGioHangBanHang();
-            this.querySelector("button[type=submit]").disabled = true;
-        });
+            resetGioHangBanHang();
+            // Xóa giỏ hàng sau khi submit
+            localStorage.setItem("gioHangBanHang", JSON.stringify(gioHangBanHang));
 
-        // ----------------- SUBMIT FORM ĐẶT HÀNG -----------------
+            this.querySelector("button[type=submit]").disabled = true;
+
+        });
+        // ----------------- EVENT CHO ĐẶT HÀNG -----------------
         document.querySelector("#tab_dathang form")?.addEventListener("submit", function(event){
             const khInput = document.getElementById("idKhachHangDatHang");
             const ten = document.getElementById("tenKh").value.trim();
@@ -543,10 +564,14 @@
             if(!khInput.value){ // khách mới
                 if(!ten || !sdt || !diaChi){
                     alert("Vui lòng nhập đầy đủ thông tin khách hàng mới!");
+                    if(!ten) document.getElementById("tenKh").focus();
+                    else if(!sdt) document.getElementById("sdt").focus();
+                    else if(!diaChi) document.getElementById("diaChi").focus();
                     event.preventDefault();
-                    return false;
+                    return;
                 }
-            } else {
+            }
+            else {
                 // Khách cũ → xóa các input khách mới để không gửi lên server
                 const tenInput = document.getElementById("tenKh");
                 const sdtInput = document.getElementById("sdt");
@@ -556,181 +581,163 @@
                 if (diaChiInput) diaChiInput.removeAttribute("name");
             }
 
-
-            // Thêm các input ẩn sản phẩm
             addHiddenInputsDatHang(event);
+            resetGioHangDatHang();
+            localStorage.setItem("gioHangDatHang", JSON.stringify(gioHangDatHang));
+
         });
 
+        document.getElementById("giamGiaSelectDatHang")?.addEventListener("change", capNhatThanhToanDatHang);
+        document.getElementById("hinhThucSelectDatHang")?.addEventListener("change", capNhatThanhToanDatHang);
+        document.getElementById("tienKhachDuaDatHang")?.addEventListener("keydown", function(e){
+            if(e.key==="Enter"){ e.preventDefault();
+                const tienKhach = parseInt(this.value.replace(/[.,]/g,'')) || 0;
+                const tongThanhToan = parseInt(document.getElementById("tongThanhToanDatHang").innerText.replace(/[.,]/g,'')) || 0;
+                document.getElementById("tienThuaDatHang").value = (tienKhach - tongThanhToan).toLocaleString('vi-VN');
+
+            }
+        });
+        document.getElementById("tienKhachDuaDatHang")?.addEventListener("input", function(){ if(this.value.trim()==="")
+            document.getElementById("tienThuaDatHang").value=""; });
     });
 
+
+    function resetGioHangBanHang() {
+        gioHangBanHang = [];
+        localStorage.removeItem("gioHangBanHang");
+        hienThiGioHangBanHang();
+    }
+
+    function resetGioHangDatHang() {
+        gioHangDatHang = [];
+        localStorage.removeItem("gioHangDatHang");
+        capNhatGioHangDatHang();
+    }
+
+    // Nếu muốn reset cả 2:
+    function resetGioHang() {
+        resetGioHangBanHang();
+        resetGioHangDatHang();
+    }
+
+
     // ----------------- HÀM CHUNG THÊM SẢN PHẨM THEO TAB -----------------
-    function themVaoGioHangTheoTab(id, ten, size, gia, tonKho=0) {
+    function themVaoGioHangTheoTab(id, ten, size, gia, tonKho=0){
         const tabBanhang = document.getElementById('tab_banhang');
         const tabDatHang = document.getElementById('tab_dathang');
-
-        if (tabBanhang.classList.contains('active')) {
-            themVaoGioHangBanHang(id, ten, size, gia, tonKho);
-        } else if (tabDatHang.classList.contains('active')) {
-            themVaoGioHangDatHang(id, ten, size, gia);
-        } else {
-            console.warn('Không xác định được tab đang active.');
-        }
+        if(tabBanhang.classList.contains('active')) themVaoGioHangBanHang(id,ten,size,gia,tonKho);
+        else if(tabDatHang.classList.contains('active')) themVaoGioHangDatHang(id,ten,size,gia);
     }
 
     // ----------------- BÁN HÀNG -----------------
-    function themVaoGioHangBanHang(id, ten, size, gia, tonKho) {
-        gia = parseFloat(gia);
-        tonKho = parseInt(tonKho);
-
-        let sp = gioHangBanHang.find(p => p.id === id && p.size === size);
-        if (sp) {
-            if (sp.soLuong < tonKho) sp.soLuong += 1;
-            else alert("⚠️ Số lượng vượt quá tồn kho!");
-        } else {
-            gioHangBanHang.push({id, ten, size, gia, soLuong: 1, tonKho});
-        }
-
+    function themVaoGioHangBanHang(id, ten, size, gia, tonKho){
+        gia = parseFloat(gia); tonKho = parseInt(tonKho);
+        let sp = gioHangBanHang.find(p=>p.id===id && p.size===size);
+        if(sp){ if(sp.soLuong<tonKho) sp.soLuong+=1; else alert("⚠️ Số lượng vượt quá tồn kho!"); }
+        else gioHangBanHang.push({id,ten,size,gia,soLuong:1,tonKho});
         hienThiGioHangBanHang();
-        localStorage.setItem("gioHangBanHang", JSON.stringify(gioHangBanHang));
+        localStorage.setItem("gioHangBanHang",JSON.stringify(gioHangBanHang));
     }
 
-    function hienThiGioHangBanHang() {
-        const tbody = document.getElementById('gioHangBody');
-        tbody.innerHTML = '';
-
-        if (gioHangBanHang.length === 0) {
-            document.getElementById('gioHangTable').style.display = 'none';
-            return;
-        } else {
-            document.getElementById('gioHangTable').style.display = 'block';
-        }
-
-        let tongTienGoc = 0;
-        gioHangBanHang.forEach((sp, index) => {
-            const thanhTien = sp.gia * sp.soLuong;
-            tongTienGoc += thanhTien;
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${sp.ten}</td>
-                <td>${sp.size}</td>
-                <td>
-                    <input type="number" min="1" max="${sp.tonKho}" value="${sp.soLuong}"
-                        onchange="capNhatSoLuongBanHang(${index}, this.value)" style="width:60px;">
-                </td>
-                <td>${sp.gia.toLocaleString()} ₫</td>
-                <td>${thanhTien.toLocaleString()} ₫</td>
-                <td>
-                    <button type="button" class="btn btn-danger btn-xs" onclick="xoaSanPhamBanHang(${index})">Xóa</button>
-                </td>
-            `;
+    function hienThiGioHangBanHang(){
+        const tbody=document.getElementById('gioHangBody'); tbody.innerHTML='';
+        if(gioHangBanHang.length===0){ document.getElementById('gioHangTable').style.display='none'; return; }
+        document.getElementById('gioHangTable').style.display='block';
+        let tongTienGoc=0;
+        gioHangBanHang.forEach((sp,index)=>{
+            const thanhTien=sp.gia*sp.soLuong; tongTienGoc+=thanhTien;
+            const tr=document.createElement('tr');
+            tr.innerHTML=`
+            <td>${sp.ten}</td>
+            <td>${sp.size}</td>
+            <td><input type="number" min="1" max="${sp.tonKho}" value="${sp.soLuong}" onchange="capNhatSoLuongBanHang(${index},this.value)" style="width:60px;"></td>
+            <td>${sp.gia.toLocaleString()} ₫</td>
+            <td>${thanhTien.toLocaleString()} ₫</td>
+            <td><button type="button" class="btn btn-danger btn-xs" onclick="xoaSanPhamBanHang(${index})">Xóa</button></td>`;
             tbody.appendChild(tr);
         });
-
-        document.getElementById('tong-tien-goc').innerText = tongTienGoc.toLocaleString();
+        document.getElementById('tong-tien-goc').innerText=tongTienGoc.toLocaleString();
         tinhTongTien();
     }
 
-    function capNhatSoLuongBanHang(index, value) {
-        value = parseInt(value); if (value < 1) value = 1;
-        const max = gioHangBanHang[index].tonKho;
-        if (value > max) value = max;
-
-        gioHangBanHang[index].soLuong = value;
+    function capNhatSoLuongBanHang(index,value){
+        value=parseInt(value);
+        if(value<1)value=1;
+        const max=gioHangBanHang[index].tonKho;
+        if(value>max)value=max;
+        gioHangBanHang[index].soLuong=value;
         hienThiGioHangBanHang();
-        localStorage.setItem("gioHangBanHang", JSON.stringify(gioHangBanHang));
     }
 
-    function xoaSanPhamBanHang(index) {
-        gioHangBanHang.splice(index, 1);
+
+
+    function xoaSanPhamBanHang(index){
+        gioHangBanHang.splice(index,1);
         hienThiGioHangBanHang();
-        localStorage.setItem("gioHangBanHang", JSON.stringify(gioHangBanHang));
+        localStorage.setItem("gioHangBanHang",JSON.stringify(gioHangBanHang));
+
     }
 
-    function tinhTongTien() {
-        let tongGoc = 0;
-        gioHangBanHang.forEach(sp => { tongGoc += sp.gia * sp.soLuong; });
 
-        let giamGia = 0;
-        const select = document.getElementById('giamGiaSelect');
-        const option = select.options[select.selectedIndex];
-        const loai = option.dataset.loai;
-        const giaTri = parseFloat(option.dataset.giaTri) || 0;
-
-        if (loai === 'PERCENT') giamGia = tongGoc * giaTri / 100;
-        else giamGia = giaTri;
-
-        const tongThanhToan = Math.max(tongGoc - giamGia, 0);
-        document.getElementById('tong-tien-goc').innerText = tongGoc.toLocaleString();
-        document.getElementById('muc-giam').innerText = giamGia.toLocaleString();
-        document.getElementById('tong-tien').innerText = tongThanhToan.toLocaleString();
-        document.getElementById('tongTienHidden').value = tongThanhToan;
-
+    function tinhTongTien(){
+        let tongGoc=0; gioHangBanHang.forEach(sp=>tongGoc+=sp.gia*sp.soLuong);
+        let giamGia=0;
+        const select=document.getElementById('giamGiaSelect'); const option=select.selectedOptions[0]; const loai=option.dataset.loai; const giaTri=parseFloat(option.dataset.giaTri||0);
+        giamGia=loai==='PERCENT'?tongGoc*giaTri/100:giaTri;
+        const tongThanhToan=Math.max(tongGoc-giamGia,0);
+        document.getElementById('tong-tien-goc').innerText=tongGoc.toLocaleString();
+        document.getElementById('muc-giam').innerText=giamGia.toLocaleString();
+        document.getElementById('tong-tien').innerText=tongThanhToan.toLocaleString();
+        document.getElementById('tongTienHidden').value=tongThanhToan;
         capNhatQR(tongThanhToan);
     }
 
-    function capNhatQR(tongTienSauGiam) {
-        const selectHinhThuc = document.getElementById('hinhThucSelect');
-        const qrContainer = document.getElementById('qrThanhToanContainer');
-        const qrImg = document.getElementById('qrCodeImg');
-        const value = selectHinhThuc.value;
 
-        if(hinhThuc === '1' || hinhThuc === '2'){
-            qrContainer.style.display = 'block';
-            tienMatFields.style.display = 'none';
-            document.getElementById("qrCodeImgDatHang").src = "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongThanhToan;
-
-
-        } else {
-            qrContainer.style.display = 'none';
-            qrImg.src = '';
-        }
+    function capNhatQR(tongThanhToan){
+        const selectHinhThuc=document.getElementById('hinhThucSelect');
+        const qrContainer=document.getElementById('qrThanhToanContainer');
+        const tienMatFields=document.getElementById('tienMatFields');
+        const qrImg=document.getElementById('qrCodeImg');
+        if(!selectHinhThuc || !qrContainer || !tienMatFields || !qrImg)
+            return;
+        const hinhThuc=selectHinhThuc.value;
+        if
+        (hinhThuc==='2'||hinhThuc==='3'){ qrContainer.style.display='block';
+            tienMatFields.style.display='none';
+            qrImg.src="https://img.vietqr.io/image/MB-0912713606-compact.png?amount="+Math.round(tongThanhToan);}
+        else {
+            qrContainer.style.display='none'; tienMatFields.style.display='none'; qrImg.src=''; }
     }
+
 
     function tinhTienThua() {
-        const tienKhach = parseFloat(document.getElementById('tienKhachDua').value) || 0;
-        const tongThanhToan = parseFloat(document.getElementById('tongTienHidden').value) || 0;
-        const thua = tienKhach - tongThanhToan;
-        document.getElementById('tienThua').value = thua >= 0 ? thua.toLocaleString() : '0';
+        const tongTien = parseFloat(document.getElementById("tongTien").textContent) || 0;
+        const tienKhachDua = parseFloat(document.getElementById("tienKhachDua").value) || 0;
+        const tienThua = tienKhachDua - tongTien;
+
+        document.getElementById("tienThua").textContent = tienThua.toLocaleString('vi-VN') + " đ";
     }
 
-    function xuLyHinhThucThanhToan(value) {
-        const qrContainer = document.getElementById('qrThanhToanContainer');
-        const tienMatFields = document.getElementById('tienMatFields');
 
-        if (value === '1' || value === '2') {
-            qrContainer.style.display = 'block';
-            tienMatFields.style.display = 'none';
-            const tongThanhToan = parseInt(document.getElementById('tongTienHidden').value);
-            document.getElementById('qrCodeImg').src = `/ban-hang/qr-code?amount=${tongThanhToan}`;
-        } else if (value === '3') {
-            qrContainer.style.display = 'none';
-            tienMatFields.style.display = 'block';
-        } else {
-            qrContainer.style.display = 'none';
-            tienMatFields.style.display = 'none';
-        }
-    }
-
-    // ----------------- ADD HIDDEN INPUTS BÁN HÀNG -----------------
-    function addHiddenInputsBanHang() {
+    function addHiddenInputsBanHang(){
         const form = document.getElementById("formThanhToan");
-        if (!form) return;
+        if(!form) return;
 
         // Xóa các input cũ
         form.querySelectorAll('input[name^="sp_"]').forEach(e => e.remove());
+        form.querySelectorAll('input[name="voucherId"]').forEach(e => e.remove());
 
-        // Thêm từng sản phẩm trong giỏ hàng
+        // Thêm sản phẩm vào input ẩn
         gioHangBanHang.forEach(sp => {
             const input = document.createElement("input");
             input.type = "hidden";
-            input.name = "sp_" + sp.id; // sp_1, sp_2 ...
+            input.name = "sp_" + sp.id;
             input.value = sp.soLuong;
             form.appendChild(input);
         });
 
-        // Tổng tiền
-        const tongTien = gioHangBanHang.reduce((sum, sp) => sum + sp.gia * sp.soLuong, 0);
+        // Tính tổng tiền và giảm giá
+        let tongTien = gioHangBanHang.reduce((sum, sp) => sum + sp.gia * sp.soLuong, 0);
         const select = document.getElementById("giamGiaSelect");
         const option = select.selectedOptions[0];
         const loai = option.dataset.loai;
@@ -738,8 +745,9 @@
         const giam = loai === 'PERCENT' ? tongTien * giaTri / 100 : giaTri;
         const tongThanhToan = Math.max(tongTien - giam, 0);
 
+        // Thêm input ẩn tổng tiền
         let tongTienInput = document.getElementById("tongTienHidden");
-        if (!tongTienInput) {
+        if(!tongTienInput){
             tongTienInput = document.createElement("input");
             tongTienInput.type = "hidden";
             tongTienInput.name = "tongTien";
@@ -748,224 +756,178 @@
         }
         tongTienInput.value = tongThanhToan;
 
-        // Khách hàng mặc định là Khách lẻ nếu chưa chọn
+        // Thêm input ẩn voucherId để gửi lên server
+        if(option && option.value && option.value !== "0") {
+            const voucherInput = document.createElement("input");
+            voucherInput.type = "hidden";
+            voucherInput.name = "voucherId";
+            voucherInput.value = option.value; // id phiếu giảm
+            form.appendChild(voucherInput);
+        }
+
+        // Khách hàng mới
         const khInput = document.getElementById("idKhachHang");
-        if (khInput && !khInput.value) khInput.value = -1; // -1 đại diện Khách lẻ
+        if(khInput && !khInput.value) khInput.value = -1;
     }
 
 
     // ----------------- ĐẶT HÀNG ONLINE -----------------
-    function themVaoGioHangDatHang(id, ten, size, gia) {
-        let index = gioHangDatHang.findIndex(sp => sp.id == id && sp.size == size);
-        if(index >= 0) gioHangDatHang[index].soLuong += 1;
-        else gioHangDatHang.push({id, ten, size, gia: parseFloat(gia), soLuong:1});
+    function themVaoGioHangDatHang(id,ten,size,gia){
+        let index=gioHangDatHang.findIndex(
+            sp=>sp.id==id && sp.size==size);
+        if(index>=0) gioHangDatHang[index].soLuong+=1;
+        else
+            gioHangDatHang.push({id,ten,size,gia:parseFloat(gia),soLuong:1
+            });
         capNhatGioHangDatHang();
+        localStorage.setItem("gioHangDatHang",JSON.stringify(gioHangDatHang));
+
     }
 
-    function capNhatGioHangDatHang() {
-        let tbody = document.getElementById("cartDatHangBody");
-        tbody.innerHTML = "";
-        let tongTien = 0;
-
-        gioHangDatHang.forEach((sp, idx) => {
-            let thanhTien = sp.gia * sp.soLuong;
-            tongTien += thanhTien;
-
-            let tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${sp.ten}</td>
-                <td>${sp.size}</td>
-                <td><input type="number" min="1" value="${sp.soLuong}" onchange="capNhatSoLuongDatHang(${idx}, this.value)" style="width:60px;"></td>
-                <td>${sp.gia.toLocaleString()} ₫</td>
-                <td>${thanhTien.toLocaleString()} ₫</td>
-                <td><button class="btn btn-danger btn-xs" onclick="xoaSanPhamDatHang(${idx})"><i class="glyphicon glyphicon-trash"></i></button></td>
-            `;
+    function capNhatGioHangDatHang(){
+        let tbody=document.getElementById("cartDatHangBody"); tbody.innerHTML=""; let tongTien=0;
+        gioHangDatHang.forEach((sp,idx)=>{
+            let thanhTien=sp.gia*sp.soLuong; tongTien+=thanhTien;
+            let tr=document.createElement("tr"); tr.innerHTML=`
+            <td>${sp.ten}</td><td>${sp.size}</td>
+            <td><input type="number" min="1" value="${sp.soLuong}" onchange="capNhatSoLuongDatHang(${idx},this.value)" style="width:60px;"></td>
+            <td>${sp.gia.toLocaleString()} ₫</td>
+            <td>${thanhTien.toLocaleString()} ₫</td>
+            <td><button class="btn btn-danger btn-xs" onclick="xoaSanPhamDatHang(${idx})"><i class="glyphicon glyphicon-trash"></i></button></td>`;
             tbody.appendChild(tr);
         });
-
-        document.getElementById("tongTienHangDatHang").innerText = tongTien.toLocaleString();
-
+        document.getElementById("tongTienHangDatHang").innerText=tongTien.toLocaleString();
         capNhatThanhToanDatHang();
     }
 
-    function capNhatSoLuongDatHang(index, value){
-        value = parseInt(value); if(value < 1) value = 1;
-        gioHangDatHang[index].soLuong = value;
+
+    function capNhatSoLuongDatHang(index,value){
+        value=parseInt(value);
+        if(value<1)value=1;
+        gioHangDatHang[index].soLuong=value;
         capNhatGioHangDatHang();
     }
+
 
     function xoaSanPhamDatHang(index){
         gioHangDatHang.splice(index,1);
         capNhatGioHangDatHang();
-    }
-
-    // function apDungGiamGiaDatHang(){
-    //     const select = document.getElementById("giamGiaSelectDatHang");
-    //     const option = select.selectedOptions[0];
-    //     const loai = option.dataset.loai;
-    //     const giaTri = parseFloat(option.dataset.giaTri || 0);
-    //
-    //     let tongTien = gioHangDatHang.reduce((sum, sp) => sum + sp.gia * sp.soLuong, 0);
-    //     let giam = loai === 'PERCENT' ? tongTien * giaTri / 100 : giaTri;
-    //     let tongThanhToan = Math.max(tongTien - giam, 0);
-    //
-    //     document.getElementById("giamGiaTienDatHang").innerText = giam.toLocaleString();
-    //     document.getElementById("tongThanhToanDatHang").innerText = tongThanhToan.toLocaleString();
-    //
-    //     const hinhThuc = document.getElementById("hinhThucSelectDatHang").value;
-    //     const qrContainer = document.getElementById("qrThanhToanContainerDatHang");
-    //     const tienMatFields = document.getElementById("tienMatFieldsDatHang");
-    //
-    //     if(hinhThuc === '1' || hinhThuc === '2'){ // Chuyển khoản / ví điện tử
-    //         qrContainer.style.display = 'block';
-    //         tienMatFields.style.display = 'none';
-    //         document.getElementById("qrCodeImgDatHang").src =
-    //             "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongThanhToan;
-    //     } else if(hinhThuc === '3'){ // Tiền mặt
-    //         qrContainer.style.display = 'none';
-    //         tienMatFields.style.display = 'block';
-    //     } else { // Không chọn
-    //         qrContainer.style.display = 'none';
-    //         tienMatFields.style.display = 'none';
-    //     }
-    // }
-
-    // ----------------- HIỂN THỊ QR / TIỀN MẶT -----------------
-    function capNhatThanhToanDatHang() {
-        const selectGiamGia = document.getElementById("giamGiaSelectDatHang");
-        const option = selectGiamGia.selectedOptions[0];
-        const loai = option?.dataset.loai;
-        const giaTri = parseFloat(option?.dataset.giaTri || 0);
-
-        // Tính tổng tiền gốc
-        let tongTien = gioHangDatHang.reduce((sum, sp) => sum + sp.gia * sp.soLuong, 0);
-
-        // Tính giảm giá
-        let giam = loai === 'PERCENT' ? tongTien * giaTri / 100 : giaTri;
-        let tongThanhToan = Math.max(tongTien - giam, 0);
-
-        document.getElementById("giamGiaTienDatHang").innerText = giam.toLocaleString();
-        document.getElementById("tongThanhToanDatHang").innerText = tongThanhToan.toLocaleString();
-
-        // Lấy phương thức thanh toán
-        const hinhThuc = document.getElementById("hinhThucSelectDatHang").value;
-        const qrContainer = document.getElementById("qrThanhToanContainerDatHang");
-        const tienMatFields = document.getElementById("tienMatFieldsDatHang");
-
-        if(hinhThuc == '2' || hinhThuc == '3'){ // dùng ==
-            qrContainer.style.display = 'block';
-            tienMatFields.style.display = 'none';
-            document.getElementById("qrCodeImgDatHang").src = "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongThanhToan;
-        } else if(hinhThuc == '1'){
-            qrContainer.style.display = 'none';
-            tienMatFields.style.display = 'block';
-        } else {
-            qrContainer.style.display = 'none';
-            tienMatFields.style.display = 'none';
-        }
+        localStorage.setItem("gioHangDatHang",JSON.stringify(gioHangDatHang));
 
     }
 
-    // Gọi hàm khi thay đổi giảm giá hoặc phương thức
-    document.getElementById("giamGiaSelectDatHang")?.addEventListener("change", capNhatThanhToanDatHang);
-    document.getElementById("hinhThucSelectDatHang")?.addEventListener("change", capNhatThanhToanDatHang);
 
-    // Tính tiền thừa khi tiền mặt
-    const tienKhachInput = document.getElementById("tienKhachDuaDatHang");
-    const tienThuaInput = document.getElementById("tienThuaDatHang");
-    const tongThanhToanEl = document.getElementById("tongThanhToanDatHang");
-
-    // Tính tiền thừa khi nhấn Enter
-    tienKhachInput?.addEventListener("keydown", function(e){
-        if(e.key === "Enter") {
-            e.preventDefault();
-            const tienKhach = parseFloat(this.value.replace(/,/g,'')) || 0;
-            const tongThanhToan = parseFloat(tongThanhToanEl.innerText.replace(/,/g,'')) || 0;
-            tienThuaInput.value = Math.max(tienKhach - tongThanhToan, 0).toLocaleString();
+    function capNhatThanhToanDatHang(){
+        const selectGiamGia=document.getElementById("giamGiaSelectDatHang");
+        const option=selectGiamGia.selectedOptions[0];
+        const loai=option?.dataset.loai;
+        const giaTri=parseFloat(option?.dataset.giaTri||0);
+        let tongTien=gioHangDatHang.reduce((sum,sp)=>sum+sp.gia*sp.soLuong,0);
+        let giam=loai==='PERCENT'?tongTien*giaTri/100:giaTri;
+        let tongThanhToan=Math.max(tongTien-giam,0);
+        document.getElementById("giamGiaTienDatHang").innerText=giam.toLocaleString();
+        document.getElementById("tongThanhToanDatHang").innerText=tongThanhToan.toLocaleString();
+        const hinhThuc=document.getElementById("hinhThucSelectDatHang").value;
+        const qrContainer=document.getElementById("qrThanhToanContainerDatHang");
+        const tienMatFields=document.getElementById("tienMatFieldsDatHang");
+        if(hinhThuc=='2'||hinhThuc=='3'){
+            qrContainer.style.display='block';
+            tienMatFields.style.display='none';
+            document.getElementById("qrCodeImgDatHang").src="https://img.vietqr.io/image/MB-0912713606-compact.png?amount="+tongThanhToan; }
+        else if(hinhThuc=='1'){
+            qrContainer.style.display='none';
+            tienMatFields.style.display='block'; }
+        else {
+            qrContainer.style.display='none';
+            tienMatFields.style.display='none';
         }
-    });
+    }
 
-    // Xóa tiền thừa khi ô tiền khách đưa rỗng
-    tienKhachInput?.addEventListener("input", function(){
-        if(this.value.trim() === "") {
-            tienThuaInput.value = "";
-        }
-    });
+
     function addHiddenInputsDatHang(event){
-        const form = document.querySelector("#tab_dathang form");
-        if (!form) return;
-
-        // Xóa các input cũ
-        form.querySelectorAll('input[name^="sp_"]').forEach(e => e.remove());
-
-        // Thêm từng sản phẩm trong giỏ hàng
-        gioHangDatHang.forEach(sp => {
-            const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = "sp_" + sp.id;
-            input.value = sp.soLuong;
+        const form=document.querySelector("#tab_dathang form");
+        if(!form)
+            return;
+        form.querySelectorAll('input[name^="sp_"]').forEach(e=>e.remove());
+        gioHangDatHang.forEach(sp=>{
+            const input=document.createElement("input");
+            input.type="hidden";
+            input.name="sp_"+sp.id;
+            input.value=sp.soLuong;
             form.appendChild(input);
         });
+        let tongTien=gioHangDatHang.reduce((sum,sp)=>sum+sp.gia*sp.soLuong,0);
+        const selectGiamGia=document.getElementById("giamGiaSelectDatHang");
+        const option=selectGiamGia.selectedOptions[0];
+        const loai=option?.dataset.loai;
+        const giaTri=parseFloat(option?.dataset.giaTri||0);
 
-        // Tính tổng tiền
-        let tongTien = gioHangDatHang.reduce((sum, sp) => sum + sp.gia * sp.soLuong, 0);
-        const selectGiamGia = document.getElementById("giamGiaSelectDatHang");
-        const option = selectGiamGia.selectedOptions[0];
-        const loai = option.dataset.loai;
-        const giaTri = parseFloat(option.dataset.giaTri || 0);
-        let giam = loai === 'PERCENT' ? tongTien * giaTri / 100 : giaTri;
-        let tongThanhToan = Math.max(tongTien - giam, 0);
 
-        // Ẩn input tổng tiền nếu chưa có
-        let tongTienInput = document.getElementById("tongTienHiddenDatHang");
+        let giam=loai==='PERCENT'?tongTien*giaTri/100:giaTri;
+        let tongThanhToan=Math.max(tongTien-giam,0);
+        let tongTienInput=document.getElementById("tongTienHiddenDatHang");
         if(!tongTienInput){
-            tongTienInput = document.createElement("input");
-            tongTienInput.type = "hidden";
-            tongTienInput.name = "tongTien";
-            tongTienInput.id = "tongTienHiddenDatHang";
+            tongTienInput=document.createElement("input");
+            tongTienInput.type="hidden";
+            tongTienInput.name="tongTien";
+            tongTienInput.id="tongTienHiddenDatHang";
             form.appendChild(tongTienInput);
         }
-        tongTienInput.value = tongThanhToan;
+
+        tongTienInput.value=tongThanhToan;
 
 
-        // QR thanh toán & tiền mặt
-        const hinhThuc = document.getElementById("hinhThucSelectDatHang").value;
-        const qrContainer = document.getElementById("qrThanhToanContainerDatHang");
-        const tienMatFields = document.getElementById("tienMatFieldsDatHang");
-        if(hinhThuc === '1' || hinhThuc === '2'){ // chuyển khoản hoặc ví điện tử
-            qrContainer.style.display = 'block';
-            tienMatFields.style.display = 'none';
-            document.getElementById("qrCodeImgDatHang").src = "https://img.vietqr.io/image/MB-0912713606-compact.png?amount=" + tongThanhToan;
-        } else if(hinhThuc === '3'){ // tiền mặt
-            qrContainer.style.display = 'none';
-            tienMatFields.style.display = 'block';
-        } else {
-            qrContainer.style.display = 'none';
-            tienMatFields.style.display = 'none';
+        const hinhThuc=document.getElementById("hinhThucSelectDatHang").value;
+        const qrContainer=document.getElementById("qrThanhToanContainerDatHang");
+        const tienMatFields=document.getElementById("tienMatFieldsDatHang");
+        if(hinhThuc==='2'||hinhThuc==='3'){
+            qrContainer.style.display='block';
+            tienMatFields.style.display='none';
+            document.getElementById("qrCodeImgDatHang").src="https://img.vietqr.io/image/MB-0912713606-compact.png?amount="+tongThanhToan; }
+        else if(hinhThuc==='1'){
+            qrContainer.style.display='none';
+            tienMatFields.style.display='block';
+        }
+        else {
+            qrContainer.style.display='none';
+            tienMatFields.style.display='none';
         }
     }
-    //Chọn khách cũ
-    function chonKhachHangDatHang(id, ten){
-        const khInput = document.getElementById("idKhachHangDatHang");
-        khInput.value = id; // phải tồn tại name="khachHangId"
 
-        document.getElementById("tenKhachHangDatHang").value = ten;
-        document.getElementById("thongTinDatHang").style.display = 'none';
+    // ----------------- CHỌN / XÓA KHÁCH HÀNG -----------------
+    function chonKhachHangDatHang(id,ten){
+        document.getElementById("idKhachHangDatHang").value=id;
+        document.getElementById("tenKhachHangDatHang").value=ten;
+        document.getElementById("thongTinDatHang").style.display='none';
+        document.getElementById("xoaKhachHangDatHang").style.display='inline-block';
+
+        // Khi nhấn nút "Chọn" trên popup khách hàng
+        document.querySelectorAll(".openKhachHangModal").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const tr = btn.closest("tr");
+                const tenKh = tr.querySelector("td:nth-child(1)").innerText.trim();
+                const sdt = tr.querySelector("td:nth-child(2)").innerText.trim();
+                const diaChi = tr.querySelector("td:nth-child(3)").innerText.trim();
+
+                // Điền thông tin vào form chính
+                document.getElementById("tenKh").value = tenKh;
+                document.getElementById("sdt").value = sdt;
+                document.getElementById("diaChiGiaoHang").value = diaChi;
+
+                // Ẩn popup nếu muốn
+                $('#modalKhachHang').modal('hide');
+            });
+        });
+        // Hiển thị nút xóa khách nếu cần
         document.getElementById("xoaKhachHangDatHang").style.display = 'inline-block';
     }
-
-
-    // Xóa khách đã chọn → hiện form khách mới
-    function xoaKhachHang(tab){
-        if(tab === 'dathang'){
-            document.getElementById("idKhachHangDatHang").value = "";
-            document.getElementById("tenKhachHangDatHang").value = "";
-            document.getElementById("thongTinDatHang").style.display = 'block';
-            document.getElementById("xoaKhachHangDatHang").style.display = 'none';
-        }
+    function xoaKhachHang(tab){ if(tab==='dathang'){
+        document.getElementById("idKhachHangDatHang").value="";
+        document.getElementById("tenKhachHangDatHang").value="";
+        document.getElementById("thongTinDatHang").style.display='block';
+        document.getElementById("xoaKhachHangDatHang").style.display='none';
     }
-
-
+    }
 </script>
 
 

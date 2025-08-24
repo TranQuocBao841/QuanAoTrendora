@@ -61,6 +61,9 @@ public class HoaDon {
     @Enumerated(EnumType.STRING)
     @Column(name = "trang_thai_don_hang")
     private TrangThaiDonHang trangThaiDonHang;
+
+    @Column(name="ly_do_huy")
+    private String lyDoHuy;
 }
 
 

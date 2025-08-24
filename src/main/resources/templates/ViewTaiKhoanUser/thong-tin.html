@@ -704,6 +704,7 @@
                 <strong>❌ Lỗi!</strong> <span th:text="${error}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+
             <h4 class="mb-3">Hóa đơn của tôi</h4>
 
             <!-- Trường hợp không có hóa đơn -->
@@ -736,14 +737,16 @@
                                 Xem
                             </button>
 
+                            <!-- Nút hủy chỉ hiện khi chưa thanh toán -->
                             <th:block th:if="${hd.trangThai == 0}">
-                                <a th:href="@{/quan-ao/hoa-don/huy/{id}(id=${hd.id})}"
-                                   class="btn btn-sm btn-outline-danger ms-1"
-                                   onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                                <button type="button" class="btn btn-sm btn-outline-danger ms-1"
+                                        data-bs-toggle="modal"
+                                        th:attr="data-bs-target='#modalHuy__' + ${hd.id}">
                                     Hủy
-                                </a>
+                                </button>
                             </th:block>
 
+                            <!-- Modal Chi tiết -->
                             <!-- Modal chi tiết -->
                             <div class="modal fade" th:id="'modalChiTiet__' + ${hd.id}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -782,7 +785,7 @@
                       step.name() == 'DANG_VAN_CHUYEN'  ? 'fas fa-truck' :
                       step.name() == 'DA_GIAO'          ? 'fas fa-house' :
                       step.name() == 'DA_HOAN_THANH'    ? 'fas fa-circle-check' :
-                      step.name() == 'DA_HUY'           ? 'fas fa-circle-xmark' : ''}"
+step.name() == 'DA_HUY'           ? 'fas fa-circle-xmark' : ''}"
                                                          th:classappend="
                 ${isCancelled} ?
                     ${step.name() == 'DA_HUY' ? 'cancelled' : 'greyed'} :
@@ -823,12 +826,41 @@
                                 </div>
                             </div>
                             <!-- End Modal -->
+                            <!-- End Modal Chi tiết -->
+
+                            <!-- Modal Hủy đơn -->
+                            <div class="modal fade" th:id="'modalHuy__' + ${hd.id}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form th:action="@{/quan-ao/hoa-don/huy/{id}(id=${hd.id})}" method="post">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Xác nhận hủy đơn hàng</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Bạn có chắc chắn muốn hủy đơn hàng <strong th:text="${hd.maHd}"></strong> không? Hãy cho chúng tôi biết lý do nhé!</p>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Lý do hủy</label>
+                                                    <textarea class="form-control" name="lyDoHuy" rows="3" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Modal Hủy đơn -->
+
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
 
         <div class="tab-pane fade" id="hoanthanh" role="tabpanel">
             <h4 class="mb-3">Đơn hàng đã hoàn thành</h4>
@@ -851,7 +883,7 @@
                                 <td th:text="${ct.soLuong}"></td>
                                 <td th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></td>
                                 <td>
-                                    <a th:href="@{/san-pham/deltal(id=${ct.sanPham.id})}" class="btn btn-sm btn-outline-success">Đánh giá</a>
+                                    <a th:href="@{/san-pham/deltal(id=${ct.sanPham.id})}" class="btn btn-sm btn-outline-success">Mua tiếp/ Đánh giá</a>
                                 </td>
                             </tr>
                             </tbody>

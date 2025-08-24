@@ -45,17 +45,18 @@ public class HoaDonController {
     @GetMapping("/hien-thi")
     public String hienThi(Model model,
                           @RequestParam(value = "maHd", required = false) String maHd,
+                          @RequestParam(value = "tenKhachHang", required = false) String tenKhachHang,  // ✅ thêm
                           @RequestParam(value = "trangThaiDonHang", required = false) TrangThaiDonHang trangThaiDonHang,
                           @RequestParam(value = "page", defaultValue = "0") int page) {
 
         int size = 6; // Mỗi trang 6 hóa đơn
 
-        Page<HoaDonDTO> hoaDonPage = service.getAllOrSearch(maHd, page, size);
+        Page<HoaDonDTO> hoaDonPage = service.getAllOrSearch(maHd, tenKhachHang, trangThaiDonHang, page, size);
 
         long tongHoaDon = hoaDonRepo.count();
         long daHoanThanh = hoaDonRepo.countByTrangThaiDonHang(TrangThaiDonHang.DA_HOAN_THANH);
         long daHuy = hoaDonRepo.countByTrangThaiDonHang(TrangThaiDonHang.DA_HUY);
-        BigDecimal tongDoanhThu = hoaDonRepo.getTongDoanhThu();
+        BigDecimal tongDoanhThu = hoaDonRepo.tongDoanhThuDaThanhToan();
         if (tongDoanhThu == null) tongDoanhThu = BigDecimal.ZERO;
 
         model.addAttribute("tongHoaDon", tongHoaDon);
@@ -67,10 +68,13 @@ public class HoaDonController {
         List<HoaDon> danhSachHoaDon = hoaDonRepo.findAll();
         model.addAttribute("hoaDonList", danhSachHoaDon);
 
-        model.addAttribute("list", hoaDonPage.getContent()); // danh sách hóa đơn trang hiện tại
+        model.addAttribute("list", hoaDonPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", hoaDonPage.getTotalPages());
         model.addAttribute("search", maHd);
+        model.addAttribute("tenKhachHang", tenKhachHang);  // ✅ giữ giá trị đã nhập
+        model.addAttribute("trangThaiDonHang", trangThaiDonHang);
+
 
 
         return "ViewHoaDon/view";
@@ -105,27 +109,32 @@ public class HoaDonController {
     HoaDonRepo hdr;
 
     @PostMapping("cap-nhat-trang-thai/{id}")
-    public String capNhatTrangThai(@PathVariable("id") Integer id,
-                                   @RequestParam("trangThaiMoi") TrangThaiDonHang trangThaiMoi) {
+    public String capNhatTrangThai(@PathVariable("id") Integer id) {
         Optional<HoaDon> optional = hdr.findById(id);
         if (optional.isPresent()) {
             HoaDon hoaDon = optional.get();
-            hoaDon.setTrangThaiDonHang(trangThaiMoi);
-            hdr.save(hoaDon);
+            TrangThaiDonHang trangThaiHienTai = hoaDon.getTrangThaiDonHang();
+            TrangThaiDonHang trangThaiTiepTheo = trangThaiHienTai.next();
+
+            if (trangThaiTiepTheo != null) {
+                hoaDon.setTrangThaiDonHang(trangThaiTiepTheo);
+                hdr.save(hoaDon);
+            }
         }
-        return "redirect:/hoa-don/detail?id=" + id; // quay lại trang detail
+        return "redirect:/hoa-don/detail?id=" + id;
     }
 
 
-    @GetMapping("/huy")
-    public String huyDonHangAdmin(@RequestParam("id") Integer id, RedirectAttributes redirect) {
+
+    @PostMapping("/huy/{id}")
+    public String huyDonHangAdmin(@PathVariable("id") Integer id,
+                                  @RequestParam("lyDoHuy") String lyDoHuy,
+                                  RedirectAttributes redirect) {
         Optional<HoaDon> optional = hoaDonRepo.findById(id);
         if (optional.isPresent()) {
             HoaDon hd = optional.get();
 
-            // Chỉ hủy được nếu đang là CHƯA XÁC NHẬN
             if (hd.getTrangThaiDonHang() == TrangThaiDonHang.CHO_XAC_NHAN) {
-
                 // Trả sản phẩm về kho
                 List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByHoaDon(hd);
                 for (HoaDonChiTiet ct : chiTietList) {
@@ -134,18 +143,19 @@ public class HoaDonController {
                     sanPhamRepo.save(sp);
                 }
 
-                // Nếu đơn hàng có phiếu giảm giá thì hoàn lại số lượng
+                // Hoàn lại voucher nếu có
                 if (hd.getGiamGia() != null) {
                     GiamGia giamGia = hd.getGiamGia();
-                    giamGia.setSoLuong(giamGia.getSoLuong() + 1); // Hoàn lại 1 lượt sử dụng
+                    giamGia.setSoLuong(giamGia.getSoLuong() + 1);
                     giamGiaRepo.save(giamGia);
                 }
 
-                // Cập nhật trạng thái sang ĐÃ HỦY
+                // Cập nhật trạng thái & lý do
                 hd.setTrangThaiDonHang(TrangThaiDonHang.DA_HUY);
+                hd.setLyDoHuy(lyDoHuy);
                 hoaDonRepo.save(hd);
 
-                redirect.addFlashAttribute("success", "✅ Đơn hàng đã được hủy, hoàn kho và hoàn voucher (nếu có).");
+                redirect.addFlashAttribute("success", "✅ Đơn hàng đã được hủy, hoàn kho và voucher (nếu có).");
             } else {
                 redirect.addFlashAttribute("error", "❌ Chỉ được hủy đơn chưa xác nhận.");
             }
@@ -155,6 +165,7 @@ public class HoaDonController {
 
         return "redirect:/hoa-don/hien-thi";
     }
+
 
 
     @GetMapping("/in")

@@ -2,14 +2,8 @@ package com.example.Trendora.DuAn.controller;
 
 
 import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
-import com.example.Trendora.DuAn.model.HoaDon;
-import com.example.Trendora.DuAn.model.HoaDonChiTiet;
-import com.example.Trendora.DuAn.model.KhachHang;
-import com.example.Trendora.DuAn.model.TaiKhoan;
-import com.example.Trendora.DuAn.repository.HoaDonChiTietRepo;
-import com.example.Trendora.DuAn.repository.HoaDonRepo;
-import com.example.Trendora.DuAn.repository.KhachHangRepo;
-import com.example.Trendora.DuAn.repository.TaiKhoanRepo;
+import com.example.Trendora.DuAn.model.*;
+import com.example.Trendora.DuAn.repository.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,12 +94,11 @@ public class TaiKhoanController {
     public String HienThiDangNhap() {
         return "ViewTrendora/login";
     }
-
     @PostMapping("/login")
     public String login(@RequestParam String email,
                         @RequestParam String matKhau,
                         Model model,
-                        HttpSession session) { // 👈 THÊM HttpSession
+                        HttpSession session) {
 
         TaiKhoan user = taiKhoanRepository.findByEmailAndMatKhau(email, matKhau);
 
@@ -119,22 +112,35 @@ public class TaiKhoanController {
             return "ViewTrendora/login";
         }
 
-        // ✅ Lưu thông tin đăng nhập vào session
-        session.setAttribute("khachHangDangNhap", user); // 👈 dùng key này để kiểm tra ở giỏ hàng
+        // ✅ Xoá session cũ trước khi set
+//        session.removeAttribute("khachHangDangNhap");
+//        session.removeAttribute("adminDangNhap");
 
+        // ✅ Nếu là Admin
         if (user.getLoaiTaiKhoan() != null && user.getLoaiTaiKhoan() == 1) {
             session.setAttribute("adminDangNhap", user);
             return "redirect:/admin/san-pham/hien-thi";
-        } else {
+        }
+        // ✅ Nếu là User
+        else {
+            session.setAttribute("khachHangDangNhap", user);
             return "redirect:/san-pham/trang-chu";
         }
     }
 
+
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // Xóa hết dữ liệu phiên
+        session.removeAttribute("khachHangDangNhap");
         return "redirect:/quan-ao/login";
     }
+
+    @GetMapping("/admin/logout")
+    public String logoutAdmin(HttpSession session) {
+        session.removeAttribute("adminDangNhap");
+        return "redirect:/quan-ao/login";
+    }
+
 
 
     @GetMapping("/thong-tin")
@@ -235,24 +241,53 @@ public class TaiKhoanController {
         redirectAttributes.addFlashAttribute("message", "Đổi mật khẩu thành công!");
         return "redirect:/quan-ao/thong-tin";
     }
-
-    @GetMapping("/hoa-don/huy/{id}")
-    public String huyHoaDon(@PathVariable("id") Integer id, RedirectAttributes redirect) {
+    @Autowired
+    SanPhamRepo spr;
+    @Autowired GiamGiaRepo ggr;
+    @PostMapping("/hoa-don/huy/{id}")
+    public String huyHoaDon(@PathVariable("id") Integer id,
+                            @RequestParam("lyDoHuy") String lyDoHuy,
+                            RedirectAttributes redirect) {
         Optional<HoaDon> optional = hoaDonRepo.findById(id);
         if (optional.isPresent()) {
             HoaDon hd = optional.get();
-            // Giả sử: 0 = Chưa thanh toán, 1 = Đã thanh toán, 2 = Đã hủy
-            if (hd.getTrangThai() == 0) {
-                hd.setTrangThai(2); // Cập nhật thành Đã hủy
+
+            // ✅ Chỉ hủy nếu trạng thái đơn hàng đang "CHỜ XÁC NHẬN" hoặc "CHƯA THANH TOÁN"
+            if (hd.getTrangThai() == 0 || hd.getTrangThaiDonHang() == TrangThaiDonHang.CHO_XAC_NHAN) {
+
+                // --- 1. Hoàn lại số lượng sản phẩm ---
+                List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByHoaDonId(hd.getId());
+                for (HoaDonChiTiet ctd : chiTietList) {
+                    SanPham sp = ctd.getSanPham();
+                    if (sp != null) {
+                        sp.setSoLuong(sp.getSoLuong() + ctd.getSoLuong());
+                        spr.save(sp); // ✅ nhớ save lại
+                    }
+                }
+
+                // --- 2. Hoàn lại phiếu giảm giá nếu có ---
+                if (hd.getGiamGia() != null) {
+                    GiamGia phieu = hd.getGiamGia();
+                    phieu.setSoLuong(phieu.getSoLuong() + 1); // hoàn lại 1 lượt
+                    ggr.save(phieu);
+                }
+
+                // --- 3. Cập nhật trạng thái hóa đơn ---
+                hd.setTrangThai(2); // 2 = Đã hủy
+                hd.setTrangThaiDonHang(TrangThaiDonHang.DA_HUY); // nếu bạn có enum cho trạng thái đơn hàng
+                hd.setLyDoHuy(lyDoHuy); // lưu lý do hủy
                 hoaDonRepo.save(hd);
-                redirect.addFlashAttribute("success", "Đơn hàng đã được hủy.");
+
+                redirect.addFlashAttribute("success", "✅ Đơn hàng đã được hủy.");
             } else {
-                redirect.addFlashAttribute("error", "Không thể hủy đơn hàng đã thanh toán.");
+                redirect.addFlashAttribute("error", "❌ Không thể hủy đơn hàng đã thanh toán hoặc đã xử lý.");
             }
         } else {
-            redirect.addFlashAttribute("error", "Không tìm thấy hóa đơn.");
+            redirect.addFlashAttribute("error", "❌ Không tìm thấy hóa đơn.");
         }
-        return "redirect:/quan-ao/thong-tin"; // đổi thành trang hiển thị đơn hàng của người dùng
+        return "redirect:/quan-ao/thong-tin"; // Trang danh sách đơn hàng khách hàng
     }
+
+
 
 }

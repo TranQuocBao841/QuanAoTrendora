@@ -18,4 +18,11 @@ public enum TrangThaiDonHang {
     public String getMoTa() {
         return moTa;
     }
+    public TrangThaiDonHang next() {
+        if (this == DA_HOAN_THANH || this == DA_HUY) {
+            return null;
+        }
+        TrangThaiDonHang[] values = TrangThaiDonHang.values();
+        return values[this.ordinal() + 1];
+    }
 }

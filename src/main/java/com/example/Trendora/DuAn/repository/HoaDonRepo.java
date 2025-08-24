@@ -27,7 +27,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon,Integer> {
 
 
     @Query("SELECT new com.example.Trendora.DuAn.DTO.HoaDonDTO(" +
-            "hd.id, hd.maHd, nv.tenNv, kh.tenKh, hinhThuc.tenHinhThuc, gg.tenGiamGia, hd.ngayTao,hd.diaChiGiaoHang, hd.tongTien, hd.trangThai, hd.trangThaiDonHang) " +
+            "hd.id, hd.maHd, nv.tenNv, kh.tenKh, hinhThuc.tenHinhThuc, gg.tenGiamGia, hd.ngayTao,hd.diaChiGiaoHang, hd.tongTien, hd.trangThai, hd.trangThaiDonHang, hd.lyDoHuy) " +
             "FROM HoaDon hd " +
             "LEFT JOIN hd.nhanVien nv " +
             "LEFT JOIN hd.khachHang kh " +
@@ -38,17 +38,22 @@ public interface HoaDonRepo extends JpaRepository<HoaDon,Integer> {
 
     // --- Lọc theo mã hóa đơn và trạng thái (có phân trang) ---
     @Query("SELECT new com.example.Trendora.DuAn.DTO.HoaDonDTO(" +
-            "hd.id, hd.maHd, nv.tenNv, kh.tenKh, hinhThuc.tenHinhThuc, gg.tenGiamGia, hd.ngayTao, hd.diaChiGiaoHang, hd.tongTien, hd.trangThai, hd.trangThaiDonHang) " +
+            "hd.id, hd.maHd, nv.tenNv, kh.tenKh, hinhThuc.tenHinhThuc, gg.tenGiamGia, " +
+            "hd.ngayTao, hd.diaChiGiaoHang, hd.tongTien, hd.trangThai, hd.trangThaiDonHang, hd.lyDoHuy) " +
             "FROM HoaDon hd " +
             "LEFT JOIN hd.nhanVien nv " +
             "LEFT JOIN hd.khachHang kh " +
             "LEFT JOIN hd.giamGia gg " +
             "LEFT JOIN hd.hinhThucThanhToan hinhThuc " +
             "WHERE (:maHd IS NULL OR hd.maHd LIKE %:maHd%) " +
-            "AND (:trangThai IS NULL OR hd.trangThaiDonHang = :trangThai)")
+            "AND (:tenKhachHang IS NULL OR kh.tenKh LIKE %:tenKhachHang%) " +
+            "AND (:trangThaiDonHang IS NULL OR hd.trangThaiDonHang = :trangThaiDonHang)")
     Page<HoaDonDTO> findAllOrSearchAndTrangThai(@Param("maHd") String maHd,
-                                                @Param("trangThai") TrangThaiDonHang trangThai,
+                                                @Param("tenKhachHang") String tenKhachHang,
+                                                @Param("trangThaiDonHang") TrangThaiDonHang trangThaiDonHang,
                                                 Pageable pageable);
+
+
 
     @Modifying
     @Transactional
@@ -61,8 +66,8 @@ public interface HoaDonRepo extends JpaRepository<HoaDon,Integer> {
 
     long countByTrangThaiDonHang(TrangThaiDonHang trangThai);
 
-    @Query("SELECT SUM(h.tongTien) FROM HoaDon h")
-    BigDecimal getTongDoanhThu();
+    @Query("SELECT SUM(h.tongTien) FROM HoaDon h WHERE h.trangThai = 1")
+    BigDecimal tongDoanhThuDaThanhToan();
 
 
     @Modifying

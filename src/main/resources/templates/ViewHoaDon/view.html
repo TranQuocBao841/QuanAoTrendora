@@ -53,21 +53,23 @@
                         <form action="/hoa-don/hien-thi" method="get" class="form-inline">
 
                             <!-- Dropdown lọc trạng thái -->
-                            <select name="trangThaiDonHang" id="trangThaiDonHang" class="form-control input-sm">
+                            <!-- Dropdown trạng thái -->
+                            <select name="trangThaiDonHang" class="form-control"
+                                    onchange="document.getElementById('filterForm').submit()">
                                 <option value="" th:selected="${trangThaiDonHang == null}">Tất cả</option>
-                                <option th:each="tt : ${allTrangThai}"
-                                        th:value="${tt.name()}"
-                                        th:text="${tt.ten}"
-                                        th:selected="${tt == trangThaiDonHang}">
-                                </option>
+                                <option value="CHO_XAC_NHAN" th:selected="${trangThaiDonHang?.name() == 'CHO_XAC_NHAN'}">Chờ xác nhận</option>
+                                <option value="DA_XAC_NHAN" th:selected="${trangThaiDonHang?.name() == 'DA_XAC_NHAN'}">Đã xác nhận</option>
+                                <option value="DANG_DONG_GOI" th:selected="${trangThaiDonHang?.name() == 'DANG_DONG_GOI'}">Đang đóng gói</option>
+                                <option value="DANG_VAN_CHUYEN" th:selected="${trangThaiDonHang?.name() == 'DANG_VAN_CHUYEN'}">Đang vận chuyển</option>
+                                <option value="DA_GIAO" th:selected="${trangThaiDonHang?.name() == 'DA_GIAO'}">Đã giao</option>
+                                <option value="DA_HOAN_THANH" th:selected="${trangThaiDonHang?.name() == 'DA_HOAN_THANH'}">Đã hoàn thành</option>
+                                <option value="DA_HUY" th:selected="${trangThaiDonHang?.name() == 'DA_HUY'}">Đã hủy</option>
                             </select>
 
 
-                            <!-- Ô tìm kiếm mã hóa đơn -->
-                            <div class="form-group" style="margin-left: 10px;">
-                                <input type="text" id="maHd" name="maHd" class="form-control input-sm"
-                                       placeholder="Tìm kiếm theo mã..." th:value="${search}">
-                            </div>
+                            <!-- Ô tìm kiếm -->
+                            <input type="text" id="tenKhachHang" name="tenKhachHang" class="form-control"
+                                   placeholder="Tìm theo tên khách hàng..." th:value="${tenKhachHang}">
 
                             <!-- Nút Tìm kiếm -->
                             <button type="submit" class="btn btn-primary btn-sm" style="margin-left: 5px;">

@@ -2,6 +2,7 @@ package com.example.Trendora.DuAn.Service;
 
 import com.example.Trendora.DuAn.DTO.HoaDonChiTietDTO;
 import com.example.Trendora.DuAn.DTO.HoaDonDTO;
+import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
 import com.example.Trendora.DuAn.repository.HoaDonChiTietRepo;
 import com.example.Trendora.DuAn.repository.HoaDonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,26 +27,22 @@ public class HoaDonService {
     @Autowired
     private HoaDonChiTietRepo hoaDonChiTietRepo;
 
-    public Page<HoaDonDTO> getAllOrSearch(String maHd, int page, int size) {
+    public Page<HoaDonDTO> getAllOrSearch(String maHd,
+                                          String tenKhachHang,   // ✅ thêm
+                                          TrangThaiDonHang trangThaiDonHang,
+                                          int page, int size) {
         if (maHd != null && maHd.trim().isEmpty()) {
             maHd = null;
+        }
+        if (tenKhachHang != null && tenKhachHang.trim().isEmpty()) {
+            tenKhachHang = null;
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "ngayTao"));
 
-        // Giả sử repo cũ của bạn trả về List<HoaDonDTO>
-        List<HoaDonDTO> fullList = hoaDonRepo.findAllOrSearch(maHd);
-
-        // 🔹 Sắp xếp hóa đơn mới lên trên cùng
-        fullList.sort((h1, h2) -> h2.getNgayTao().compareTo(h1.getNgayTao()));
-
-        // 🔹 Phân trang thủ công
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), fullList.size());
-        List<HoaDonDTO> subList = fullList.subList(start, end);
-
-        return new PageImpl<>(subList, pageable, fullList.size());
+        return hoaDonRepo.findAllOrSearchAndTrangThai(maHd, tenKhachHang, trangThaiDonHang, pageable);
     }
+
 
 
 

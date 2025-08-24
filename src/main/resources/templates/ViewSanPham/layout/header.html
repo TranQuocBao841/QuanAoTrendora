@@ -214,34 +214,35 @@
                 </li>
                 <!-- User Account: style can be found in dropdown.less -->
                 <!-- Nếu đã đăng nhập -->
-                <li class="dropdown user user-menu" th:if="${session.khachHangDangNhap != null}">
+
+                <!-- Nếu đăng nhập là ADMIN -->
+                <li class="dropdown user user-menu" th:if="${session.adminDangNhap != null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img th:src="@{/assets/dist/img/user2-160x160.jpg}" class="user-image" alt="User Image">
-                        <span th:text="${session.khachHangDangNhap.email}">Tài khoản</span>
+                        <img th:src="@{/assets/dist/img/user2-160x160.jpg}" class="user-image" alt="Admin Image">
+                        <span th:text="${session.adminDangNhap.tenDangNhap}">Admin</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <!-- User image -->
                         <li class="user-header">
-                            <img th:src="@{/assets/dist/img/user2-160x160.jpg}" class="img-circle" alt="User Image">
+                            <img th:src="@{/assets/dist/img/user2-160x160.jpg}" class="img-circle" alt="Admin Image">
                             <p>
-                                <span th:text="${session.khachHangDangNhap.tenDangNhap}">Tên người dùng</span> - Web Developer
+                                <span th:text="${session.adminDangNhap.tenDangNhap}">Tên admin</span>
                                 <br />
-                                <small th:text="${session.khachHangDangNhap.email}">example@gmail.com</small>
+                                <small th:text="${session.adminDangNhap.email}">admin@gmail.com</small>
                             </p>
                         </li>
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                <a href="#" class="btn btn-default btn-flat">Admin Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a th:href="@{/quan-ao/logout}" class="btn btn-default btn-flat">Đăng xuất</a>
+                                <a th:href="@{/quan-ao/admin/logout}" class="btn btn-default btn-flat">Đăng xuất</a>
                             </div>
                         </li>
                     </ul>
                 </li>
 
                 <!-- Nếu chưa đăng nhập -->
-                <li class="dropdown user user-menu" th:unless="${session.khachHangDangNhap != null}">
+                <li class="dropdown user user-menu" th:if="${session.khachHangDangNhap == null and session.adminDangNhap == null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img th:src="@{/assets/dist/img/user2-160x160.jpg}" class="user-image" alt="User Image">
                         <span>Khách</span>
@@ -258,6 +259,7 @@
                         </li>
                     </ul>
                 </li>
+
 
 
                 <!-- Control Sidebar Toggle Button -->

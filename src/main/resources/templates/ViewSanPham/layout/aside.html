@@ -8,11 +8,8 @@
             </div>
             <div class="pull-left info">
                 <!-- Nếu đã đăng nhập -->
-                <p th:if="${session.khachHangDangNhap != null}"
-                   th:text="${session.khachHangDangNhap.email}">Người dùng</p>
-
-                <!-- Nếu chưa đăng nhập -->
-                <p th:unless="${session.khachHangDangNhap != null}">Khách</p>
+                <p th:if="${session.adminDangNhap != null}"
+                   th:text="${session.adminDangNhap.email}">Người dùng</p>
 
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>

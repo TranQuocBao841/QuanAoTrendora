@@ -253,11 +253,19 @@ public class GioHangController {
 
         BigDecimal tongTienTruocGiam = cart != null ? cart.getTongTien() : BigDecimal.ZERO;
 
+        // ✅ tạo 1 lần – nếu đã có thì dùng lại
+        String maHoaDon = (String) session.getAttribute("maHoaDon");
+        if (maHoaDon == null) {
+            maHoaDon = "HD" + System.currentTimeMillis(); // hoặc dùng sequence tự tăng
+            session.setAttribute("maHoaDon", maHoaDon);
+        }
+
         // Thêm vào model
         model.addAttribute("tongTien", tongTien);
         model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);
         model.addAttribute("giamGiaDangApDung", giamGia);
         model.addAttribute("gioHang", cart);
+        model.addAttribute("maHoaDon", maHoaDon); // 🆕 thêm mã hóa đơn
 
         TaiKhoan taiKhoan = (TaiKhoan) session.getAttribute("khachHangDangNhap");
         if (taiKhoan != null && taiKhoan.getKhachHang() != null) {
@@ -273,13 +281,12 @@ public class GioHangController {
     @PostMapping("/thanh-toan")
     public String xuLyThanhToan(
             @RequestParam("idHinhThuc") Integer idHinhThuc,
-
+            @RequestParam("maHoaDon") String maHoaDon,
             @RequestParam("tongTien") Double tongTien,
             @RequestParam(value = "ghiChu", required = false) String ghiChu,
             @RequestParam("diaChi") String diaChi,
 
             HttpSession session,
-            Model model,
             RedirectAttributes redirectAttributes) {
 
         Cart cart = (Cart) session.getAttribute("gioHang");
@@ -295,7 +302,7 @@ public class GioHangController {
 
         // Tạo hóa đơn
         HoaDon hoaDon = new HoaDon();
-        hoaDon.setMaHd("HD" + System.currentTimeMillis());
+        hoaDon.setMaHd(maHoaDon); // dùng lại mã từ QR
         hoaDon.setKhachHang(taiKhoan.getKhachHang());
         hoaDon.setNgayTao(LocalDateTime.now());
         hoaDon.setHinhThucThanhToan(hinhThuc);
@@ -318,39 +325,41 @@ public class GioHangController {
 
         hdr.save(hoaDon);
 
-        try {
-            for (CartItem item : cart.getAllItems()) {
-                // Trừ tồn kho
-                SanPham sanPham = sanPhamRepo.findById(item.getId()).orElse(null);
-                if (sanPham != null) {
-                    sanPham.setSoLuong(sanPham.getSoLuong() - item.getSoLuong());
-                    sanPhamRepo.save(sanPham);
-                }
+        // ✅ Lưu chi tiết hóa đơn
+        for (CartItem item : cart.getAllItems()) {
+            SanPham sanPham = sanPhamRepo.findById(item.getId()).orElse(null);
+            if (sanPham == null) continue;
 
-                // Lưu chi tiết hóa đơn
-                HoaDonChiTiet chiTiet = new HoaDonChiTiet();
-                chiTiet.setMaHdct("HDCT" + System.currentTimeMillis() + "_" + item.getId());
-                chiTiet.setHoaDon(hoaDon);
-                chiTiet.setSanPham(sanPham);
-                chiTiet.setSoLuong(item.getSoLuong());
-                chiTiet.setDonGia(item.getDonGia());
-                chiTiet.setThanhTien(item.getDonGia().multiply(BigDecimal.valueOf(item.getSoLuong())));
-                chiTiet.setTrangThai(hoaDon.getTrangThai());
-                hdcr.save(chiTiet);
+            // Kiểm tra tồn kho
+            if (sanPham.getSoLuong() < item.getSoLuong()) {
+                throw new RuntimeException("Sản phẩm " + sanPham.getTenSanPham() + " không đủ tồn kho!");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi lưu hóa đơn chi tiết.");
-            return "redirect:/gio-hang/hien-thi";
+
+            // Trừ tồn kho
+            sanPham.setSoLuong(sanPham.getSoLuong() - item.getSoLuong());
+            sanPhamRepo.save(sanPham);
+
+            // Lưu chi tiết
+            HoaDonChiTiet chiTiet = new HoaDonChiTiet();
+            chiTiet.setMaHdct("HDCT" + System.currentTimeMillis() + "_" + UUID.randomUUID());
+            chiTiet.setHoaDon(hoaDon);
+            chiTiet.setSanPham(sanPham);
+            chiTiet.setSoLuong(item.getSoLuong());
+            chiTiet.setDonGia(item.getDonGia());
+            chiTiet.setThanhTien(item.getDonGia().multiply(BigDecimal.valueOf(item.getSoLuong())));
+            chiTiet.setTrangThai(hoaDon.getTrangThai());
+            hdcr.save(chiTiet);
         }
 
-        // Xóa session giỏ hàng và mã giảm giá
+        // ✅ Clear session sau khi thanh toán
         session.removeAttribute("gioHang");
         session.removeAttribute("maGiamGiaDaApDung");
+        session.removeAttribute("maHoaDon");
 
-        redirectAttributes.addFlashAttribute("success", "Thanh toán thành công!");
+        redirectAttributes.addFlashAttribute("success", "Thanh toán thành công! Mã đơn hàng: " + maHoaDon);
         return "redirect:/gio-hang/cam-on";
     }
+
 
 
     @GetMapping("/cam-on")

@@ -1,7 +1,10 @@
 package com.example.Trendora.DuAn.controller;
+
+import com.example.Trendora.DuAn.DTO.KhachHangDTO;
 import com.example.Trendora.DuAn.enums.TrangThaiDonHang;
 import com.example.Trendora.DuAn.model.*;
 import com.example.Trendora.DuAn.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -13,6 +16,9 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -82,10 +88,16 @@ public class BanHangTaiQuayController {
 
         List<SanPham> danhSachSanPham;
 // ✅ Nếu quay lại sau khi thanh toán thì không có giỏ hàng nữa
-        Map<Integer, Integer> gioHang = (Map<Integer, Integer>) session.getAttribute("gioHang");
-        if (gioHang == null || gioHang.isEmpty()) {
+        // Lấy giỏ hàng từ session
+        Cart cart = (Cart) session.getAttribute("gioHang");
+
+        if (cart == null || cart.getItems().isEmpty()) {
             model.addAttribute("thongBao", "🛒 Giỏ hàng đang trống. Vui lòng chọn sản phẩm mới để bán.");
         }
+
+        // Lấy Map<Integer, CartItem> từ Cart
+        Map<Integer, CartItem> gioHang = cart != null ? cart.getItems() : new HashMap<>();
+        model.addAttribute("gioHang", gioHang);
 
         boolean coLoc = (keyword != null && !keyword.isEmpty())
                 || danhMucId != null
@@ -282,8 +294,6 @@ public class BanHangTaiQuayController {
 
     }
 
-
-
     // Trang hiển thị hóa đơn
     @GetMapping("/in-hoa-don/{id}")
     public String inHoaDon(@PathVariable("id") Integer id, Model model,
@@ -429,7 +439,6 @@ public class BanHangTaiQuayController {
 
         NhanVien nhanVien = taiKhoan.getNhanVien();
 
-        // ==== 1. XỬ LÝ KHÁCH HÀNG ====
         // ==== 2. ĐỊA CHỈ GIAO HÀNG ====
         String diaChiGiaoHang = params.get("diaChiGiaoHang");
         KhachHang khachHang = null;
@@ -443,7 +452,17 @@ public class BanHangTaiQuayController {
                 redirect.addFlashAttribute("error", "Khách hàng không tồn tại!");
                 return "redirect:/ban-hang/hien-thi?tab=dat-hang";
             }
-        } else {
+
+            // Nếu người dùng không nhập địa chỉ mới, giữ nguyên địa chỉ cũ
+            if (diaChiGiaoHang == null || diaChiGiaoHang.isEmpty()) {
+                diaChiGiaoHang = khachHang.getDiaChi();
+            } else if (!diaChiGiaoHang.equals(khachHang.getDiaChi())) {
+                // Cập nhật địa chỉ mới cho khách cũ
+                khachHang.setDiaChi(diaChiGiaoHang);
+                khachHangRepo.save(khachHang);
+            }
+        }
+        else {
             // Khách hàng mới → validate dữ liệu trước khi tạo
             String tenKh = params.get("tenKh");
             String diaChi = params.get("diaChi");
@@ -462,7 +481,7 @@ public class BanHangTaiQuayController {
             // Nếu hợp lệ mới tạo và lưu
             khachHang = new KhachHang();
             khachHang.setTenKh(tenKh);
-            khachHang.setDiaChi(diaChi != null ? diaChi : "Việt Nam");
+            khachHang.setDiaChi(diaChiGiaoHang != null ? diaChiGiaoHang : "Việt Nam");
             khachHang.setSdt(sdt);
             khachHang.setTrangThai(1);
             khachHang.setGioiTinh(true);

@@ -32,5 +32,5 @@ public class HoaDonDTO {
     private Integer tongTien;
     private Integer trangThai;
     private TrangThaiDonHang trangThaiDonHang;
-
+    private String lyDoHuy;
 }

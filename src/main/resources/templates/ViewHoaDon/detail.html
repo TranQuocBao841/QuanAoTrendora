@@ -140,7 +140,7 @@
         <section class="content-header">
             <h1>
                 Trang Quản Trị Admin Bán Áo Phông
-                <small>Kích Thước</small>
+                <small>Hóa Đơn Chi Tiết</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -201,20 +201,16 @@
 
 
                 <div class="container mt-4">
-                    <form th:action="@{'/hoa-don/cap-nhat-trang-thai/' + ${hoaDon.id}}" method="post" class="form-inline">
-                        <div class="form-group">
-                            <label for="trangThaiMoi" class="me-2">Cập nhật trạng thái:</label>
-                            <select name="trangThaiMoi" id="trangThaiMoi" class="form-control">
-                                <option th:each="step : ${steps}"
-                                        th:value="${step.name()}"
-                                        th:text="${step.moTa}"
-                                        th:selected="${step.name() == hoaDon.trangThaiDonHang}">
-                                </option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary ms-2">Lưu</button>
+                    <form th:action="@{'/hoa-don/cap-nhat-trang-thai/' + ${hoaDon.id}}" method="post" class="form-inline"
+                          onsubmit="return confirm('Chuyển trạng thái đơn hàng sang bước tiếp theo?');">
+                        <button type="submit"
+                                class="btn btn-primary ms-2"
+                                th:disabled="${hoaDon.trangThaiDonHang.name() == 'DA_HOAN_THANH' or hoaDon.trangThaiDonHang.name() == 'DA_HUY'}">
+                            Trạng thái tiếp theo
+                        </button>
                     </form>
                 </div>
+
 
 
 
