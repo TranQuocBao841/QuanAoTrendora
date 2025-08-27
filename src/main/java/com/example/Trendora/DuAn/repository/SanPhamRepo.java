@@ -1,6 +1,9 @@
 package com.example.Trendora.DuAn.repository;
 
 
+import com.example.Trendora.DuAn.model.ChatLieu;
+import com.example.Trendora.DuAn.model.KichThuoc;
+import com.example.Trendora.DuAn.model.MauSac;
 import com.example.Trendora.DuAn.model.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +20,9 @@ public interface SanPhamRepo extends JpaRepository<SanPham,Integer> {
     public List<SanPham> findSanPhamsByTenSanPhamContains(String ten);
 
     List<SanPham> findByMoTaContaining(String moTa);
+
+    @Query("SELECT sp FROM SanPham sp ORDER BY sp.id DESC")
+    List<SanPham> findAllOrderByIdDesc();
 
     @Query("SELECT sp FROM SanPham sp WHERE "
             + "(:tenSanPham IS NULL OR LOWER(sp.tenSanPham) LIKE LOWER(CONCAT('%', :tenSanPham, '%'))) AND "
@@ -36,13 +42,16 @@ public interface SanPhamRepo extends JpaRepository<SanPham,Integer> {
             @Param("danhMucId") Long danhMucId
     );
 
-    boolean existsByMaSanPham(String maSanPham);
+//    boolean existsByMaSanPham(String maSanPham);
+boolean existsByMaSanPhamAndMauSacAndKichThuocAndChatLieu(
+        String maSanPham, MauSac mauSac, KichThuoc kichThuoc, ChatLieu chatLieu
+);
 
 
 
+    @Query("SELECT sp FROM SanPham sp WHERE sp.maSanPham = :maSanPham")
+    List<SanPham> findByMaSanPham(@Param("maSanPham") String maSanPham);
 
-    @Query("SELECT sp FROM SanPham sp WHERE sp.tenSanPham = :tenSanPham")
-    List<SanPham> findByTenSanPham(@Param("tenSanPham") String tenSanPham);
 
 
 

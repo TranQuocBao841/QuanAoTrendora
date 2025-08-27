@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -113,7 +114,7 @@ public class AdminSanPhamController {
                     danhMuc,
                     giaMin,
                     giaMax,
-                    PageRequest.of(page, size)
+                    PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")) // << sắp xếp mới nhất lên đầu
             );
 
             model.addAttribute("list", sanPhamPage.getContent()); // truyền danh sách
@@ -162,24 +163,37 @@ public class AdminSanPhamController {
                       @RequestParam("fileAnh") MultipartFile fileAnh,
                       Model model) {
 
-        if (sanPhamRepo.existsByMaSanPham(sp.getMaSanPham())) {
-            result.rejectValue("maSanPham", null, "Mã sản phẩm đã tồn tại");
-        }
-
+        // Nếu có lỗi validate, trả lại form
         if (result.hasErrors()) {
-            model.addAttribute("dsChatLieu", chatLieuRepo.findAll());
-            model.addAttribute("dsMauSac", mauSacRepo.findAll());
-            model.addAttribute("dsKichThuoc", kichThuocRepo.findAll());
-            model.addAttribute("dsCoAo", coAoRepo.findAll());
-            model.addAttribute("dsDuongMay", duongMayRepo.findAll());
-            model.addAttribute("dsHoaTiet", hoaTietRepo.findAll());
-            model.addAttribute("dsKhuyAo", khuyAoRepo.findAll());
-            model.addAttribute("dsKieuDang", kieuDangRepo.findAll());
-            model.addAttribute("dsPhongCach", phongCachRepo.findAll());
-            model.addAttribute("dsTayAo", tayAoRepo.findAll());
-            model.addAttribute("dsDanhMuc", danhMucRepo.findAll());
+            loadDropdowns(model);
             return "ViewSanPham/add";
         }
+        Boolean exists = sanPhamRepo.existsByMaSanPhamAndMauSacAndKichThuocAndChatLieu(
+                sp.getMaSanPham(),
+                sp.getMauSac(),
+                sp.getKichThuoc(),
+                sp.getChatLieu()
+        );
+        if (exists) {
+            model.addAttribute("error", "Sản phẩm đã tồn tại với cùng mã, màu sắc, kích thước và chất liệu!");
+            loadDropdowns(model);
+            return "ViewSanPham/add";
+        }
+
+//        if (result.hasErrors()) {
+//            model.addAttribute("dsChatLieu", chatLieuRepo.findAll());
+//            model.addAttribute("dsMauSac", mauSacRepo.findAll());
+//            model.addAttribute("dsKichThuoc", kichThuocRepo.findAll());
+//            model.addAttribute("dsCoAo", coAoRepo.findAll());
+//            model.addAttribute("dsDuongMay", duongMayRepo.findAll());
+//            model.addAttribute("dsHoaTiet", hoaTietRepo.findAll());
+//            model.addAttribute("dsKhuyAo", khuyAoRepo.findAll());
+//            model.addAttribute("dsKieuDang", kieuDangRepo.findAll());
+//            model.addAttribute("dsPhongCach", phongCachRepo.findAll());
+//            model.addAttribute("dsTayAo", tayAoRepo.findAll());
+//            model.addAttribute("dsDanhMuc", danhMucRepo.findAll());
+//            return "ViewSanPham/add";
+//        }
 
         // ✅ Dùng đường dẫn ngoài project (ổ D)
         String uploadFolder = "D:/ShopImages/";
@@ -210,6 +224,21 @@ public class AdminSanPhamController {
 
         sanPhamRepo.save(sp);
         return "redirect:/admin/san-pham/hien-thi";
+    }
+
+
+    private void loadDropdowns(Model model) {
+        model.addAttribute("dsChatLieu", chatLieuRepo.findAll());
+        model.addAttribute("dsMauSac", mauSacRepo.findAll());
+        model.addAttribute("dsKichThuoc", kichThuocRepo.findAll());
+        model.addAttribute("dsCoAo", coAoRepo.findAll());
+        model.addAttribute("dsDuongMay", duongMayRepo.findAll());
+        model.addAttribute("dsHoaTiet", hoaTietRepo.findAll());
+        model.addAttribute("dsKhuyAo", khuyAoRepo.findAll());
+        model.addAttribute("dsKieuDang", kieuDangRepo.findAll());
+        model.addAttribute("dsPhongCach", phongCachRepo.findAll());
+        model.addAttribute("dsTayAo", tayAoRepo.findAll());
+        model.addAttribute("dsDanhMuc", danhMucRepo.findAll());
     }
 
     @GetMapping("/deltal")

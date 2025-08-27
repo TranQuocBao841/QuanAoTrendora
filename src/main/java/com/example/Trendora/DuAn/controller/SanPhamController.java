@@ -107,7 +107,7 @@ public class SanPhamController {
       }
 
       // Lấy các biến thể cùng tên (nếu đúng logic), hoặc cùng cha sản phẩm
-      List<SanPham> bienTheList = sanPhamRepo.findByTenSanPham(sp.getTenSanPham());
+      List<SanPham> bienTheList = sanPhamRepo.findByMaSanPham(sp.getMaSanPham());
 
       // Lọc các thuộc tính duy nhất
       List<MauSac> listMauSac = bienTheList.stream()
