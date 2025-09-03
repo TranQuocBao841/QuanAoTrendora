@@ -565,7 +565,7 @@ public class BanHangTaiQuayController {
         hoaDon.setKhachHang(khachHang);
         hoaDon.setHinhThucThanhToan(hinhThuc);
         hoaDon.setGiamGia(giamGia);
-        hoaDon.setTrangThaiDonHang(TrangThaiDonHang.DA_XAC_NHAN);
+        hoaDon.setTrangThaiDonHang(TrangThaiDonHang.DA_HOAN_THANH);
 
         // **Set địa chỉ giao hàng**
         hoaDon.setDiaChiGiaoHang(diaChiGiaoHang);

@@ -134,7 +134,9 @@ public class HoaDonController {
         if (optional.isPresent()) {
             HoaDon hd = optional.get();
 
-            if (hd.getTrangThaiDonHang() == TrangThaiDonHang.CHO_XAC_NHAN) {
+            if (hd.getTrangThaiDonHang() == TrangThaiDonHang.CHO_XAC_NHAN
+                    || hd.getTrangThaiDonHang() == TrangThaiDonHang.DA_XAC_NHAN
+                    || hd.getTrangThaiDonHang() == TrangThaiDonHang.DANG_DONG_GOI) {
                 // Trả sản phẩm về kho
                 List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByHoaDon(hd);
                 for (HoaDonChiTiet ct : chiTietList) {
@@ -226,45 +228,6 @@ public class HoaDonController {
         }
 
         return "ViewBanHang/in-hoa-don";
-    }
-
-    @PostMapping("/hanh-dong-tat-ca")
-    public String hanhDongTatCa(
-            @RequestParam(value = "hoaDonIds", required = false) List<Integer> hoaDonIds,
-            @RequestParam("action") String action,
-            RedirectAttributes redirectAttributes,
-            Model model) {
-
-        if (hoaDonIds == null || hoaDonIds.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "❌ Bạn chưa chọn hóa đơn nào!");
-            return "redirect:/hoa-don/hien-thi";
-        }
-
-        if ("xacNhan".equals(action)) {
-            List<HoaDon> hoaDons = hoaDonRepo.findAllById(hoaDonIds);
-
-            int demXacNhan = 0;
-            for (HoaDon hd : hoaDons) {
-                if (hd.getTrangThaiDonHang() == TrangThaiDonHang.CHO_XAC_NHAN) {
-                    hd.setTrangThaiDonHang(TrangThaiDonHang.DA_XAC_NHAN);
-                    demXacNhan++;
-                }
-            }
-
-            if (demXacNhan > 0) {
-                hoaDonRepo.saveAll(hoaDons);
-                redirectAttributes.addFlashAttribute("success", "✅ Đã xác nhận " + demXacNhan + " đơn hàng!");
-            } else {
-                redirectAttributes.addFlashAttribute("warning", "⚠️ Không có đơn nào ở trạng thái 'Chờ xác nhận' để xác nhận!");
-            }
-        }
-        else if ("in".equals(action)) {
-            List<HoaDon> hoaDons = hoaDonRepo.findAllById(hoaDonIds);
-            model.addAttribute("hoaDons", hoaDons);
-            return "ViewHoaDon/in-nhieu-hoa-don"; // view in nhiều hóa đơn
-        }
-
-        return "redirect:/hoa-don/hien-thi";
     }
 
 
