@@ -1,9 +1,6 @@
 services:
   - type: web
     name: QuanAoTrendora
-    runtime: java
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/*.jar
+    runtime: docker
     plan: free
     autoDeploy: true
-
