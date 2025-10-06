@@ -1,14 +1,9 @@
-# Sử dụng JDK 17 để build
-FROM eclipse-temurin:17-jdk
-
-# Đặt thư mục làm việc
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
-
-# Sao chép toàn bộ code vào container
 COPY . .
+RUN mvn clean package -DskipTests
 
-# Build ứng dụng (bỏ test để nhanh hơn)
-RUN ./mvnw clean package -DskipTests
-
-# Chạy file jar
-CMD ["java", "-jar", "target/*.jar"]
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
