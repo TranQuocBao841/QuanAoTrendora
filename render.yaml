@@ -1,6 +1,8 @@
 services:
   - type: web
     name: QuanAoTrendora
-    runtime: docker
+    env: java
     plan: free
-    autoDeploy: true
+    buildCommand: ./mvnw clean install
+    startCommand: java -jar target/QuanAoTrendora-0.0.1-SNAPSHOT.jar
+    region: oregon
